@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { SyncOutlined, ExperimentOutlined, FundViewOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
 
 const SideMenu: React.FC = () => {
   const navigate = useNavigate();
@@ -44,7 +44,6 @@ const SideMenu: React.FC = () => {
               className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}
               onClick={() => navigate(item.key)}
             >
-              <span className="menu-icon">{item.icon}</span>
               <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
             </div>
           ))}

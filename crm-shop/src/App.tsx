@@ -4,6 +4,9 @@ import SideMenu from './components/SideMenu';
 import DataConversion from './pages/DataConversion';
 import ModelTraining from './pages/ModelTraining';
 import DataInference from './pages/DataInference';
+import RoleManagement from './pages/RoleManagement';
+import AdminList from './pages/AdminList';
+import PermissionSettings from './pages/PermissionSettings';
 import FitModelTrainData from './pages/FitModelTrainData';
 import FitModelTrain from './pages/FitModelTrain';
 import FitModelTrainDataInference from './pages/FitModelTrainDataInference';
@@ -30,6 +33,9 @@ function App() {
                 <Route path="/fit-model-train-data" element={<FitModelTrainData />} />
                 <Route path="/fit-model-train" element={<FitModelTrain />} />
                 <Route path="/fit-model-train-data-inference" element={<FitModelTrainDataInference />} />
+                <Route path="/roles" element={<RoleManagement />} />
+                <Route path="/admins" element={<AdminList />} />
+                <Route path="/permissions" element={<PermissionSettings />} />
               </Routes>
             </Content>
           </Layout>

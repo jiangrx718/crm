@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ExperimentOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined } from '@ant-design/icons';
 
 const SideMenu: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-  const [open, setOpen] = useState(false); // 默认为收起
+  const [openTrain, setOpenTrain] = useState(false); // 模型训练：默认收起
+  const [openAdmin, setOpenAdmin] = useState(false); // 管理权限：默认收起
 
   const subMenuItems = [
     { key: '/', label: 'AI 模型训练数据' },
@@ -17,13 +18,19 @@ const SideMenu: React.FC = () => {
     { key: '/fit-model-train-data-inference', label: '机理模型数据推理' },
   ];
 
+  const adminMenuItems = [
+    { key: '/roles', label: '角色管理' },
+    { key: '/admins', label: '管理员列表' },
+    { key: '/permissions', label: '权限设置' },
+  ];
+
   return (
     <div className="menu-container">
       {/* 父级菜单：模型训练 */}
       <div
         className={`menu-item ${currentPath === '/model-training' ? 'active' : ''}`}
         onClick={() => {
-          setOpen(prev => !prev);
+          setOpenTrain(prev => !prev);
           // 点击同时跳转到模型训练页面
           navigate('/model-training');
         }}
@@ -31,14 +38,40 @@ const SideMenu: React.FC = () => {
         <span className="menu-icon"><ExperimentOutlined /></span>
         <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>模型训练</span>
         <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
-          {open ? <DownOutlined /> : <RightOutlined />}
+          {openTrain ? <DownOutlined /> : <RightOutlined />}
         </span>
       </div>
 
       {/* 子菜单列表 */}
-      {open && (
+      {openTrain && (
         <div className="submenu-container">
           {subMenuItems.map(item => (
+            <div
+              key={item.key}
+              className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}
+              onClick={() => navigate(item.key)}
+            >
+              <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 父级菜单：管理权限 */}
+      <div
+        className={`menu-item ${['/roles','/admins','/permissions'].includes(currentPath) ? 'active' : ''}`}
+        onClick={() => setOpenAdmin(prev => !prev)}
+      >
+        <span className="menu-icon"><SafetyOutlined /></span>
+        <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>管理权限</span>
+        <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+          {openAdmin ? <DownOutlined /> : <RightOutlined />}
+        </span>
+      </div>
+
+      {openAdmin && (
+        <div className="submenu-container">
+          {adminMenuItems.map(item => (
             <div
               key={item.key}
               className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}

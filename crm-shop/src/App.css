@@ -48,7 +48,7 @@ body {
 }
 
 .app-sider {
-  background: #4a90e2 !important;  /* 修改为蓝色背景 */
+  background: #1677ff !important;  /* 修改为蓝色背景 */
   min-height: 100vh;
   position: fixed;
   left: 0;
@@ -58,7 +58,7 @@ body {
 
 .menu-container {
   padding: 16px;
-  background: #4a90e2;
+  background: #1677ff;
 }
 
 .menu-item {

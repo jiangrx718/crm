@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty } from 'antd';
+import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb } from 'antd';
+import { Link } from 'react-router-dom';
 
 const AdminList: React.FC = () => {
   const [status, setStatus] = useState<string | undefined>();
@@ -15,6 +16,14 @@ const AdminList: React.FC = () => {
   return (
     <div>
       <Card>
+        {/* 面包屑导航 */}
+        <Breadcrumb style={{ marginBottom: 20 }}>
+          <Breadcrumb.Item>
+            <Link to="/">首页</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>管理权限</Breadcrumb.Item>
+          <Breadcrumb.Item>管理员列表</Breadcrumb.Item>
+        </Breadcrumb>
         <Form layout="inline" style={{ background: '#f7f8fa', padding: 16, borderRadius: 8 }}>
           <Form.Item label="状态">
             <Select
@@ -39,8 +48,8 @@ const AdminList: React.FC = () => {
           </Form.Item>
         </Form>
 
-        <div style={{ marginTop: 16 }}>
-          <Button type="primary">添加管理员</Button>
+        <div style={{ marginTop: 12, display: 'flex', justifyContent: 'flex-start' }}>
+          <Button type="primary" size="small">添加管理员</Button>
         </div>
 
         <div style={{ marginTop: 16 }}>

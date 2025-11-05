@@ -57,7 +57,7 @@ body {
 }
 
 .menu-container {
-  padding: 16px;
+  padding: 0;
   background: #1677ff;
 }
 
@@ -80,6 +80,7 @@ body {
 .menu-item.active {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
+  border-radius: 0; /* 高亮块直角 */
 }
 
 .menu-icon {
@@ -94,13 +95,13 @@ body {
 
 /* 子菜单缩进与样式 */
 .submenu-container {
-  margin-left: 12px;
-  padding-left: 8px;
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .submenu-item {
   margin: 6px 0;
-  padding: 10px 14px;
+  padding: 10px 14px 10px 32px;
   border-radius: 6px;
   color: rgba(255, 255, 255, 0.85);
   transition: all 0.3s;
@@ -117,6 +118,7 @@ body {
 .submenu-item.active {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
+  border-radius: 0; /* 高亮块直角 */
 }
 
 .app-content {

@@ -77,7 +77,7 @@ const AdminList: React.FC = () => {
           <Button key="ok" type="primary" onClick={() => {
             form
               .validateFields()
-              .then(values => {
+              .then(() => {
                 // 提交逻辑可在此接入接口
                 setOpenAdd(false);
               })

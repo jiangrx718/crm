@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined } from '@ant-design/icons';
 
 const SideMenu: React.FC = () => {
   const navigate = useNavigate();
@@ -8,6 +8,7 @@ const SideMenu: React.FC = () => {
   const currentPath = location.pathname;
   const [openTrain, setOpenTrain] = useState(false); // 模型训练：默认收起
   const [openAdmin, setOpenAdmin] = useState(false); // 管理权限：默认收起
+  const [openGoods, setOpenGoods] = useState(false); // 商品管理：默认收起
 
   const subMenuItems = [
     { key: '/', label: 'AI 模型训练数据' },
@@ -22,6 +23,11 @@ const SideMenu: React.FC = () => {
     { key: '/roles', label: '角色管理' },
     { key: '/admins', label: '管理员列表' },
     { key: '/permissions', label: '权限设置' },
+  ];
+
+  const goodsMenuItems = [
+    { key: '/product-category', label: '商品分类' },
+    { key: '/product-list', label: '商品列表' },
   ];
 
   return (
@@ -72,6 +78,32 @@ const SideMenu: React.FC = () => {
       {openAdmin && (
         <div className="submenu-container">
           {adminMenuItems.map(item => (
+            <div
+              key={item.key}
+              className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}
+              onClick={() => navigate(item.key)}
+            >
+              <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 父级菜单：商品管理 */}
+      <div
+        className={`menu-item ${['/product-category','/product-list'].includes(currentPath) ? 'active' : ''}`}
+        onClick={() => setOpenGoods(prev => !prev)}
+      >
+        <span className="menu-icon"><ShoppingOutlined /></span>
+        <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>商品管理</span>
+        <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+          {openGoods ? <DownOutlined /> : <RightOutlined />}
+        </span>
+      </div>
+
+      {openGoods && (
+        <div className="submenu-container">
+          {goodsMenuItems.map(item => (
             <div
               key={item.key}
               className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}

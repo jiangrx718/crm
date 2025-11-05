@@ -10,6 +10,8 @@ import PermissionSettings from './pages/PermissionSettings';
 import FitModelTrainData from './pages/FitModelTrainData';
 import FitModelTrain from './pages/FitModelTrain';
 import FitModelTrainDataInference from './pages/FitModelTrainDataInference';
+import ProductCategory from './pages/ProductCategory';
+import ProductList from './pages/ProductList';
 
 const { Header, Content, Sider } = Layout;
 
@@ -36,6 +38,8 @@ function App() {
                 <Route path="/roles" element={<RoleManagement />} />
                 <Route path="/admins" element={<AdminList />} />
                 <Route path="/permissions" element={<PermissionSettings />} />
+                <Route path="/product-category" element={<ProductCategory />} />
+                <Route path="/product-list" element={<ProductList />} />
               </Routes>
             </Content>
           </Layout>

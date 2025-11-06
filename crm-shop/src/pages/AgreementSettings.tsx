@@ -38,11 +38,18 @@ const AgreementSettings: React.FC = () => {
     quillRef.current = new Quill(quillContainerRef.current, {
       theme: 'snow',
       modules: {
+        // 扩展常用控件：标题(H1/H2...)、字体大小、颜色/背景、删除线、引用、上下标、缩进、对齐、清除格式等
         toolbar: [
-          ['bold', 'italic', 'underline'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          ['link', 'image', 'code-block'],
-          [{ align: '' }, { align: 'center' }, { align: 'right' }],
+          [{ header: [1, 2, 3, 4, 5, 6, false] }, { font: [] }],
+          [{ size: ['small', false, 'large', 'huge'] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ color: [] }, { background: [] }],
+          [{ script: 'sub' }, { script: 'super' }],
+          ['blockquote', 'code-block'],
+          [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+          [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+          ['link', 'image'],
+          ['clean'],
         ],
       },
     });

@@ -32,7 +32,8 @@ const FitModelTrainDataInference: React.FC = () => {
   // 获取数据按钮 loading 状态
   const [loadingGetData, setLoadingGetData] = useState(false);
   // 轮询管理
-  const pollingRefs = useRef<Record<number, NodeJS.Timeout>>({});
+// 使用 ReturnType<typeof setTimeout> 以兼容浏览器与 Node 环境
+const pollingRefs = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
   const [form] = Form.useForm();
   const [taskList, setTaskList] = React.useState<any[]>([]);
   const [total, setTotal] = React.useState(0);
@@ -177,7 +178,8 @@ const FitModelTrainDataInference: React.FC = () => {
             }
           } catch {}
           // 继续轮询
-          pollingRefs.current[task.id] = setTimeout(pollStatus, 3000);
+          // 使用 window.setTimeout 确保返回 number（DOM）
+          pollingRefs.current[task.id] = window.setTimeout(pollStatus, 3000);
         };
         pollStatus();
       }

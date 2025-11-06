@@ -112,12 +112,14 @@ const DataInference: React.FC = () => {
     isPollingActive.current = false;
   };
 
-  const pollingTaskTimers = useRef<{ [id: string]: NodeJS.Timeout }>({});
+  // 使用 ReturnType<typeof setInterval> 兼容浏览器与 Node 类型差异
+  const pollingTaskTimers = useRef<{ [id: string]: ReturnType<typeof setInterval> }>({});
 
   // 轮询单个推理任务状态
   const pollTaskStatus = (taskId: number | string) => {
     if (pollingTaskTimers.current[taskId]) return; // 已有定时器则不重复
-    pollingTaskTimers.current[taskId] = setInterval(async () => {
+    // 使用 window.setInterval 确保返回 number 类型（DOM）
+    pollingTaskTimers.current[taskId] = window.setInterval(async () => {
       try {
         const resp = await fetch(`${API_BASE_URL}/api/v1/data/reasoning/info?id=${taskId}`);
         const data = await resp.json();

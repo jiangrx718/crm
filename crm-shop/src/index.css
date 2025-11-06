@@ -66,3 +66,18 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Quill 编辑器：增强标题、字号与字体效果，避免被全局样式覆盖 */
+.ql-editor h1 { font-size: 2em; line-height: 1.2; }
+.ql-editor h2 { font-size: 1.6em; line-height: 1.3; }
+.ql-editor h3 { font-size: 1.3em; line-height: 1.4; }
+.ql-editor h4 { font-size: 1.1em; }
+.ql-editor h5 { font-size: 1em; }
+.ql-editor h6 { font-size: 0.9em; }
+
+.ql-size-small { font-size: 12px; }
+.ql-size-large { font-size: 18px; }
+.ql-size-huge { font-size: 24px; }
+
+.ql-font-serif { font-family: Georgia, 'Times New Roman', serif; }
+.ql-font-monospace { font-family: Menlo, Monaco, monospace; }

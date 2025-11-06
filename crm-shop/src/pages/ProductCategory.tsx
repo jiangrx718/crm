@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Image, Tag, Breadcrumb } from 'antd';
+import { Card, Form, Select, Input, Button, Table, Empty, Image, Breadcrumb, Switch } from 'antd';
 import { Link } from 'react-router-dom';
 
 const ProductCategory: React.FC = () => {
@@ -16,7 +16,7 @@ const ProductCategory: React.FC = () => {
     children?: Cat[];
   };
 
-  const mockData: Cat[] = [
+  const initialMockData: Cat[] = [
     {
       id: 7,
       name: '生活家居',
@@ -130,6 +130,24 @@ const ProductCategory: React.FC = () => {
     },
   ];
 
+  const [baseData, setBaseData] = useState<Cat[]>(initialMockData);
+
+  const updateStatusById = (items: Cat[], id: number, enabled: boolean): Cat[] =>
+    items.map((item) => {
+      const updated: Cat = {
+        ...item,
+        status: item.id === id ? (enabled ? 'enabled' : 'disabled') : item.status,
+      };
+      if (item.children && item.children.length) {
+        updated.children = updateStatusById(item.children, id, enabled);
+      }
+      return updated;
+    });
+
+  const handleStatusChange = (id: number, checked: boolean) => {
+    setBaseData((prev) => updateStatusById(prev, id, checked));
+  };
+
   const dataSource = useMemo(() => {
     const filterByKeyword = (items: Cat[]): Cat[] =>
       items
@@ -140,20 +158,27 @@ const ProductCategory: React.FC = () => {
           children: item.children ? filterByKeyword(item.children) : undefined,
         }));
 
-    const filtered = filterByKeyword(mockData);
+    const filtered = filterByKeyword(baseData);
     if (!categoryId) return filtered;
     // 简单根据顶级分类ID过滤。
     return filtered.filter((item) => String(item.id) === String(categoryId));
-  }, [categoryId, status, keyword]);
+  }, [categoryId, status, keyword, baseData]);
 
-  const categoryOptions = useMemo(() => mockData.map((c) => ({ value: String(c.id), label: c.name })), []);
+  const categoryOptions = useMemo(() => baseData.map((c) => ({ value: String(c.id), label: c.name })), [baseData]);
 
   const columns = [
     { title: 'ID', dataIndex: 'id', width: 80 },
     { title: '分类名称', dataIndex: 'name' },
     { title: '分类图标', dataIndex: 'icon', render: (src: string) => src ? <Image src={src} width={32} height={32} /> : '-' },
     { title: '排序', dataIndex: 'sort', width: 100 },
-    { title: '状态', dataIndex: 'status', width: 120, render: (s: string) => <Tag color={s === 'enabled' ? 'blue' : 'default'}>{s === 'enabled' ? '开启' : '关闭'}</Tag> },
+    { title: '状态', dataIndex: 'status', width: 120, render: (_: any, record: Cat) => (
+      <Switch
+        checkedChildren="开启"
+        unCheckedChildren="关闭"
+        checked={record.status === 'enabled'}
+        onChange={(checked) => handleStatusChange(record.id, checked)}
+      />
+    ) },
     { title: '操作', dataIndex: 'action', width: 160, render: () => <div style={{ display: 'flex', gap: 8 }}><Button type="link">编辑</Button><Button type="link" danger>删除</Button></div> }
   ];
 

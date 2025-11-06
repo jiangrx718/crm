@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Image, Breadcrumb, Switch } from 'antd';
+import { Card, Form, Select, Input, Button, Table, Empty, Image, Breadcrumb, Switch, Modal, Radio, InputNumber, Upload } from 'antd';
 import { Link } from 'react-router-dom';
 
 const ProductCategory: React.FC = () => {
   const [categoryId, setCategoryId] = useState<string | undefined>();
   const [status, setStatus] = useState<string | undefined>();
   const [keyword, setKeyword] = useState<string>('');
+  const [showAdd, setShowAdd] = useState(false);
+  const [addForm] = Form.useForm();
 
   type Cat = {
     id: number;
@@ -166,8 +168,51 @@ const ProductCategory: React.FC = () => {
 
   const categoryOptions = useMemo(() => baseData.map((c) => ({ value: String(c.id), label: c.name })), [baseData]);
 
+  const flatMaxId = (items: Cat[]): number => {
+    let maxId = 0;
+    const walk = (list: Cat[]) => {
+      list.forEach((it) => {
+        if (it.id > maxId) maxId = it.id;
+        if (it.children && it.children.length) walk(it.children);
+      });
+    };
+    walk(items);
+    return maxId;
+  };
+
+  const onAddCancel = () => {
+    setShowAdd(false);
+    addForm.resetFields();
+  };
+
+  const onAddOk = async () => {
+    const values = await addForm.validateFields();
+    const nextId = flatMaxId(baseData) + 1;
+    const newItem: Cat = {
+      id: nextId,
+      name: values.name,
+      icon: values.icon?.[0]?.url || 'https://via.placeholder.com/32?text=新',
+      sort: values.sort ?? 0,
+      status: values.status === 'show' ? 'enabled' : 'disabled',
+    };
+
+    const pid = Number(values.parentId || 0);
+    setBaseData((prev) => {
+      if (pid === 0) {
+        return [...prev, newItem];
+      }
+      return prev.map((cat) => {
+        if (cat.id === pid) {
+          return { ...cat, children: [...(cat.children || []), newItem] };
+        }
+        return cat;
+      });
+    });
+    onAddCancel();
+  };
+
   const columns = [
-    { title: 'ID', dataIndex: 'id', width: 80 },
+    { title: 'ID', dataIndex: 'id', width: 100 },
     { title: '分类名称', dataIndex: 'name' },
     { title: '分类图标', dataIndex: 'icon', render: (src: string) => src ? <Image src={src} width={32} height={32} /> : '-' },
     { title: '排序', dataIndex: 'sort', width: 100 },
@@ -229,7 +274,7 @@ const ProductCategory: React.FC = () => {
         </Form>
 
         <div style={{ marginTop: 12, display: 'flex', justifyContent: 'flex-start' }}>
-          <Button type="primary" size="small">添加分类</Button>
+          <Button type="primary" size="small" onClick={() => setShowAdd(true)}>添加分类</Button>
         </div>
 
         <div style={{ marginTop: 16 }}>
@@ -245,6 +290,51 @@ const ProductCategory: React.FC = () => {
             }}
           />
         </div>
+
+        <Modal
+          title="添加分类"
+          open={showAdd}
+          onOk={onAddOk}
+          onCancel={onAddCancel}
+          width={720}
+          okText="确定"
+          cancelText="取消"
+        >
+          <div className="upload-like-box">
+            <Form form={addForm} layout="vertical" requiredMark={true} initialValues={{ parentId: 0, status: 'show', sort: 0 }}>
+              <Form.Item label="上级分类" name="parentId">
+                <Select style={{ width: 240 }} options={[{ value: 0, label: '顶级分类' }, ...categoryOptions]} />
+              </Form.Item>
+
+              <Form.Item label="分类名称" name="name" rules={[{ required: true, message: '请输入分类名称' }]}>
+                <Input placeholder="请输入分类名称" />
+              </Form.Item>
+
+              <Form.Item label="分类图标 (180*180)" name="icon" valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
+                <Upload listType="picture-card" beforeUpload={() => false}>
+                  +
+                </Upload>
+              </Form.Item>
+
+              <Form.Item label="分类大图 (468*340)" name="banner" valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
+                <Upload listType="picture-card" beforeUpload={() => false}>
+                  +
+                </Upload>
+              </Form.Item>
+
+              <Form.Item label="排序" name="sort">
+                <InputNumber min={0} style={{ width: 160 }} />
+              </Form.Item>
+
+              <Form.Item label="状态" name="status">
+                <Radio.Group>
+                  <Radio value="show">显示</Radio>
+                  <Radio value="hide">隐藏</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Form>
+          </div>
+        </Modal>
       </Card>
     </div>
   );

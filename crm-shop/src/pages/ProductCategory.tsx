@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Image, Breadcrumb, Switch, Modal, Radio, InputNumber, Upload } from 'antd';
+import { Card, Form, Select, Input, Button, Table, Empty, Image, Breadcrumb, Switch, Modal, Radio, InputNumber, Upload, Popconfirm, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 
 const ProductCategory: React.FC = () => {
@@ -261,6 +261,15 @@ const ProductCategory: React.FC = () => {
       return next;
     });
 
+  const removeCatById = (items: Cat[], id: number): Cat[] =>
+    items
+      .filter((it) => it.id !== id)
+      .map((it) => ({
+        ...it,
+        children: it.children ? removeCatById(it.children, id) : it.children,
+      }));
+  // 删除逻辑通过操作列的 Popconfirm 直接调用 removeCatById，无需独立函数。
+
   const onEditOk = async () => {
     if (!editing) return;
     const values = await editForm.validateFields();
@@ -290,7 +299,30 @@ const ProductCategory: React.FC = () => {
         onChange={(checked) => handleStatusChange(record.id, checked)}
       />
     ) },
-    { title: '操作', dataIndex: 'action', width: 160, render: (_: any, record: Cat) => <div style={{ display: 'flex', gap: 8 }}><Button type="link" onClick={() => onEdit(record)}>编辑</Button><Button type="link" danger>删除</Button></div> }
+    { title: '操作', dataIndex: 'action', width: 200, render: (_: any, record: Cat) => {
+      const hasChildren = Array.isArray(record.children) && record.children.length > 0;
+      return (
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Button type="link" onClick={() => onEdit(record)}>编辑</Button>
+          {hasChildren ? (
+            <Tooltip title="存在下级分类，请先删除下级分类">
+              <Button type="link" danger disabled>删除</Button>
+            </Tooltip>
+          ) : (
+            <Popconfirm
+              title="确认删除该分类？"
+              description={`删除后不可恢复（ID: ${record.id}，名称：${record.name}）。`}
+              okText="删除"
+              cancelText="取消"
+              okButtonProps={{ danger: true }}
+              onConfirm={() => setBaseData((prev) => removeCatById(prev, record.id))}
+            >
+              <Button type="link" danger>删除</Button>
+            </Popconfirm>
+          )}
+        </div>
+      );
+    } }
   ];
 
   return (

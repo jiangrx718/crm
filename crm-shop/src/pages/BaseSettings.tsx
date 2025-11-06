@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Card, Form, Input, InputNumber, Switch, Button, Space, Tabs } from 'antd';
+import { Breadcrumb, Card, Form, Input, Button, Space, Tabs, Radio } from 'antd';
 import { Link } from 'react-router-dom';
 
 const BaseSettings: React.FC = () => {
   const [form] = Form.useForm();
-  const [activeTab, setActiveTab] = useState<string>('icp');
+  const [activeTab, setActiveTab] = useState<string>('basic');
 
   const onSubmit = () => {
     form.validateFields().then(() => {
@@ -65,27 +65,44 @@ const BaseSettings: React.FC = () => {
               form={form}
               layout="vertical"
               requiredMark={false}
-              initialValues={{ siteName: '', hotline: '', pageSize: 10, enableRegister: true }}
+              initialValues={{
+                siteEnabled: true,
+                siteName: 'CRMEB标准版',
+                siteUrl: 'https://v5.crmeb.net',
+                mqEnabled: false,
+                hotline: '',
+                licenseKey: ''
+              }}
             >
               <Space direction="vertical" style={{ width: '100%' }} size={16}>
+                <Form.Item label="站点开启" name="siteEnabled" extra="站点开始关闭（用于升级等临时关闭），关闭后前端会弹窗显示站点升级中，请稍后访问">
+                  <Radio.Group>
+                    <Radio value={true}>开启</Radio>
+                    <Radio value={false}>关闭</Radio>
+                  </Radio.Group>
+                </Form.Item>
+
                 <Form.Item label="网站名称" name="siteName" rules={[{ required: true, message: '请输入网站名称' }]}> 
-                  <Input placeholder="请输入网站名称" />
+                  <Input placeholder="CRMEB标准版" />
                 </Form.Item>
 
-                <Form.Item label="LOGO地址" name="logoUrl" rules={[{ type: 'url', message: '请输入合法的URL' }]}> 
-                  <Input placeholder="https://example.com/logo.png" />
+                <Form.Item label="网站地址" name="siteUrl" rules={[{ required: true, message: '请输入网站地址' }, { type: 'url', message: '请输入合法的URL' }]} >
+                  <Input placeholder="https://v5.crmeb.net" />
                 </Form.Item>
 
-                <Form.Item label="客服热线" name="hotline"> 
-                  <Input placeholder="400-000-0000" />
+                <Form.Item label="消息队列" name="mqEnabled" >
+                  <Radio.Group>
+                    <Radio value={true}>开启</Radio>
+                    <Radio value={false}>关闭</Radio>
+                  </Radio.Group>
                 </Form.Item>
 
-                <Form.Item label="分页大小" name="pageSize" rules={[{ required: true, message: '请输入分页大小' }]}> 
-                  <InputNumber style={{ width: 160 }} min={5} max={100} />
+                <Form.Item label="联系电话" name="hotline">
+                  <Input placeholder="请输入联系电话" />
                 </Form.Item>
 
-                <Form.Item label="是否开启注册" name="enableRegister" valuePropName="checked"> 
-                  <Switch />
+                <Form.Item label="授权密钥" name="licenseKey">
+                  <Input placeholder="请输入授权密钥" />
                 </Form.Item>
 
                 <Form.Item>

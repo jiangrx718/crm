@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb } from 'antd';
+import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch } from 'antd';
 import { Link } from 'react-router-dom';
 
 const PermissionSettings: React.FC = () => {
   const [status, setStatus] = useState<string | undefined>();
   const [keyword, setKeyword] = useState<string>('');
+  const [openAdd, setOpenAdd] = useState(false);
+  const [form] = Form.useForm();
 
   const columns = [
     { title: 'ID', dataIndex: 'id' },
@@ -49,7 +51,7 @@ const PermissionSettings: React.FC = () => {
         </Form>
 
         <div style={{ marginTop: 12, display: 'flex', justifyContent: 'flex-start' }}>
-          <Button type="primary" size="small">添加权限项</Button>
+          <Button type="primary" size="small" onClick={() => setOpenAdd(true)}>添加权限项</Button>
         </div>
 
         <div style={{ marginTop: 16 }}>
@@ -62,6 +64,37 @@ const PermissionSettings: React.FC = () => {
           />
         </div>
       </Card>
+      {/* 添加权限项弹层 */}
+      <Modal
+        title="添加权限项"
+        open={openAdd}
+        width={800}
+        destroyOnClose
+        onCancel={() => setOpenAdd(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setOpenAdd(false)}>取消</Button>,
+          <Button key="ok" type="primary" onClick={() => {
+            form.validateFields().then(() => {
+              setOpenAdd(false);
+            });
+          }}>提交</Button>
+        ]}
+      >
+        <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
+          <Form.Item label="控制器名称" name="name" rules={[{ required: true, message: '请输入控制器名称' }]}> 
+            <Input placeholder="请输入控制器名称" />
+          </Form.Item>
+          <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型路径' }]}> 
+            <Input placeholder="例如：/admin/index" />
+          </Form.Item>
+          <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请输入排序值' }]}> 
+            <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入排序" />
+          </Form.Item>
+          <Form.Item label="是否显示" name="visible" valuePropName="checked" initialValue={true}> 
+            <Switch />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

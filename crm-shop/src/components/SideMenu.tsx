@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined, SettingOutlined } from '@ant-design/icons';
 
 const SideMenu: React.FC = () => {
   const navigate = useNavigate();
@@ -9,6 +9,7 @@ const SideMenu: React.FC = () => {
   const [openTrain, setOpenTrain] = useState(false); // 模型训练：默认收起
   const [openAdmin, setOpenAdmin] = useState(false); // 管理权限：默认收起
   const [openGoods, setOpenGoods] = useState(false); // 商品管理：默认收起
+  const [openSettings, setOpenSettings] = useState(false); // 系统设置：默认收起
 
   const subMenuItems = [
     { key: '/', label: 'AI 模型训练数据' },
@@ -28,6 +29,11 @@ const SideMenu: React.FC = () => {
   const goodsMenuItems = [
     { key: '/product-category', label: '商品分类' },
     { key: '/product-list', label: '商品列表' },
+  ];
+
+  const settingsMenuItems = [
+    { key: '/base-settings', label: '基础设置' },
+    { key: '/agreement-settings', label: '协议设置' },
   ];
 
   return (
@@ -104,6 +110,32 @@ const SideMenu: React.FC = () => {
       {openGoods && (
         <div className="submenu-container">
           {goodsMenuItems.map(item => (
+            <div
+              key={item.key}
+              className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}
+              onClick={() => navigate(item.key)}
+            >
+              <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 父级菜单：系统设置 */}
+      <div
+        className={`menu-item ${['/base-settings','/agreement-settings'].includes(currentPath) ? 'active' : ''}`}
+        onClick={() => setOpenSettings(prev => !prev)}
+      >
+        <span className="menu-icon"><SettingOutlined /></span>
+        <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>系统设置</span>
+        <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+          {openSettings ? <DownOutlined /> : <RightOutlined />}
+        </span>
+      </div>
+
+      {openSettings && (
+        <div className="submenu-container">
+          {settingsMenuItems.map(item => (
             <div
               key={item.key}
               className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}

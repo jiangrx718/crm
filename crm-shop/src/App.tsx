@@ -12,6 +12,8 @@ import FitModelTrain from './pages/FitModelTrain';
 import FitModelTrainDataInference from './pages/FitModelTrainDataInference';
 import ProductCategory from './pages/ProductCategory';
 import ProductList from './pages/ProductList';
+import BaseSettings from './pages/BaseSettings';
+import AgreementSettings from './pages/AgreementSettings';
 
 const { Header, Content, Sider } = Layout;
 
@@ -40,6 +42,8 @@ function App() {
                 <Route path="/permissions" element={<PermissionSettings />} />
                 <Route path="/product-category" element={<ProductCategory />} />
                 <Route path="/product-list" element={<ProductList />} />
+                <Route path="/base-settings" element={<BaseSettings />} />
+                <Route path="/agreement-settings" element={<AgreementSettings />} />
               </Routes>
             </Content>
           </Layout>

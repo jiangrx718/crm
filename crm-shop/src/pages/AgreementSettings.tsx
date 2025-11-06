@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Breadcrumb, Card, Tabs, Space, Button } from 'antd';
+import { Breadcrumb, Card, Tabs, Button } from 'antd';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 
@@ -93,9 +93,6 @@ const AgreementSettings: React.FC = () => {
           items={agreementTabs.map(t => ({ key: t.key, label: t.label }))}
           onChange={setActiveKey}
         />
-
-        {/* 工具栏样式提示，与截图保持一致 */}
-        <Space align="center" style={{ marginBottom: 8, color: '#6b7280' }}>HTML</Space>
 
         <div style={{ border: '1px solid #e5e6eb', borderRadius: 6, overflow: 'hidden' }}>
           <div ref={quillContainerRef} style={{ height: 420 }} />

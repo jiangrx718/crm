@@ -1,5 +1,6 @@
 import React from 'react';
 import { Breadcrumb, Card, Form, Input, InputNumber, Switch, Button, Space } from 'antd';
+import { Link } from 'react-router-dom';
 
 const BaseSettings: React.FC = () => {
   const [form] = Form.useForm();
@@ -12,7 +13,7 @@ const BaseSettings: React.FC = () => {
 
   return (
     <div className="page-container">
-      <Breadcrumb items={[{ title: '首页' }, { title: '系统设置' }, { title: '基础设置' }]} />
+      <Breadcrumb items={[{ title: <Link to="/home">首页</Link> }, { title: '系统设置' }, { title: '基础设置' }]} />
 
       <Card style={{ marginTop: 16 }}>
         <Form

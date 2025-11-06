@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined, SettingOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined, SettingOutlined, HomeOutlined } from '@ant-design/icons';
 
 const SideMenu: React.FC = () => {
   const navigate = useNavigate();
@@ -38,6 +38,15 @@ const SideMenu: React.FC = () => {
 
   return (
     <div className="menu-container">
+      {/* 顶部菜单：首页 */}
+      <div
+        className={`menu-item ${currentPath === '/home' ? 'active' : ''}`}
+        onClick={() => navigate('/home')}
+      >
+        <span className="menu-icon"><HomeOutlined /></span>
+        <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>首页</span>
+      </div>
+
       {/* 父级菜单：模型训练 */}
       <div
         className={`menu-item ${currentPath === '/model-training' ? 'active' : ''}`}

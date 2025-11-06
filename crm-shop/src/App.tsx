@@ -14,6 +14,7 @@ import ProductCategory from './pages/ProductCategory';
 import ProductList from './pages/ProductList';
 import BaseSettings from './pages/BaseSettings';
 import AgreementSettings from './pages/AgreementSettings';
+import Home from './pages/Home';
 
 const { Header, Content, Sider } = Layout;
 
@@ -31,6 +32,7 @@ function App() {
           <Layout>
             <Content className="app-content">
               <Routes>
+                <Route path="/home" element={<Home />} />
                 <Route path="/" element={<DataConversion />} />
                 <Route path="/model-training" element={<ModelTraining />} />
                 <Route path="/data-inference" element={<DataInference />} />

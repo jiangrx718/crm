@@ -22,7 +22,7 @@ const ProductCategory: React.FC = () => {
         {/* 面包屑导航 */}
         <Breadcrumb style={{ marginBottom: 20 }}>
           <Breadcrumb.Item>
-            <Link to="/">首页</Link>
+            <Link to="/home">首页</Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>商品管理</Breadcrumb.Item>
           <Breadcrumb.Item>商品分类</Breadcrumb.Item>

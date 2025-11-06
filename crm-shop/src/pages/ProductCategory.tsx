@@ -8,6 +8,9 @@ const ProductCategory: React.FC = () => {
   const [keyword, setKeyword] = useState<string>('');
   const [showAdd, setShowAdd] = useState(false);
   const [addForm] = Form.useForm();
+  const [showEdit, setShowEdit] = useState(false);
+  const [editForm] = Form.useForm();
+  const [editing, setEditing] = useState<Cat | null>(null);
 
   type Cat = {
     id: number;
@@ -211,6 +214,69 @@ const ProductCategory: React.FC = () => {
     onAddCancel();
   };
 
+  const containsId = (list: Cat[] | undefined, id: number): boolean => {
+    if (!list) return false;
+    for (const it of list) {
+      if (it.id === id) return true;
+      if (containsId(it.children, id)) return true;
+    }
+    return false;
+  };
+
+  const findTopParentId = (id: number): number => {
+    for (const root of baseData) {
+      if (root.id === id) return 0;
+      if (containsId(root.children, id)) return root.id;
+    }
+    return 0;
+  };
+
+  const toFileList = (url?: string) => (url ? [{ uid: '1', url, status: 'done', name: 'image' }] : []);
+
+  const onEdit = (record: Cat) => {
+    setEditing(record);
+    editForm.setFieldsValue({
+      parentId: findTopParentId(record.id),
+      name: record.name,
+      icon: toFileList(record.icon),
+      banner: [],
+      sort: record.sort,
+      status: record.status === 'enabled' ? 'show' : 'hide',
+    });
+    setShowEdit(true);
+  };
+
+  const onEditCancel = () => {
+    setShowEdit(false);
+    editForm.resetFields();
+    setEditing(null);
+  };
+
+  const updateCatById = (items: Cat[], id: number, updater: (c: Cat) => Cat): Cat[] =>
+    items.map((it) => {
+      let next = it.id === id ? updater(it) : it;
+      if (it.children && it.children.length) {
+        next = { ...next, children: updateCatById(it.children, id, updater) } as Cat;
+      }
+      return next;
+    });
+
+  const onEditOk = async () => {
+    if (!editing) return;
+    const values = await editForm.validateFields();
+    const nextIcon = values.icon?.[0]?.url || editing.icon;
+    setBaseData((prev) =>
+      updateCatById(prev, editing.id, (c) => ({
+        ...c,
+        name: values.name,
+        icon: nextIcon,
+        sort: values.sort ?? c.sort,
+        status: values.status === 'show' ? 'enabled' : 'disabled',
+      }))
+    );
+    onEditCancel();
+  };
+
   const columns = [
     { title: 'ID', dataIndex: 'id', width: 100 },
     { title: '分类名称', dataIndex: 'name' },
@@ -224,7 +290,7 @@ const ProductCategory: React.FC = () => {
         onChange={(checked) => handleStatusChange(record.id, checked)}
       />
     ) },
-    { title: '操作', dataIndex: 'action', width: 160, render: () => <div style={{ display: 'flex', gap: 8 }}><Button type="link">编辑</Button><Button type="link" danger>删除</Button></div> }
+    { title: '操作', dataIndex: 'action', width: 160, render: (_: any, record: Cat) => <div style={{ display: 'flex', gap: 8 }}><Button type="link" onClick={() => onEdit(record)}>编辑</Button><Button type="link" danger>删除</Button></div> }
   ];
 
   return (
@@ -305,6 +371,60 @@ const ProductCategory: React.FC = () => {
           <div className="upload-like-box">
             <Form
               form={addForm}
+              layout="horizontal"
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 18 }}
+              requiredMark={true}
+              initialValues={{ parentId: 0, status: 'show', sort: 0 }}
+            >
+              <Form.Item label="上级分类" name="parentId">
+                <Select style={{ width: 240 }} options={[{ value: 0, label: '顶级分类' }, ...categoryOptions]} />
+              </Form.Item>
+
+              <Form.Item label="分类名称" name="name" rules={[{ required: true, message: '请输入分类名称' }]}>
+                <Input placeholder="请输入分类名称" />
+              </Form.Item>
+
+              <Form.Item label="分类图标 (180*180)" name="icon" valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
+                <Upload listType="picture-card" beforeUpload={() => false}>
+                  +
+                </Upload>
+              </Form.Item>
+
+              <Form.Item label="分类大图 (468*340)" name="banner" valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
+                <Upload listType="picture-card" beforeUpload={() => false}>
+                  +
+                </Upload>
+              </Form.Item>
+
+              <Form.Item label="排序" name="sort">
+                <InputNumber min={0} style={{ width: 160 }} />
+              </Form.Item>
+
+              <Form.Item label="状态" name="status">
+                <Radio.Group>
+                  <Radio value="show">显示</Radio>
+                  <Radio value="hide">隐藏</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Form>
+          </div>
+        </Modal>
+
+        <Modal
+          title="编辑分类"
+          open={showEdit}
+          onOk={onEditOk}
+          onCancel={onEditCancel}
+          width={640}
+          rootClassName="compact-modal"
+          bodyStyle={{ padding: 12, maxHeight: '60vh', overflow: 'auto' }}
+          okText="保存"
+          cancelText="取消"
+        >
+          <div className="upload-like-box">
+            <Form
+              form={editForm}
               layout="horizontal"
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}

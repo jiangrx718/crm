@@ -296,7 +296,9 @@ const ProductCategory: React.FC = () => {
           open={showAdd}
           onOk={onAddOk}
           onCancel={onAddCancel}
-          width={720}
+          width={640}
+          rootClassName="compact-modal"
+          bodyStyle={{ padding: 12, maxHeight: '60vh', overflow: 'auto' }}
           okText="确定"
           cancelText="取消"
         >

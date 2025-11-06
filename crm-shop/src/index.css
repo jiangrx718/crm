@@ -90,3 +90,15 @@ button:focus-visible {
   padding: 24px;
   min-height: 240px;
 }
+
+/* Compact modal tweaks for Add Category */
+.compact-modal .upload-like-box {
+  padding: 8px;
+}
+.compact-modal .ant-form-item {
+  margin-bottom: 12px;
+}
+.compact-modal .ant-upload-select-picture-card {
+  width: 96px;
+  height: 96px;
+}

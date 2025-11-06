@@ -303,7 +303,14 @@ const ProductCategory: React.FC = () => {
           cancelText="取消"
         >
           <div className="upload-like-box">
-            <Form form={addForm} layout="vertical" requiredMark={true} initialValues={{ parentId: 0, status: 'show', sort: 0 }}>
+            <Form
+              form={addForm}
+              layout="horizontal"
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 18 }}
+              requiredMark={true}
+              initialValues={{ parentId: 0, status: 'show', sort: 0 }}
+            >
               <Form.Item label="上级分类" name="parentId">
                 <Select style={{ width: 240 }} options={[{ value: 0, label: '顶级分类' }, ...categoryOptions]} />
               </Form.Item>

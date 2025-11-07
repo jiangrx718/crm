@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch } from 'antd';
+import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, Upload } from 'antd';
+import type { UploadFile } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 type Permission = {
@@ -8,14 +10,19 @@ type Permission = {
   type: string; // 路径/类型
   sort: number;
   visible: boolean;
+  icon?: string; // 可选图标地址
   children?: Permission[];
 };
 
 const PermissionSettings: React.FC = () => {
-  const [status, setStatus] = useState<string | undefined>();
   const [keyword, setKeyword] = useState<string>('');
   const [openAdd, setOpenAdd] = useState(false);
   const [form] = Form.useForm();
+  const [showEdit, setShowEdit] = useState(false);
+  const [editForm] = Form.useForm();
+  const [editing, setEditing] = useState<Permission | null>(null);
+  const [addIconList, setAddIconList] = useState<UploadFile[]>([]);
+  const [editIconList, setEditIconList] = useState<UploadFile[]>([]);
 
   // Mock 数据：与上传图片页面的列表视觉一致（有层级，可展开）
   const [permissions, setPermissions] = useState<Permission[]>([
@@ -65,6 +72,30 @@ const PermissionSettings: React.FC = () => {
     });
   };
 
+  const toFileList = (url?: string): UploadFile[] => {
+    if (!url) return [];
+    return [
+      {
+        uid: `${Date.now()}`,
+        name: 'icon.png',
+        status: 'done',
+        url,
+      } as UploadFile,
+    ];
+  };
+
+  const onEdit = (record: Permission) => {
+    setEditing(record);
+    setShowEdit(true);
+    editForm.setFieldsValue({
+      name: record.name,
+      type: record.type,
+      sort: record.sort,
+      visible: record.visible,
+    });
+    setEditIconList(toFileList(record.icon));
+  };
+
   const columns = [
     { title: '权限名称', dataIndex: 'name', width: 200 },
     { title: '类型', dataIndex: 'type', width: 260 },
@@ -86,8 +117,8 @@ const PermissionSettings: React.FC = () => {
       title: '操作',
       key: 'action',
       width: 120,
-      render: () => (
-        <Button type="link" size="small" onClick={() => setOpenAdd(true)}>编辑</Button>
+      render: (_: any, record: Permission) => (
+        <Button type="link" size="small" onClick={() => onEdit(record)}>编辑</Button>
       ),
     },
   ];
@@ -105,16 +136,6 @@ const PermissionSettings: React.FC = () => {
           ]}
         />
         <Form layout="inline" style={{ background: '#f7f8fa', padding: 16, borderRadius: 8 }}>
-          <Form.Item label="状态">
-            <Select
-              style={{ width: 180 }}
-              placeholder="请选择"
-              value={status}
-              onChange={setStatus}
-              options={[{ value: 'enabled', label: '启用' }, { value: 'disabled', label: '禁用' }]}
-              allowClear
-            />
-          </Form.Item>
           <Form.Item label="身份昵称">
             <Input
               style={{ width: 280 }}
@@ -144,25 +165,45 @@ const PermissionSettings: React.FC = () => {
           />
         </div>
       </Card>
-      {/* 添加权限项弹层 */}
+      {/* 添加权限项弹层 - 与上传图片页面保持一致的紧凑横向布局 */}
       <Modal
         title="添加权限项"
         open={openAdd}
-        width={800}
+        width={640}
         destroyOnClose
+        className="compact-modal"
+        bodyStyle={{ padding: 12, maxHeight: '60vh', overflow: 'auto' }}
         onCancel={() => setOpenAdd(false)}
         footer={[
           <Button key="cancel" onClick={() => setOpenAdd(false)}>取消</Button>,
-          <Button key="ok" type="primary" onClick={() => {
-            form.validateFields().then(() => {
-              setOpenAdd(false);
-            });
-          }}>提交</Button>
+          <Button
+            key="ok"
+            type="primary"
+            onClick={() => {
+              form.validateFields().then((vals) => {
+                const iconUrl = addIconList[0]?.url || (addIconList[0] as any)?.thumbUrl;
+                const newItem: Permission = {
+                  id: Date.now(),
+                  name: vals.name,
+                  type: vals.type,
+                  sort: Number(vals.sort || 0),
+                  visible: !!vals.visible,
+                  ...(iconUrl ? { icon: iconUrl } : {}),
+                };
+                setPermissions((prev) => [newItem, ...prev]);
+                setOpenAdd(false);
+                form.resetFields();
+                setAddIconList([]);
+              });
+            }}
+          >
+            提交
+          </Button>,
         ]}
       >
-        <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
-          <Form.Item label="控制器名称" name="name" rules={[{ required: true, message: '请输入控制器名称' }]}> 
-            <Input placeholder="请输入控制器名称" />
+        <Form form={form} layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} requiredMark={false}>
+          <Form.Item label="权限名称" name="name" rules={[{ required: true, message: '请输入权限名称' }]}> 
+            <Input placeholder="请输入权限名称" />
           </Form.Item>
           <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型路径' }]}> 
             <Input placeholder="例如：/admin/index" />
@@ -172,6 +213,92 @@ const PermissionSettings: React.FC = () => {
           </Form.Item>
           <Form.Item label="是否显示" name="visible" valuePropName="checked" initialValue={true}> 
             <Switch />
+          </Form.Item>
+          <Form.Item label="图标">
+            <Upload
+              listType="picture-card"
+              fileList={addIconList}
+              beforeUpload={() => false}
+              onChange={({ fileList }) => setAddIconList(fileList)}
+            >
+              {addIconList.length >= 1 ? null : (
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>上传</div>
+                </div>
+              )}
+            </Upload>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* 编辑权限项弹层 - 预填展示 */}
+      <Modal
+        title="编辑权限项"
+        open={showEdit}
+        width={640}
+        destroyOnClose
+        className="compact-modal"
+        bodyStyle={{ padding: 12, maxHeight: '60vh', overflow: 'auto' }}
+        onCancel={() => {
+          setShowEdit(false);
+          setEditing(null);
+        }}
+        footer={[
+          <Button key="cancel" onClick={() => { setShowEdit(false); setEditing(null); }}>取消</Button>,
+          <Button
+            key="ok"
+            type="primary"
+            onClick={() => {
+              editForm.validateFields().then((vals) => {
+                const iconUrl = editIconList[0]?.url || (editIconList[0] as any)?.thumbUrl;
+                if (!editing) return;
+                setPermissions((prev) =>
+                  updateById(prev, editing.id, (it) => ({
+                    ...it,
+                    name: vals.name,
+                    type: vals.type,
+                    sort: Number(vals.sort || 0),
+                    visible: !!vals.visible,
+                    ...(iconUrl ? { icon: iconUrl } : {}),
+                  }))
+                );
+                setShowEdit(false);
+                setEditing(null);
+              });
+            }}
+          >
+            提交
+          </Button>,
+        ]}
+      >
+        <Form form={editForm} layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} requiredMark={false}>
+          <Form.Item label="权限名称" name="name" rules={[{ required: true, message: '请输入权限名称' }]}> 
+            <Input placeholder="请输入权限名称" />
+          </Form.Item>
+          <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型路径' }]}> 
+            <Input placeholder="例如：/admin/index" />
+          </Form.Item>
+          <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请输入排序值' }]}> 
+            <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入排序" />
+          </Form.Item>
+          <Form.Item label="是否显示" name="visible" valuePropName="checked"> 
+            <Switch />
+          </Form.Item>
+          <Form.Item label="图标">
+            <Upload
+              listType="picture-card"
+              fileList={editIconList}
+              beforeUpload={() => false}
+              onChange={({ fileList }) => setEditIconList(fileList)}
+            >
+              {editIconList.length >= 1 ? null : (
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>上传</div>
+                </div>
+              )}
+            </Upload>
           </Form.Item>
         </Form>
       </Modal>

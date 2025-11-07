@@ -2,13 +2,33 @@ import React, { useState } from 'react';
 import { Card, Form, Select, Input, Button, Table, Empty, Image, Breadcrumb, Switch, Modal, InputNumber, Upload, Radio } from 'antd';
 import { Link } from 'react-router-dom';
 
-type Cat = { id: number; name: string; icon?: string; status: 'show' | 'hide'; desc?: string; sort?: number; parentId?: number };
+type Cat = { id: number; name: string; icon?: string; status: 'show' | 'hide'; desc?: string; sort?: number; parentId?: number; children?: Cat[] };
 
 const initialData: Cat[] = [
-  { id: 181, name: '院校介绍', icon: 'https://via.placeholder.com/40?text=A', status: 'show' },
-  { id: 180, name: '潮流文化', icon: 'https://via.placeholder.com/40?text=B', status: 'show' },
-  { id: 179, name: '品牌资讯', icon: 'https://via.placeholder.com/40?text=C', status: 'show' },
-  { id: 182, name: '🎧分类', icon: 'https://via.placeholder.com/40?text=%F0%9F%8E%A7', status: 'show' },
+  {
+    id: 7,
+    name: '生活家居',
+    icon: 'https://via.placeholder.com/40?text=家',
+    sort: 999,
+    status: 'show',
+    children: [
+      { id: 701, parentId: 7, name: '收纳整理', icon: 'https://via.placeholder.com/40?text=收', sort: 30, status: 'show' },
+      { id: 702, parentId: 7, name: '床上用品', icon: 'https://via.placeholder.com/40?text=床', sort: 20, status: 'show' },
+    ],
+  },
+  {
+    id: 180,
+    name: '潮流文化',
+    icon: 'https://via.placeholder.com/40?text=潮',
+    sort: 60,
+    status: 'show',
+    children: [
+      { id: 18001, parentId: 180, name: '街头艺术', icon: 'https://via.placeholder.com/40?text=艺', sort: 12, status: 'show' },
+      { id: 18002, parentId: 180, name: '球鞋文化', icon: 'https://via.placeholder.com/40?text=鞋', sort: 11, status: 'hide' },
+    ],
+  },
+  { id: 179, name: '品牌资讯', icon: 'https://via.placeholder.com/40?text=品', sort: 50, status: 'show' },
+  { id: 182, name: '🎧分类', icon: 'emoji:🎧', sort: 10, status: 'show' },
 ];
 
 const ArticleCategory: React.FC = () => {
@@ -21,11 +41,49 @@ const ArticleCategory: React.FC = () => {
   const [editForm] = Form.useForm();
   const [editing, setEditing] = useState<Cat | null>(null);
 
-  const filtered = data.filter(item => {
-    const byStatus = status ? (status === 'show' ? item.status === 'show' : item.status === 'hide') : true;
-    const byKeyword = keyword ? item.name.includes(keyword) : true;
-    return byStatus && byKeyword;
-  });
+  const filterTree = (items: Cat[]): Cat[] => {
+    const matchItem = (it: Cat) => {
+      const byStatus = status ? (status === 'show' ? it.status === 'show' : it.status === 'hide') : true;
+      const byKeyword = keyword ? it.name.includes(keyword) : true;
+      return byStatus && byKeyword;
+    };
+    const next: Cat[] = [];
+    items.forEach((it) => {
+      const child = it.children ? filterTree(it.children) : [];
+      if (matchItem(it) || child.length) {
+        next.push({ ...it, children: child });
+      }
+    });
+    return next;
+  };
+  const filtered = filterTree(data);
+
+  const updateStatusById = (items: Cat[], id: number, enabled: boolean): Cat[] =>
+    items.map((item) => {
+      const updated: Cat = {
+        ...item,
+        status: item.id === id ? (enabled ? 'show' : 'hide') : item.status,
+      };
+      if (item.children && item.children.length) {
+        updated.children = updateStatusById(item.children, id, enabled);
+      }
+      return updated;
+    });
+
+  const removeCatById = (list: Cat[], id: number): Cat[] =>
+    list
+      .filter((it) => it.id !== id)
+      .map((it) => ({ ...it, children: it.children ? removeCatById(it.children, id) : undefined }));
+
+  const insertCatToParent = (list: Cat[], pid: number, item: Cat): Cat[] => {
+    if (pid === 0) return [...list, item];
+    return list.map((it) => {
+      if (it.id === pid) {
+        return { ...it, children: [...(it.children || []), item] };
+      }
+      return { ...it, children: it.children ? insertCatToParent(it.children, pid, item) : it.children };
+    });
+  };
 
   const columns = [
     { title: 'ID', dataIndex: 'id', width: 80 },
@@ -38,18 +96,19 @@ const ArticleCategory: React.FC = () => {
       }
       return <Image src={src} width={40} height={40} />;
     } },
+    { title: '排序', dataIndex: 'sort', width: 100 },
     { title: '状态', dataIndex: 'status', width: 120, render: (_: any, record: Cat) => (
       <Switch
         checkedChildren="开启"
         unCheckedChildren="关闭"
         checked={record.status === 'show'}
-        onChange={(checked) => setData(prev => prev.map(it => it.id === record.id ? { ...it, status: checked ? 'show' : 'hide' } : it))}
+        onChange={(checked) => setData(prev => updateStatusById(prev, record.id, checked))}
       />
     ) },
     { title: '操作', dataIndex: 'action', width: 200, render: (_: any, record: Cat) => (
       <div style={{ display: 'flex', gap: 8 }}>
         <Button type="link" onClick={() => onEdit(record)}>编辑</Button>
-        <Button type="link" danger onClick={() => setData(prev => prev.filter(it => it.id !== record.id))}>删除</Button>
+        <Button type="link" danger onClick={() => setData(prev => removeCatById(prev, record.id))}>删除</Button>
         <Button type="link">查看文章</Button>
       </div>
     ) },
@@ -104,8 +163,9 @@ const ArticleCategory: React.FC = () => {
       status: values.status,
       desc: values.desc,
       sort: values.sort ?? 0,
+      parentId: values.parentId,
     };
-    setData(prev => [newItem, ...prev]);
+    setData(prev => insertCatToParent(prev, values.parentId, newItem));
     form.resetFields();
     setOpenAdd(false);
   };
@@ -158,6 +218,10 @@ const ArticleCategory: React.FC = () => {
             pagination={false}
             locale={{ emptyText: <Empty description="暂无数据" /> }}
             rowKey="id"
+            expandable={{
+              indentSize: 20,
+              rowExpandable: (record: Cat) => Array.isArray(record.children) && record.children.length > 0,
+            }}
           />
         </div>
 

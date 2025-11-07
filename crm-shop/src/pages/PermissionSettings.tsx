@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, TreeSelect, Tooltip, Popconfirm } from 'antd';
-import { PictureOutlined, HomeOutlined, SearchOutlined, SettingOutlined, UserOutlined, PhoneOutlined, QuestionCircleOutlined, InfoCircleOutlined, MinusOutlined, PlusOutlined, CheckOutlined, CloseOutlined, ZoomInOutlined, ZoomOutOutlined, CloudUploadOutlined, CloudDownloadOutlined, CameraOutlined, AppstoreOutlined, DashboardOutlined, BellOutlined, CloudOutlined, SaveOutlined, EditOutlined, FileTextOutlined, ShopOutlined, ShareAltOutlined, UpOutlined, DownOutlined, LeftOutlined, RightOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { PictureOutlined, HomeOutlined, SearchOutlined, SettingOutlined, UserOutlined, PhoneOutlined, QuestionCircleOutlined, InfoCircleOutlined, MinusOutlined, PlusOutlined, CheckOutlined, CloseOutlined, ZoomInOutlined, ZoomOutOutlined, CloudUploadOutlined, CloudDownloadOutlined, CameraOutlined, AppstoreOutlined, DashboardOutlined, BellOutlined, CloudOutlined, SaveOutlined, EditOutlined, FileTextOutlined, ShopOutlined, ShareAltOutlined, UpOutlined, DownOutlined, LeftOutlined, RightOutlined, ArrowLeftOutlined, ArrowRightOutlined, ExperimentOutlined, SafetyOutlined, ShoppingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UnorderedListOutlined, BarsOutlined, DatabaseOutlined, ToolOutlined, FolderOutlined, FolderOpenOutlined, ContainerOutlined, ProfileOutlined, IdcardOutlined, CreditCardOutlined, BankOutlined, WalletOutlined, ProjectOutlined, ControlOutlined, FormOutlined, TableOutlined, CalendarOutlined, MoneyCollectOutlined, PayCircleOutlined, QrcodeOutlined, TagOutlined, TagsOutlined, DownloadOutlined, UploadOutlined, ShoppingCartOutlined, MailOutlined, MessageOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 type Permission = {
@@ -99,6 +99,8 @@ const PermissionSettings: React.FC = () => {
     { key: 's-edit', icon: <EditOutlined /> },
     { key: 's-file', icon: <FileTextOutlined /> },
     { key: 's-shop', icon: <ShopOutlined /> },
+    { key: 's-shopping', icon: <ShoppingOutlined /> },
+    { key: 's-shopping-cart', icon: <ShoppingCartOutlined /> },
     { key: 's-share', icon: <ShareAltOutlined /> },
     { key: 's-up', icon: <UpOutlined /> },
     { key: 's-down', icon: <DownOutlined /> },
@@ -107,6 +109,48 @@ const PermissionSettings: React.FC = () => {
     { key: 's-arrow-left', icon: <ArrowLeftOutlined /> },
     { key: 's-arrow-right', icon: <ArrowRightOutlined /> },
     { key: 's-image', icon: <PictureOutlined /> },
+    // 左侧菜单常用图标
+    { key: 's-experiment', icon: <ExperimentOutlined /> },
+    { key: 's-safety', icon: <SafetyOutlined /> },
+    { key: 's-setting-gear', icon: <SettingOutlined /> },
+    // 列表/菜单
+    { key: 's-list', icon: <UnorderedListOutlined /> },
+    { key: 's-bars', icon: <BarsOutlined /> },
+    { key: 's-menu-fold', icon: <MenuFoldOutlined /> },
+    { key: 's-menu-unfold', icon: <MenuUnfoldOutlined /> },
+    // 数据/表格
+    { key: 's-table', icon: <TableOutlined /> },
+    { key: 's-database', icon: <DatabaseOutlined /> },
+    // 文件/目录
+    { key: 's-folder', icon: <FolderOutlined /> },
+    { key: 's-folder-open', icon: <FolderOpenOutlined /> },
+    { key: 's-container', icon: <ContainerOutlined /> },
+    { key: 's-profile', icon: <ProfileOutlined /> },
+    { key: 's-idcard', icon: <IdcardOutlined /> },
+    { key: 's-credit-card', icon: <CreditCardOutlined /> },
+    // 业务/财务
+    { key: 's-bank', icon: <BankOutlined /> },
+    { key: 's-wallet', icon: <WalletOutlined /> },
+    { key: 's-money', icon: <MoneyCollectOutlined /> },
+    { key: 's-pay', icon: <PayCircleOutlined /> },
+    // 工具/表单
+    { key: 's-tool', icon: <ToolOutlined /> },
+    { key: 's-form', icon: <FormOutlined /> },
+    // 通讯/消息
+    { key: 's-mail', icon: <MailOutlined /> },
+    { key: 's-message', icon: <MessageOutlined /> },
+    // 项目/控制
+    { key: 's-project', icon: <ProjectOutlined /> },
+    { key: 's-control', icon: <ControlOutlined /> },
+    // 下载/上传
+    { key: 's-download', icon: <DownloadOutlined /> },
+    { key: 's-upload', icon: <UploadOutlined /> },
+    // 标签/二维码
+    { key: 's-tag', icon: <TagOutlined /> },
+    { key: 's-tags', icon: <TagsOutlined /> },
+    { key: 's-qrcode', icon: <QrcodeOutlined /> },
+    // 日历/时间
+    { key: 's-calendar', icon: <CalendarOutlined /> },
   ];
 
   const openIconPicker = (target: 'add' | 'edit') => {

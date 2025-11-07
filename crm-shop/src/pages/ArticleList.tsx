@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Popconfirm, message, Switch, Row, Col, Divider } from 'antd';
-// removed image upload for add article
+import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Popconfirm, message, Switch, Divider } from 'antd';
 import { Link } from 'react-router-dom';
 
 type Article = {
@@ -181,35 +180,21 @@ const ArticleList: React.FC = () => {
               <Divider orientation="left">文章信息</Divider>
               <Form
                 form={addForm}
-                layout="horizontal"
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 19 }}
+                layout="vertical"
                 initialValues={{ title: '', author: '', summary: '', category: undefined, content: '' }}
               >
-                <Row gutter={24}>
-                  <Col span={12}>
-                    <Form.Item label="标题" name="title" rules={[{ required: true, message: '请输入标题' }]}> 
-                      <Input placeholder="请输入" maxLength={80} showCount />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item label="作者" name="author"> 
-                      <Input placeholder="请输入" maxLength={10} showCount />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row gutter={24}>
-                  <Col span={12}>
-                    <Form.Item label="文章分类" name="category" rules={[{ required: true, message: '请选择分类' }]}> 
-                      <Select placeholder="请选择" options={categories.map(c => ({ value: c, label: c }))} />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item label="文章简介" name="summary"> 
-                      <Input.TextArea placeholder="请输入" rows={3} maxLength={300} showCount />
-                    </Form.Item>
-                  </Col>
-                </Row>
+                <Form.Item label="标题" name="title" rules={[{ required: true, message: '请输入标题' }]}> 
+                  <Input placeholder="请输入" maxLength={80} showCount />
+                </Form.Item>
+                <Form.Item label="文章分类" name="category" rules={[{ required: true, message: '请选择分类' }]}> 
+                  <Select placeholder="请选择" options={categories.map(c => ({ value: c, label: c }))} />
+                </Form.Item>
+                <Form.Item label="作者" name="author"> 
+                  <Input placeholder="请输入" maxLength={10} showCount />
+                </Form.Item>
+                <Form.Item label="文章简介" name="summary"> 
+                  <Input.TextArea placeholder="请输入" rows={3} maxLength={300} showCount />
+                </Form.Item>
                 {/* 封面上传区域已移除 */}
 
                 <Divider orientation="left">文章内容</Divider>

@@ -140,10 +140,10 @@ const PermissionSettings: React.FC = () => {
 
   const columns = [
     { title: '权限名称', dataIndex: 'name', width: 200 },
-    { title: '类型', dataIndex: 'type', width: 260 },
+    { title: '权限路径', dataIndex: 'type', width: 260 },
     { title: '排序', dataIndex: 'sort', width: 120 },
     {
-      title: '是否显示',
+      title: '显示状态',
       dataIndex: 'visible',
       width: 140,
       render: (_: any, record: Permission) => (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, Upload } from 'antd';
+import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, Upload, TreeSelect } from 'antd';
 import type { UploadFile } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ type Permission = {
   sort: number;
   visible: boolean;
   icon?: string; // 可选图标地址
+  parentId?: number; // 父级ID
   children?: Permission[];
 };
 
@@ -33,8 +34,8 @@ const PermissionSettings: React.FC = () => {
       sort: 127,
       visible: true,
       children: [
-        { id: 1101, name: '仪表盘', type: '/admin/dashboard', sort: 30, visible: true },
-        { id: 1102, name: '欢迎页', type: '/admin/welcome', sort: 20, visible: true },
+        { id: 1101, name: '仪表盘', type: '/admin/dashboard', sort: 30, visible: true, parentId: 1001 },
+        { id: 1102, name: '欢迎页', type: '/admin/welcome', sort: 20, visible: true, parentId: 1001 },
       ],
     },
     { id: 1002, name: '用户', type: '/admin/user', sort: 125, visible: true },
@@ -46,8 +47,8 @@ const PermissionSettings: React.FC = () => {
       sort: 115,
       visible: true,
       children: [
-        { id: 1401, name: '商品列表', type: '/admin/product/list', sort: 20, visible: true },
-        { id: 1402, name: '商品分类', type: '/admin/product/category', sort: 10, visible: true },
+        { id: 1401, name: '商品列表', type: '/admin/product/list', sort: 20, visible: true, parentId: 1004 },
+        { id: 1402, name: '商品分类', type: '/admin/product/category', sort: 10, visible: true, parentId: 1004 },
       ],
     },
     { id: 1005, name: '营销', type: '/admin/marketing', sort: 110, visible: true },
@@ -84,6 +85,46 @@ const PermissionSettings: React.FC = () => {
     ];
   };
 
+  // 将权限列表转换为 TreeSelect 的数据结构
+  const toTreeData = (items: Permission[]): any[] =>
+    items.map((it) => ({
+      value: it.id,
+      title: it.name,
+      children: it.children ? toTreeData(it.children) : undefined,
+    }));
+
+  // 在指定父节点下插入子节点（插入在前面，使新项靠前）
+  const addUnderParent = (items: Permission[], parentId: number, child: Permission): Permission[] =>
+    items.map((it) => {
+      if (it.id === parentId) {
+        const children = it.children ? [child, ...it.children] : [child];
+        return { ...it, children };
+      }
+      return it.children
+        ? { ...it, children: addUnderParent(it.children, parentId, child) }
+        : it;
+    });
+
+  // 从树中删除指定节点，返回新的树（不保留空 children）
+  const removeById = (items: Permission[], id: number): Permission[] => {
+    const walk = (list: Permission[]): Permission[] =>
+      list
+        .filter((node) => node.id !== id)
+        .map((node) =>
+          node.children ? { ...node, children: walk(node.children) } : node
+        )
+        .map((node) => {
+          if (node.children && node.children.length === 0) {
+            const { children, ...rest } = node as any;
+            return rest as Permission;
+          }
+          return node;
+        });
+    return walk(items);
+  };
+
+  const treeOptions = React.useMemo(() => toTreeData(permissions), [permissions]);
+
   const onEdit = (record: Permission) => {
     setEditing(record);
     setShowEdit(true);
@@ -92,6 +133,7 @@ const PermissionSettings: React.FC = () => {
       type: record.type,
       sort: record.sort,
       visible: record.visible,
+      parentId: record.parentId,
     });
     setEditIconList(toFileList(record.icon));
   };
@@ -189,8 +231,14 @@ const PermissionSettings: React.FC = () => {
                   sort: Number(vals.sort || 0),
                   visible: !!vals.visible,
                   ...(iconUrl ? { icon: iconUrl } : {}),
+                  ...(vals.parentId ? { parentId: vals.parentId } : {}),
                 };
-                setPermissions((prev) => [newItem, ...prev]);
+                setPermissions((prev) => {
+                  if (vals.parentId) {
+                    return addUnderParent(prev, vals.parentId, newItem);
+                  }
+                  return [newItem, ...prev];
+                });
                 setOpenAdd(false);
                 form.resetFields();
                 setAddIconList([]);
@@ -204,6 +252,15 @@ const PermissionSettings: React.FC = () => {
         <Form form={form} layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} requiredMark={false}>
           <Form.Item label="权限名称" name="name" rules={[{ required: true, message: '请输入权限名称' }]}> 
             <Input placeholder="请输入权限名称" />
+          </Form.Item>
+          <Form.Item label="父级分类" name="parentId">
+            <TreeSelect
+              placeholder="请选择"
+              allowClear
+              treeData={treeOptions}
+              treeDefaultExpandAll
+              style={{ width: '100%' }}
+            />
           </Form.Item>
           <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型路径' }]}> 
             <Input placeholder="例如：/admin/index" />
@@ -253,16 +310,22 @@ const PermissionSettings: React.FC = () => {
               editForm.validateFields().then((vals) => {
                 const iconUrl = editIconList[0]?.url || (editIconList[0] as any)?.thumbUrl;
                 if (!editing) return;
-                setPermissions((prev) =>
-                  updateById(prev, editing.id, (it) => ({
-                    ...it,
-                    name: vals.name,
-                    type: vals.type,
-                    sort: Number(vals.sort || 0),
-                    visible: !!vals.visible,
-                    ...(iconUrl ? { icon: iconUrl } : {}),
-                  }))
-                );
+                const updated: Permission = {
+                  ...editing,
+                  name: vals.name,
+                  type: vals.type,
+                  sort: Number(vals.sort || 0),
+                  visible: !!vals.visible,
+                  ...(iconUrl ? { icon: iconUrl } : {}),
+                  parentId: vals.parentId,
+                };
+                setPermissions((prev) => {
+                  const afterRemoval = removeById(prev, editing.id);
+                  if (updated.parentId) {
+                    return addUnderParent(afterRemoval, updated.parentId, updated);
+                  }
+                  return [updated, ...afterRemoval];
+                });
                 setShowEdit(false);
                 setEditing(null);
               });
@@ -275,6 +338,15 @@ const PermissionSettings: React.FC = () => {
         <Form form={editForm} layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} requiredMark={false}>
           <Form.Item label="权限名称" name="name" rules={[{ required: true, message: '请输入权限名称' }]}> 
             <Input placeholder="请输入权限名称" />
+          </Form.Item>
+          <Form.Item label="父级分类" name="parentId">
+            <TreeSelect
+              placeholder="请选择"
+              allowClear
+              treeData={treeOptions}
+              treeDefaultExpandAll
+              style={{ width: '100%' }}
+            />
           </Form.Item>
           <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型路径' }]}> 
             <Input placeholder="例如：/admin/index" />

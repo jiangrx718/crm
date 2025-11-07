@@ -178,10 +178,10 @@ const PermissionSettings: React.FC = () => {
           ]}
         />
         <Form layout="inline" style={{ background: '#f7f8fa', padding: 16, borderRadius: 8 }}>
-          <Form.Item label="身份昵称">
+          <Form.Item label="权限名称">
             <Input
               style={{ width: 280 }}
-              placeholder="请输入身份昵称"
+              placeholder="请输入权限名称"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
             />

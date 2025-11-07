@@ -422,7 +422,12 @@ const ArticleList: React.FC = () => {
                         <button className="ql-link" title="插入链接" />
                         <button className="ql-image" title="插入图片" />
                         <button className="ql-clean" title="清除格式" />
-                        <button className="ql-divider" title="分隔线" />
+                        <button className="ql-divider" title="分隔线">
+                          {/* 自定义分隔线图标：一条水平线 */}
+                          <svg viewBox="0 0 18 18" width="18" height="18">
+                            <line x1="3" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth="1.5"/>
+                          </svg>
+                        </button>
                         <button className="ql-video" title="插入视频" />
                         <button className="ql-fullscreen" title="全屏" />
                       </span>

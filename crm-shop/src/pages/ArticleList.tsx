@@ -53,11 +53,25 @@ const ArticleList: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isHtmlMode, setIsHtmlMode] = useState(false);
   const [htmlSource, setHtmlSource] = useState('');
+  // 全屏自适应高度：记录工具栏高度与视口高度
+  const [toolbarHeight, setToolbarHeight] = useState(48);
+  const [viewportHeight, setViewportHeight] = useState<number>(() => (typeof window !== 'undefined' ? window.innerHeight : 800));
   // 解决 toolbar handler 闭包状态不更新的问题
   const isHtmlModeRef = useRef<boolean>(false);
   const htmlSourceRef = useRef<string>('');
   useEffect(() => { isHtmlModeRef.current = isHtmlMode; }, [isHtmlMode]);
   useEffect(() => { htmlSourceRef.current = htmlSource; }, [htmlSource]);
+
+  // 监听窗口变化并测量工具栏高度，用于全屏时动态计算编辑区高度
+  useEffect(() => {
+    const measure = () => {
+      setToolbarHeight(quillToolbarRef.current?.offsetHeight || 48);
+      if (typeof window !== 'undefined') setViewportHeight(window.innerHeight);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [addOpen, isFullscreen, isHtmlMode]);
 
   const filtered = useMemo(() => (
     data.filter(item => {
@@ -442,12 +456,12 @@ const ArticleList: React.FC = () => {
                     </div>
                     <div style={{ border: '1px solid #e5e6eb', borderRadius: 6, overflow: 'hidden' }}>
                       {/* 始终保留 Quill 容器，避免切换模式时卸载导致编辑器失效 */}
-                      <div ref={quillContainerRef} style={{ height: 420, display: isHtmlMode ? 'none' : 'block' }} />
+                      <div ref={quillContainerRef} style={{ height: isFullscreen ? Math.max(300, viewportHeight - 32 - toolbarHeight) : 560, display: isHtmlMode ? 'none' : 'block' }} />
                       {isHtmlMode && (
                         <textarea
                           value={htmlSource}
                           onChange={(e) => setHtmlSource(e.target.value)}
-                          style={{ height: 420, width: '100%', fontFamily: 'monospace', fontSize: 12, lineHeight: '20px', border: 'none', outline: 'none', padding: 12 }}
+                          style={{ height: isFullscreen ? Math.max(300, viewportHeight - 32 - toolbarHeight) : 560, width: '100%', fontFamily: 'monospace', fontSize: 12, lineHeight: '20px', border: 'none', outline: 'none', padding: 12 }}
                         />
                       )}
                     </div>

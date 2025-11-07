@@ -1,13 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Image, Popconfirm, message } from 'antd';
+import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Popconfirm, message, Switch } from 'antd';
 import { Link } from 'react-router-dom';
 
 type Article = {
   id: number;
   title: string;
   category: string;
-  cover: string;
-  relatedGoods: string;
   views: number;
   time: string; // YYYY-MM-DD HH:mm
   status: 'published' | 'draft';
@@ -30,8 +28,6 @@ const initialData: Article[] = Array.from({ length: 36 }, (_, i) => {
     id,
     title: titlePool[i % titlePool.length],
     category: cat,
-    cover: `https://picsum.photos/seed/a${id}/60/60`,
-    relatedGoods: i % 2 === 0 ? 'Kaleidos 万花筒装饰画合集' : '联名限量周边',
     views: 200 + (i * 7) % 1300,
     time: `2025-04-${String(1 + (i % 9)).padStart(2, '0')} 16:${String(20 + (i % 40)).padStart(2, '0')}`,
     status: i % 3 === 0 ? 'draft' : 'published',
@@ -57,38 +53,28 @@ const ArticleList: React.FC = () => {
     filtered.slice((page - 1) * pageSize, page * pageSize)
   ), [filtered, page, pageSize]);
 
-  const togglePublish = (id: number) => {
-    setData(prev => prev.map(a => a.id === id ? { ...a, status: a.status === 'published' ? 'draft' : 'published' } : a));
-  };
-
   const removeById = (id: number) => {
     setData(prev => prev.filter(a => a.id !== id));
     message.success('已删除文章');
   };
 
-  const copyLink = async (id: number) => {
-    const url = `https://example.com/article/${id}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      message.success('链接已复制');
-    } catch {
-      message.info(url);
-    }
-  };
-
   const columns = [
     { title: 'ID', dataIndex: 'id', width: 80 },
-    { title: '文章图片', dataIndex: 'cover', width: 100, render: (src: string) => <Image src={src} width={40} height={40} /> },
     { title: '文章名称', dataIndex: 'title' },
-    { title: '关联商品', dataIndex: 'relatedGoods' },
+    { title: '所属分类', dataIndex: 'category', width: 160 },
+    { title: '发布状态', dataIndex: 'status', width: 120, render: (_: any, record: Article) => (
+      <Switch
+        checkedChildren="已发布"
+        unCheckedChildren="未发布"
+        checked={record.status === 'published'}
+        onChange={(checked) => setData(prev => prev.map(a => a.id === record.id ? { ...a, status: checked ? 'published' : 'draft' } : a))}
+      />
+    ) },
     { title: '浏览量', dataIndex: 'views', width: 100 },
     { title: '时间', dataIndex: 'time', width: 180 },
-    { title: '操作', dataIndex: 'action', width: 260, render: (_: any, record: Article) => (
+    { title: '操作', dataIndex: 'action', width: 200, render: (_: any, record: Article) => (
       <div style={{ display: 'flex', gap: 8 }}>
         <Button type="link">编辑</Button>
-        <Button type="link" onClick={() => togglePublish(record.id)}>
-          {record.status === 'published' ? '取消发布' : '发布'}
-        </Button>
         <Popconfirm
           title="确认删除当前文章吗？"
           okText="删除"
@@ -98,7 +84,6 @@ const ArticleList: React.FC = () => {
         >
           <Button type="link" danger>删除</Button>
         </Popconfirm>
-        <Button type="link" onClick={() => copyLink(record.id)}>复制链接</Button>
       </div>
     ) }
   ];

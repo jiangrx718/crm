@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Popconfirm, message, Switch, Divider, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import Quill from 'quill';
+import 'quill/dist/quill.snow.css';
 
 type Article = {
   id: number;
@@ -43,6 +45,14 @@ const ArticleList: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [addOpen, setAddOpen] = useState(false);
   const [addForm] = Form.useForm();
+  const [content, setContent] = useState('');
+  const quillContainerRef = useRef<HTMLDivElement | null>(null);
+  const quillToolbarRef = useRef<HTMLDivElement | null>(null);
+  const quillRef = useRef<Quill | null>(null);
+  const editorWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isHtmlMode, setIsHtmlMode] = useState(false);
+  const [htmlSource, setHtmlSource] = useState('');
 
   const filtered = useMemo(() => (
     data.filter(item => {
@@ -74,7 +84,123 @@ const ArticleList: React.FC = () => {
     message.success('已添加文章');
     setAddOpen(false);
     addForm.resetFields();
+    setContent('');
   };
+
+  // 初始化 Quill 编辑器（进入添加页时）
+  useEffect(() => {
+    if (!addOpen) return;
+    if (!quillContainerRef.current) return;
+
+    // 清理可能残留的工具栏与内容容器
+    const wrapper = quillContainerRef.current.parentElement;
+    wrapper?.querySelectorAll('.ql-toolbar').forEach(el => el.remove());
+    quillContainerRef.current.innerHTML = '';
+
+    // 注册分隔线 Blot（<hr/>）
+    const BlockEmbed: any = (Quill as any).import('blots/block/embed');
+    class DividerBlot extends BlockEmbed { static blotName = 'divider'; static tagName = 'hr'; }
+    (Quill as any).register(DividerBlot);
+
+    quillRef.current = new Quill(quillContainerRef.current, {
+      theme: 'snow',
+      modules: {
+        toolbar: {
+          container: quillToolbarRef.current || '#article-toolbar',
+          handlers: {
+            image: () => {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = 'image/*';
+              input.onchange = async () => {
+                const file = input.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                  const range = quillRef.current!.getSelection(true);
+                  quillRef.current!.insertEmbed(range ? range.index : 0, 'image', reader.result as string, 'user');
+                };
+                reader.readAsDataURL(file);
+              };
+              input.click();
+            },
+            video: () => {
+              const url = window.prompt('请输入视频地址（支持外链）');
+              if (url) {
+                const range = quillRef.current!.getSelection(true);
+                quillRef.current!.insertEmbed(range ? range.index : 0, 'video', url, 'user');
+              }
+            },
+            divider: () => {
+              const range = quillRef.current!.getSelection(true);
+              quillRef.current!.insertEmbed(range ? range.index : 0, 'divider', true, 'user');
+            },
+            fullscreen: () => {
+              setIsFullscreen(prev => !prev);
+            },
+            html: () => {
+              const next = !isHtmlMode;
+              if (next) {
+                const html = quillRef.current!.root.innerHTML;
+                setHtmlSource(html);
+                setIsHtmlMode(true);
+                setContent(html);
+                addForm.setFieldValue('content', html);
+              } else {
+                quillRef.current!.root.innerHTML = htmlSource;
+                setIsHtmlMode(false);
+                setContent(htmlSource);
+                addForm.setFieldValue('content', htmlSource);
+              }
+            },
+          }
+        },
+      },
+      formats: [
+        'header', 'font', 'size',
+        'bold', 'italic', 'underline', 'strike',
+        'color', 'background', 'script',
+        'blockquote', 'code-block',
+        'list', 'indent',
+        'align', 'link', 'image', 'video', 'divider'
+      ],
+    });
+
+    // 初始内容同步
+    const initHtml = addForm.getFieldValue('content') || content || '';
+    quillRef.current.root.innerHTML = initHtml;
+
+    // 监听文本变化同步到表单
+    quillRef.current.on('text-change', () => {
+      const html = quillRef.current!.root.innerHTML;
+      setContent(html);
+      addForm.setFieldValue('content', html);
+    });
+
+    return () => {
+      if (quillRef.current) {
+        quillRef.current.off('text-change');
+      }
+    };
+  }, [addOpen]);
+
+  // HTML 源码模式时，同步内容到表单
+  useEffect(() => {
+    if (isHtmlMode) {
+      addForm.setFieldValue('content', htmlSource);
+      setContent(htmlSource);
+    }
+  }, [isHtmlMode, htmlSource]);
+
+  // 全屏时禁用页面滚动
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isFullscreen]);
 
   const columns = [
     { title: 'ID', dataIndex: 'id', width: 80 },
@@ -218,11 +344,85 @@ const ArticleList: React.FC = () => {
 
                 <Divider orientation="center">文章内容</Divider>
                 <Form.Item label="文章内容" name="content" rules={[{ required: true, message: '请输入文章内容' }]}> 
-                  <div>
-                    <div style={{ border: '1px solid #e5e6eb', borderBottom: 'none', padding: 8, borderRadius: '6px 6px 0 0', background: '#fafafa' }}>
-                      <span style={{ color: '#999' }}>HTML</span>
+                  <div ref={editorWrapperRef} style={isFullscreen ? { position: 'fixed', inset: 0, zIndex: 1000, background: '#fff', padding: 16 } : undefined}>
+                    {/* 工具栏：与协议设置页一致，并补充 HTML/分隔线/全屏 */}
+                    <div id="article-toolbar" ref={quillToolbarRef} className="ql-toolbar ql-snow" style={{ border: '1px solid #e5e6eb', borderRadius: 6, borderBottom: 'none' }}>
+                      <button className="ql-html" title="HTML" style={isHtmlMode ? { background: '#efefef', borderRadius: 4, padding: '0 6px' } : { padding: '0 6px' }}>HTML</button>
+                      <span className="ql-formats">
+                        <select className="ql-header" defaultValue="">
+                          <option value="">正文</option>
+                          <option value="1">标题1</option>
+                          <option value="2">标题2</option>
+                          <option value="3">标题3</option>
+                          <option value="4">标题4</option>
+                          <option value="5">标题5</option>
+                          <option value="6">标题6</option>
+                        </select>
+                        <select className="ql-font" defaultValue="">
+                          <option value="">默认字体</option>
+                          <option value="serif">衬线</option>
+                          <option value="monospace">等宽</option>
+                        </select>
+                        <select className="ql-size" defaultValue="">
+                          <option value="small">小</option>
+                          <option value="">标准</option>
+                          <option value="large">大</option>
+                          <option value="huge">超大</option>
+                        </select>
+                      </span>
+                      <span className="ql-formats">
+                        <button className="ql-bold" title="加粗" />
+                        <button className="ql-italic" title="斜体" />
+                        <button className="ql-underline" title="下划线" />
+                        <button className="ql-strike" title="删除线" />
+                      </span>
+                      <span className="ql-formats">
+                        <select className="ql-color" />
+                        <select className="ql-background" />
+                        <button className="ql-script" value="sub" title="下标" />
+                        <button className="ql-script" value="super" title="上标" />
+                      </span>
+                      <span className="ql-formats">
+                        <button className="ql-blockquote" title="引用" />
+                        <button className="ql-code-block" title="代码块" />
+                      </span>
+                      <span className="ql-formats">
+                        <button className="ql-list" value="ordered" title="有序列表" />
+                        <button className="ql-list" value="bullet" title="无序列表" />
+                        <button className="ql-indent" value="-1" title="减少缩进" />
+                        <button className="ql-indent" value="+1" title="增加缩进" />
+                      </span>
+                      <span className="ql-formats">
+                        <button className="ql-align" value="" title="左对齐" />
+                        <button className="ql-align" value="center" title="居中对齐" />
+                        <button className="ql-align" value="right" title="右对齐" />
+                        <button className="ql-align" value="justify" title="两端对齐" />
+                      </span>
+                      <span className="ql-formats">
+                        <button className="ql-link" title="插入链接" />
+                        <button className="ql-image" title="插入图片" />
+                        <button className="ql-clean" title="清除格式" />
+                        <button className="ql-divider" title="分隔线" />
+                        <button className="ql-video" title="插入视频" />
+                        <button className="ql-fullscreen" title="全屏" />
+                      </span>
                     </div>
-                    <Input.TextArea rows={12} style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }} />
+                    <div style={{ border: '1px solid #e5e6eb', borderRadius: 6, overflow: 'hidden' }}>
+                      {isHtmlMode ? (
+                        <textarea
+                          value={htmlSource}
+                          onChange={(e) => setHtmlSource(e.target.value)}
+                          style={{ height: 420, width: '100%', fontFamily: 'monospace', fontSize: 12, lineHeight: '20px', border: 'none', outline: 'none', padding: 12 }}
+                        />
+                      ) : (
+                        <div ref={quillContainerRef} style={{ height: 420 }} />
+                      )}
+                    </div>
+                    {isFullscreen && (
+                      <div style={{ position: 'fixed', top: 12, right: 16, zIndex: 1001 }}>
+                        <Button onClick={() => setIsFullscreen(false)}>退出全屏</Button>
+                      </div>
+                    )}
                   </div>
                 </Form.Item>
               </Form>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumb, Card, Form, Input, Select, Button, Tabs, Table, Tag, Empty, Dropdown, Modal, message } from 'antd';
+import { Breadcrumb, Card, Form, Input, Select, Button, Tabs, Table, Tag, Empty, Dropdown, Modal, message, Drawer, Descriptions, Divider } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from 'react-router-dom';
 
@@ -12,6 +12,14 @@ type OrderItem = {
   payTime?: string;
   amount: number;
 };
+
+// 小标题左侧标志样式组件
+const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div style={{ display: 'flex', alignItems: 'center', fontWeight: 600, margin: '12px 0 8px' }}>
+    <span style={{ display: 'inline-block', width: 4, height: 16, background: '#1677ff', borderRadius: 2, marginRight: 8 }} />
+    <span>{children}</span>
+  </div>
+);
 
 const statusMap: Record<OrderItem['status'], { label: string; color: string }> = {
   unpaid: { label: '未支付', color: 'default' },
@@ -42,6 +50,8 @@ const OrderList: React.FC = () => {
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [data, setData] = React.useState<OrderItem[]>(allMock);
+  const [detailOpen, setDetailOpen] = React.useState<boolean>(false);
+  const [detailOrder, setDetailOrder] = React.useState<OrderItem | null>(null);
 
   const filtered = React.useMemo(() => {
     if (activeTab === 'all') return data;
@@ -93,6 +103,9 @@ const OrderList: React.FC = () => {
                     setPage(1);
                   }
                 });
+              } else if (key === 'detail') {
+                setDetailOrder(record);
+                setDetailOpen(true);
               }
             }
           }}
@@ -158,6 +171,70 @@ const OrderList: React.FC = () => {
           />
         </div>
       </Card>
+      {/* 订单详情抽屉 */}
+      <Drawer
+        title="订单详情"
+        width={760}
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+      >
+        {detailOrder ? (
+          <div>
+            {/* 顶部概要 */}
+            <Descriptions column={3} size="small" style={{ marginBottom: 8 }}>
+              <Descriptions.Item label="订单编号">{detailOrder.id}</Descriptions.Item>
+              <Descriptions.Item label="订单状态">{statusMap[detailOrder.status].label}</Descriptions.Item>
+              <Descriptions.Item label="实付金额">￥{detailOrder.amount.toFixed(2)}</Descriptions.Item>
+              <Descriptions.Item label="支付方式">{detailOrder.payMethod}</Descriptions.Item>
+              <Descriptions.Item label="支付时间">{detailOrder.payTime || '--'}</Descriptions.Item>
+            </Descriptions>
+            <Divider />
+
+            {/* 订单信息 */}
+            <SectionTitle>订单信息</SectionTitle>
+            <Descriptions column={3} size="small" bordered>
+              <Descriptions.Item label="用户昵称">{detailOrder.user.name}</Descriptions.Item>
+              <Descriptions.Item label="用户ID">{detailOrder.user.id}</Descriptions.Item>
+              <Descriptions.Item label="买家备注">--</Descriptions.Item>
+              <Descriptions.Item label="收货人">张客户</Descriptions.Item>
+              <Descriptions.Item label="收货电话">138****8625</Descriptions.Item>
+              <Descriptions.Item label="收货地址">新疆维吾尔自治区 乌鲁木齐市 天山区</Descriptions.Item>
+            </Descriptions>
+            <Divider />
+
+            {/* 商品信息 */}
+            <SectionTitle>商品信息</SectionTitle>
+            <Table
+              size="small"
+              columns={[
+                { title: '商品名', dataIndex: ['goods','title'] },
+                { title: '单价', dataIndex: ['goods','price'], render: (v: number) => `￥${v}` },
+                { title: '数量', dataIndex: 'count', render: () => 1 },
+                { title: '小计', dataIndex: 'amount', render: (_: any, r: OrderItem) => `￥${r.amount.toFixed(2)}` },
+              ]}
+              dataSource={[detailOrder]}
+              rowKey="id"
+              pagination={false}
+            />
+            <Divider />
+
+            {/* 订单记录（Mock） */}
+            <SectionTitle>订单记录</SectionTitle>
+            <Table
+              size="small"
+              columns={[
+                { title: '时间', dataIndex: 'time' },
+                { title: '动作', dataIndex: 'action' },
+              ]}
+              dataSource={[
+                { key: '1', time: '2025-01-05 00:42:21', action: '创建订单' },
+                { key: '2', time: detailOrder.payTime || '—', action: '支付成功' },
+              ]}
+              pagination={false}
+            />
+          </div>
+        ) : null}
+      </Drawer>
     </div>
   );
 };

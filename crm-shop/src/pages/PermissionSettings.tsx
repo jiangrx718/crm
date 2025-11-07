@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, TreeSelect, Tooltip, Popconfirm } from 'antd';
+import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, TreeSelect, Tooltip, Popconfirm, Radio } from 'antd';
 import { PictureOutlined, HomeOutlined, SearchOutlined, SettingOutlined, UserOutlined, PhoneOutlined, QuestionCircleOutlined, InfoCircleOutlined, MinusOutlined, PlusOutlined, CheckOutlined, CloseOutlined, ZoomInOutlined, ZoomOutOutlined, CloudUploadOutlined, CloudDownloadOutlined, CameraOutlined, AppstoreOutlined, DashboardOutlined, BellOutlined, CloudOutlined, SaveOutlined, EditOutlined, FileTextOutlined, ShopOutlined, ShareAltOutlined, UpOutlined, DownOutlined, LeftOutlined, RightOutlined, ArrowLeftOutlined, ArrowRightOutlined, ExperimentOutlined, SafetyOutlined, ShoppingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UnorderedListOutlined, BarsOutlined, DatabaseOutlined, ToolOutlined, FolderOutlined, FolderOpenOutlined, ContainerOutlined, ProfileOutlined, IdcardOutlined, CreditCardOutlined, BankOutlined, WalletOutlined, ProjectOutlined, ControlOutlined, FormOutlined, TableOutlined, CalendarOutlined, MoneyCollectOutlined, PayCircleOutlined, QrcodeOutlined, TagOutlined, TagsOutlined, DownloadOutlined, UploadOutlined, ShoppingCartOutlined, MailOutlined, MessageOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -219,10 +219,12 @@ const PermissionSettings: React.FC = () => {
     {
       title: '显示状态',
       dataIndex: 'visible',
-      width: 140,
+      width: 120,
       render: (_: any, record: Permission) => (
         <Switch
           checked={record.visible}
+          checkedChildren="开启"
+          unCheckedChildren="关闭"
           onChange={(checked) => {
             setPermissions((prev) => updateById(prev, record.id, (it) => ({ ...it, visible: checked })));
           }}
@@ -380,8 +382,11 @@ const PermissionSettings: React.FC = () => {
           <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请输入排序值' }]}> 
             <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入排序" />
           </Form.Item>
-          <Form.Item label="是否显示" name="visible" valuePropName="checked" initialValue={true}> 
-            <Switch />
+          <Form.Item label="状态" name="visible" initialValue={true}> 
+            <Radio.Group>
+              <Radio value={true}>显示</Radio>
+              <Radio value={false}>隐藏</Radio>
+            </Radio.Group>
           </Form.Item>
         </Form>
       </Modal>
@@ -467,8 +472,11 @@ const PermissionSettings: React.FC = () => {
           <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请输入排序值' }]}> 
             <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入排序" />
           </Form.Item>
-          <Form.Item label="是否显示" name="visible" valuePropName="checked"> 
-            <Switch />
+          <Form.Item label="状态" name="visible"> 
+            <Radio.Group>
+              <Radio value={true}>开启</Radio>
+              <Radio value={false}>关闭</Radio>
+            </Radio.Group>
           </Form.Item>
         </Form>
       </Modal>

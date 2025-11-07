@@ -380,8 +380,28 @@ const ArticleList: React.FC = () => {
                 <Form.Item label="文章内容" name="content" rules={[{ required: true, message: '请输入文章内容' }]}> 
                   <div ref={editorWrapperRef} style={isFullscreen ? { position: 'fixed', inset: 0, zIndex: 1000, background: '#fff', padding: 16 } : undefined}>
                     {/* 工具栏：与协议设置页一致，并补充 HTML/分隔线/全屏 */}
-                    <div id="article-toolbar" ref={quillToolbarRef} className="ql-toolbar ql-snow" style={{ border: '1px solid #e5e6eb', borderRadius: 6, borderBottom: 'none' }}>
-                      <button className="ql-html" title={isHtmlMode ? '返回' : 'HTML'} style={isHtmlMode ? { background: '#efefef', borderRadius: 4, padding: '0 6px' } : { padding: '0 6px' }}>{isHtmlMode ? '返回' : 'HTML'}</button>
+                    <div id="article-toolbar" ref={quillToolbarRef} className="ql-toolbar ql-snow" style={{ border: '1px solid #e5e6eb', borderRadius: 6, borderBottom: 'none', display: 'flex', flexWrap: 'nowrap', alignItems: 'center', gap: 4, overflowX: 'auto', position: 'sticky', top: 0, zIndex: 5, background: '#fff', width: '100%' }}>
+                      <span className="ql-formats">
+                        <button
+                          className="ql-html"
+                          title={isHtmlMode ? '可视化界面' : 'HTML'}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: 28,
+                            lineHeight: '28px',
+                            width: 'auto',
+                            minWidth: 44,
+                            padding: '0 10px',
+                            borderRadius: 4,
+                            whiteSpace: 'nowrap',
+                            background: isHtmlMode ? '#efefef' : 'transparent',
+                          }}
+                        >
+                          {isHtmlMode ? '可视化界面' : 'HTML'}
+                        </button>
+                      </span>
                       <span className="ql-formats">
                         <select className="ql-header" defaultValue="">
                           <option value="">正文</option>

@@ -1,10 +1,73 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Form, Input, Button } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+
+  // 图形验证码（本地生成）
+  const [captchaText, setCaptchaText] = useState('');
+  const [captchaDataUrl, setCaptchaDataUrl] = useState<string>('');
+
+  const genCaptchaText = (len = 4) => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s = '';
+    for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    return s;
+  };
+
+  const drawCaptcha = (text: string) => {
+    const w = 120, h = 40;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d')!;
+    const grad = ctx.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, '#e6f4ff');
+    grad.addColorStop(1, '#f7fbff');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+    ctx.font = 'bold 24px system-ui, -apple-system, Segoe UI, Roboto';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const x = 16 + i * 26 + Math.random() * 4;
+      const y = h / 2 + (Math.random() * 6 - 3);
+      const rot = (Math.random() - 0.5) * 0.5;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot);
+      ctx.fillStyle = ['#1677ff', '#0958d9', '#40a9ff'][i % 3];
+      ctx.fillText(ch, 0, 0);
+      ctx.restore();
+    }
+    for (let i = 0; i < 3; i++) {
+      ctx.strokeStyle = 'rgba(64,169,255,0.6)';
+      ctx.beginPath();
+      ctx.moveTo(Math.random() * w, Math.random() * h);
+      ctx.quadraticCurveTo(Math.random() * w, Math.random() * h, Math.random() * w, Math.random() * h);
+      ctx.stroke();
+    }
+    for (let i = 0; i < 40; i++) {
+      ctx.fillStyle = 'rgba(0,0,0,0.15)';
+      ctx.beginPath();
+      ctx.arc(Math.random() * w, Math.random() * h, Math.random() * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    setCaptchaDataUrl(canvas.toDataURL('image/png'));
+  };
+
+  const refreshCaptcha = () => {
+    const t = genCaptchaText();
+    setCaptchaText(t);
+    drawCaptcha(t);
+    form.setFields([{ name: 'captcha', value: '' }]);
+  };
+
+  useEffect(() => {
+    refreshCaptcha();
+  }, []);
 
   const onFinish = () => {
     // 这里不做登录态校验，提交后直接进入后台首页
@@ -62,6 +125,33 @@ const Login: React.FC = () => {
               </Form.Item>
               <Form.Item label="密码" name="password" rules={[{ required: true, message: '请输入密码' }]}> 
                 <Input.Password placeholder="" />
+              </Form.Item>
+              <Form.Item 
+                label="验证码" 
+                name="captcha" 
+                validateFirst
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      if (!value) return Promise.reject('请输入验证码');
+                      if (String(value).toLowerCase() !== captchaText.toLowerCase()) return Promise.reject('验证码错误');
+                      return Promise.resolve();
+                    }
+                  }
+                ]}
+              > 
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <Input placeholder="请输入验证码" style={{ flex: 1 }} />
+                  <img
+                    src={captchaDataUrl}
+                    alt="图形验证码"
+                    width={120}
+                    height={40}
+                    style={{ cursor: 'pointer', border: '1px solid #e5e6eb', borderRadius: 6 }}
+                    onClick={refreshCaptcha}
+                  />
+                  <Button icon={<ReloadOutlined />} onClick={refreshCaptcha} title="换一张" />
+                </div>
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit" block>登录</Button>

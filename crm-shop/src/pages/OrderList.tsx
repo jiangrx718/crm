@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumb, Card, Form, Input, Select, Button, Tabs, Table, Tag, Empty, Dropdown } from 'antd';
+import { Breadcrumb, Card, Form, Input, Select, Button, Tabs, Table, Tag, Empty, Dropdown, Modal, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from 'react-router-dom';
 
@@ -41,14 +41,15 @@ const OrderList: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<string>('all');
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
+  const [data, setData] = React.useState<OrderItem[]>(allMock);
 
   const filtered = React.useMemo(() => {
-    if (activeTab === 'all') return allMock;
+    if (activeTab === 'all') return data;
     const map: Record<string, OrderItem['status']> = {
       unpaid: 'unpaid', pending: 'pending', shipped: 'shipped', finished: 'finished', refunded: 'refunded', deleted: 'deleted'
     };
-    return allMock.filter(o => o.status === map[activeTab]);
-  }, [activeTab]);
+    return data.filter(o => o.status === map[activeTab]);
+  }, [activeTab, data]);
 
   const paged = React.useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -68,16 +69,30 @@ const OrderList: React.FC = () => {
       key: 'action',
       fixed: 'right',
       width: 120,
-      render: () => (
+      render: (_: any, record: OrderItem) => (
         <Dropdown
+          trigger={["click"]}
+          getPopupContainer={() => document.body}
           menu={{
             items: [
               { key: 'detail', label: '订单详情' },
-              { key: 'refresh', label: '刷新订单' },
+              { key: 'delete', label: '删除订单' },
             ],
-            onClick: (info) => {
-              if (info.key === 'refresh') {
-                setPage(1);
+            onClick: ({ key, domEvent }) => {
+              domEvent?.stopPropagation();
+              if (key === 'delete') {
+                Modal.confirm({
+                  title: '确认删除当前订单信息吗?',
+                  content: `删除后不可恢复（ID: ${record.id}）。`,
+                  okText: '删除',
+                  cancelText: '取消',
+                  okButtonProps: { danger: true },
+                  onOk: () => {
+                    setData(prev => prev.filter(o => o.id !== record.id));
+                    message.success('已删除订单');
+                    setPage(1);
+                  }
+                });
               }
             }
           }}

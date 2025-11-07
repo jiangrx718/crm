@@ -102,3 +102,19 @@ button:focus-visible {
   width: 96px;
   height: 96px;
 }
+
+/* 全屏弹窗样式 */
+.full-screen-modal .ant-modal {
+  width: 100vw !important;
+  max-width: 100vw;
+  top: 0;
+  margin: 0;
+}
+.full-screen-modal .ant-modal-content {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.full-screen-modal .ant-modal-body {
+  flex: 1;
+}

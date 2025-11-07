@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Popconfirm, message, Switch } from 'antd';
+import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Popconfirm, message, Switch, Row, Col, Divider } from 'antd';
+// removed image upload for add article
 import { Link } from 'react-router-dom';
 
 type Article = {
@@ -40,6 +41,8 @@ const ArticleList: React.FC = () => {
   const [data, setData] = useState<Article[]>(initialData);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [addOpen, setAddOpen] = useState(false);
+  const [addForm] = Form.useForm();
 
   const filtered = useMemo(() => (
     data.filter(item => {
@@ -56,6 +59,21 @@ const ArticleList: React.FC = () => {
   const removeById = (id: number) => {
     setData(prev => prev.filter(a => a.id !== id));
     message.success('已删除文章');
+  };
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const onAddOk = async () => {
+    const values = await addForm.validateFields();
+    const now = new Date();
+    const time = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const nextId = Math.max(...data.map(d => d.id)) + 1;
+    setData(prev => [
+      { id: nextId, title: values.title, category: values.category, views: 0, time, status: 'draft' },
+      ...prev,
+    ]);
+    message.success('已添加文章');
+    setAddOpen(false);
+    addForm.resetFields();
   };
 
   const columns = [
@@ -99,51 +117,114 @@ const ArticleList: React.FC = () => {
           <Breadcrumb.Item>文章列表</Breadcrumb.Item>
         </Breadcrumb>
 
-        <Form layout="inline" style={{ background: '#f7f8fa', padding: 16, borderRadius: 8 }}>
-          <Form.Item label="文章分类">
-            <Select
-              style={{ width: 220 }}
-              placeholder="请选择"
-              value={category}
-              onChange={setCategory}
-              options={categories.map(c => ({ value: c, label: c }))}
-              allowClear
-            />
-          </Form.Item>
-          <Form.Item label="文章搜索">
-            <Input
-              style={{ width: 280 }}
-              placeholder="请输入"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary">查询</Button>
-          </Form.Item>
-        </Form>
+        {/* 列表视图 / 添加视图 切换渲染在红框区域 */}
+        {!addOpen ? (
+          <>
+            <Form layout="inline" style={{ background: '#f7f8fa', padding: 16, borderRadius: 8 }}>
+              <Form.Item label="文章分类">
+                <Select
+                  style={{ width: 220 }}
+                  placeholder="请选择"
+                  value={category}
+                  onChange={setCategory}
+                  options={categories.map(c => ({ value: c, label: c }))}
+                  allowClear
+                />
+              </Form.Item>
+              <Form.Item label="文章搜索">
+                <Input
+                  style={{ width: 280 }}
+                  placeholder="请输入"
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary">查询</Button>
+              </Form.Item>
+            </Form>
 
-        <div style={{ marginTop: 12, display: 'flex', justifyContent: 'flex-start' }}>
-          <Button type="primary" size="small">添加文章</Button>
-        </div>
+            <div style={{ marginTop: 12, display: 'flex', justifyContent: 'flex-start' }}>
+              <Button type="primary" size="small" onClick={() => setAddOpen(true)}>添加文章</Button>
+            </div>
 
-        <div style={{ marginTop: 16 }}>
-          <Table
-            columns={columns}
-            dataSource={paged}
-            pagination={{
-              current: page,
-              pageSize,
-              total: filtered.length,
-              showSizeChanger: true,
-              pageSizeOptions: [10, 20, 50],
-              showTotal: (total) => `共 ${total} 条`,
-              onChange: (p, ps) => { setPage(p); setPageSize(ps); },
-            }}
-            locale={{ emptyText: <Empty description="暂无数据" /> }}
-            rowKey="id"
-          />
-        </div>
+            <div style={{ marginTop: 16 }}>
+              <Table
+                columns={columns}
+                dataSource={paged}
+                pagination={{
+                  current: page,
+                  pageSize,
+                  total: filtered.length,
+                  showSizeChanger: true,
+                  pageSizeOptions: [10, 20, 50],
+                  showTotal: (total) => `共 ${total} 条`,
+                  onChange: (p, ps) => { setPage(p); setPageSize(ps); },
+                }}
+                locale={{ emptyText: <Empty description="暂无数据" /> }}
+                rowKey="id"
+              />
+            </div>
+          </>
+        ) : (
+          <div style={{ marginTop: 8 }}>
+            {/* 顶部操作栏 */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <div style={{ fontWeight: 600 }}>添加文章</div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <Button onClick={() => { setAddOpen(false); addForm.resetFields(); }}>取消</Button>
+                <Button type="primary" onClick={onAddOk}>保存</Button>
+              </div>
+            </div>
+
+            <div style={{ border: '1px solid #f0f0f0', borderRadius: 8, padding: 16, background: '#fff', maxHeight: '70vh', overflow: 'auto' }}>
+              <Divider orientation="left">文章信息</Divider>
+              <Form
+                form={addForm}
+                layout="horizontal"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 19 }}
+                initialValues={{ title: '', author: '', summary: '', category: undefined, content: '' }}
+              >
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Form.Item label="标题" name="title" rules={[{ required: true, message: '请输入标题' }]}> 
+                      <Input placeholder="请输入" maxLength={80} showCount />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="作者" name="author"> 
+                      <Input placeholder="请输入" maxLength={10} showCount />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Form.Item label="文章分类" name="category" rules={[{ required: true, message: '请选择分类' }]}> 
+                      <Select placeholder="请选择" options={categories.map(c => ({ value: c, label: c }))} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="文章简介" name="summary"> 
+                      <Input.TextArea placeholder="请输入" rows={3} maxLength={300} showCount />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                {/* 封面上传区域已移除 */}
+
+                <Divider orientation="left">文章内容</Divider>
+                <Form.Item label="文章内容" name="content" rules={[{ required: true, message: '请输入文章内容' }]}> 
+                  <div>
+                    <div style={{ border: '1px solid #e5e6eb', borderBottom: 'none', padding: 8, borderRadius: '6px 6px 0 0', background: '#fafafa' }}>
+                      <span style={{ color: '#999' }}>HTML</span>
+                    </div>
+                    <Input.TextArea rows={12} style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }} />
+                  </div>
+                </Form.Item>
+              </Form>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );

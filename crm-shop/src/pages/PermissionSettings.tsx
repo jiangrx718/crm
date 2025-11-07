@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, Upload, TreeSelect } from 'antd';
+import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, Upload, TreeSelect, Tooltip, Popconfirm } from 'antd';
 import type { UploadFile } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -159,9 +159,32 @@ const PermissionSettings: React.FC = () => {
       title: '操作',
       key: 'action',
       width: 120,
-      render: (_: any, record: Permission) => (
-        <Button type="link" size="small" onClick={() => onEdit(record)}>编辑</Button>
-      ),
+      render: (_: any, record: Permission) => {
+        const hasChildren = Array.isArray(record.children) && record.children.length > 0;
+        return (
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button type="link" size="small" onClick={() => onEdit(record)}>编辑</Button>
+            {hasChildren ? (
+              <Tooltip title="存在下级分类，请先删除下级分类">
+                <Button type="link" size="small" danger disabled>删除</Button>
+              </Tooltip>
+            ) : (
+              <Popconfirm
+                title="确认删除该权限项？"
+                description={`删除后不可恢复（ID: ${record.id}，名称：${record.name}）。`}
+                okText="删除"
+                cancelText="取消"
+                okButtonProps={{ danger: true }}
+                onConfirm={() => {
+                  setPermissions((prev) => removeById(prev, record.id));
+                }}
+              >
+                <Button type="link" size="small" danger>删除</Button>
+              </Popconfirm>
+            )}
+          </div>
+        );
+      },
     },
   ];
 

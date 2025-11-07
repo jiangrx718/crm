@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined, SettingOutlined, HomeOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined, SettingOutlined, HomeOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 
 const SideMenu: React.FC = () => {
   const navigate = useNavigate();
@@ -9,6 +9,7 @@ const SideMenu: React.FC = () => {
   const [openTrain, setOpenTrain] = useState(false); // 模型训练：默认收起
   const [openAdmin, setOpenAdmin] = useState(false); // 管理权限：默认收起
   const [openGoods, setOpenGoods] = useState(false); // 商品管理：默认收起
+  const [openOrders, setOpenOrders] = useState(false); // 订单管理：默认收起
   const [openSettings, setOpenSettings] = useState(false); // 系统设置：默认收起
 
   const subMenuItems = [
@@ -29,6 +30,11 @@ const SideMenu: React.FC = () => {
   const goodsMenuItems = [
     { key: '/product-category', label: '商品分类' },
     { key: '/product-list', label: '商品列表' },
+  ];
+
+  const ordersMenuItems = [
+    { key: '/order-list', label: '订单列表' },
+    { key: '/order-statistics', label: '订单统计' },
   ];
 
   const settingsMenuItems = [
@@ -119,6 +125,32 @@ const SideMenu: React.FC = () => {
       {openGoods && (
         <div className="submenu-container">
           {goodsMenuItems.map(item => (
+            <div
+              key={item.key}
+              className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}
+              onClick={() => navigate(item.key)}
+            >
+              <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 父级菜单：订单管理 */}
+      <div
+        className={`menu-item ${['/order-list','/order-statistics'].includes(currentPath) ? 'active' : ''}`}
+        onClick={() => setOpenOrders(prev => !prev)}
+      >
+        <span className="menu-icon"><ShoppingCartOutlined /></span>
+        <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>订单管理</span>
+        <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+          {openOrders ? <DownOutlined /> : <RightOutlined />}
+        </span>
+      </div>
+
+      {openOrders && (
+        <div className="submenu-container">
+          {ordersMenuItems.map(item => (
             <div
               key={item.key}
               className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}

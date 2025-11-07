@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined, SettingOutlined, HomeOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, DownOutlined, RightOutlined, SafetyOutlined, ShoppingOutlined, SettingOutlined, HomeOutlined, ShoppingCartOutlined, ReadOutlined } from '@ant-design/icons';
 
 const SideMenu: React.FC = () => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ const SideMenu: React.FC = () => {
   const [openGoods, setOpenGoods] = useState(false); // 商品管理：默认收起
   const [openOrders, setOpenOrders] = useState(false); // 订单管理：默认收起
   const [openSettings, setOpenSettings] = useState(false); // 系统设置：默认收起
+  const [openContent, setOpenContent] = useState(false); // 内容管理：默认收起
 
   const subMenuItems = [
     { key: '/', label: 'AI 模型训练数据' },
@@ -40,6 +41,11 @@ const SideMenu: React.FC = () => {
   const settingsMenuItems = [
     { key: '/base-settings', label: '基础设置' },
     { key: '/agreement-settings', label: '协议设置' },
+  ];
+
+  const contentMenuItems = [
+    { key: '/article-list', label: '文章列表' },
+    { key: '/article-category', label: '文章分类' },
   ];
 
   return (
@@ -151,6 +157,42 @@ const SideMenu: React.FC = () => {
       {openGoods && (
         <div className="submenu-container">
           {goodsMenuItems.map(item => (
+            <div
+              key={item.key}
+              className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}
+              onClick={() => navigate(item.key)}
+            >
+              <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 父级菜单：内容管理 */}
+      <div
+        className={`menu-item ${['/article-list','/article-category'].includes(currentPath) ? 'active' : ''}`}
+        onClick={() => {
+          const next = !openContent;
+          setOpenContent(next);
+          if (next) {
+            setOpenTrain(false);
+            setOpenAdmin(false);
+            setOpenGoods(false);
+            setOpenOrders(false);
+            setOpenSettings(false);
+          }
+        }}
+      >
+        <span className="menu-icon"><ReadOutlined /></span>
+        <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>内容管理</span>
+        <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+          {openContent ? <DownOutlined /> : <RightOutlined />}
+        </span>
+      </div>
+
+      {openContent && (
+        <div className="submenu-container">
+          {contentMenuItems.map(item => (
             <div
               key={item.key}
               className={`submenu-item ${currentPath === item.key ? 'active' : ''}`}

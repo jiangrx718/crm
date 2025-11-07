@@ -17,6 +17,8 @@ import AgreementSettings from './pages/AgreementSettings';
 import Home from './pages/Home';
 import OrderList from './pages/OrderList';
 import OrderStatistics from './pages/OrderStatistics';
+import ArticleCategory from './pages/ArticleCategory';
+import ArticleList from './pages/ArticleList';
 
 const { Header, Content, Sider } = Layout;
 
@@ -46,6 +48,8 @@ function App() {
                 <Route path="/permissions" element={<PermissionSettings />} />
                 <Route path="/product-category" element={<ProductCategory />} />
                 <Route path="/product-list" element={<ProductList />} />
+                <Route path="/article-category" element={<ArticleCategory />} />
+                <Route path="/article-list" element={<ArticleList />} />
                 <Route path="/order-list" element={<OrderList />} />
                 <Route path="/order-statistics" element={<OrderStatistics />} />
                 <Route path="/base-settings" element={<BaseSettings />} />

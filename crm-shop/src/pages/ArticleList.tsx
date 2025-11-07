@@ -429,7 +429,15 @@ const ArticleList: React.FC = () => {
                           </svg>
                         </button>
                         <button className="ql-video" title="插入视频" />
-                        <button className="ql-fullscreen" title="全屏" />
+                        <button className="ql-fullscreen" title="全屏" aria-label="全屏">
+                          {/* 全屏图标：四角扩展 */}
+                          <svg viewBox="0 0 18 18" width="18" height="18">
+                            <path d="M3 7V3h4" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                            <path d="M15 11v4h-4" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                            <path d="M7 15H3v-4" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                            <path d="M11 3h4v4" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                          </svg>
+                        </button>
                       </span>
                     </div>
                     <div style={{ border: '1px solid #e5e6eb', borderRadius: 6, overflow: 'hidden' }}>

@@ -317,17 +317,27 @@ const PermissionSettings: React.FC = () => {
           <Form.Item label="权限路径" name="type" rules={[{ required: true, message: '请输入权限路径' }]}> 
             <Input placeholder="例如：/home" />
           </Form.Item>
+          <Form.Item label="图标" name="icon">
+            <Input
+              size="large"
+              style={{ height: 40 }}
+              placeholder="请输入图标名称，如：s-home"
+              suffix={
+                <Button
+                  type="text"
+                  size="large"
+                  icon={<PictureOutlined />}
+                  onClick={() => openIconPicker('add')}
+                  style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                />
+              }
+            />
+          </Form.Item>
           <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请输入排序值' }]}> 
             <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入排序" />
           </Form.Item>
           <Form.Item label="是否显示" name="visible" valuePropName="checked" initialValue={true}> 
             <Switch />
-          </Form.Item>
-          <Form.Item label="图标" name="icon">
-            <Input
-              placeholder="请输入图标名称，如：s-home"
-              suffix={<Button type="text" icon={<PictureOutlined />} onClick={() => openIconPicker('add')} />}
-            />
           </Form.Item>
         </Form>
       </Modal>
@@ -394,17 +404,27 @@ const PermissionSettings: React.FC = () => {
           <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型路径' }]}> 
             <Input placeholder="例如：/admin/index" />
           </Form.Item>
+          <Form.Item label="图标" name="icon">
+            <Input
+              size="large"
+              style={{ height: 40 }}
+              placeholder="请输入图标名称，如：s-home"
+              suffix={
+                <Button
+                  type="text"
+                  size="large"
+                  icon={<PictureOutlined />}
+                  onClick={() => openIconPicker('edit')}
+                  style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                />
+              }
+            />
+          </Form.Item>
           <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请输入排序值' }]}> 
             <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入排序" />
           </Form.Item>
           <Form.Item label="是否显示" name="visible" valuePropName="checked"> 
             <Switch />
-          </Form.Item>
-          <Form.Item label="图标" name="icon">
-            <Input
-              placeholder="请输入图标名称，如：s-home"
-              suffix={<Button type="text" icon={<PictureOutlined />} onClick={() => openIconPicker('edit')} />}
-            />
           </Form.Item>
         </Form>
       </Modal>

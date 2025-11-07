@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Popconfirm, message, Switch, Divider } from 'antd';
+import { Card, Form, Select, Input, Button, Table, Empty, Breadcrumb, Popconfirm, message, Switch, Divider, Upload } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 type Article = {
@@ -177,7 +178,7 @@ const ArticleList: React.FC = () => {
             </div>
 
             <div style={{ border: '1px solid #f0f0f0', borderRadius: 8, padding: 16, background: '#fff', maxHeight: '70vh', overflow: 'auto' }}>
-              <Divider orientation="left">文章信息</Divider>
+              <Divider orientation="center">文章信息</Divider>
               <Form
                 form={addForm}
                 layout="vertical"
@@ -189,15 +190,33 @@ const ArticleList: React.FC = () => {
                 <Form.Item label="文章分类" name="category" rules={[{ required: true, message: '请选择分类' }]}> 
                   <Select placeholder="请选择" options={categories.map(c => ({ value: c, label: c }))} />
                 </Form.Item>
+                <Form.Item 
+                  label={(
+                    <span>
+                      图文封面
+                      <span style={{ color: '#999', fontSize: 12, marginLeft: 6 }}>(建议尺寸：500 x 312 px)</span>
+                    </span>
+                  )}
+                  name="cover"
+                  valuePropName="fileList"
+                  getValueFromEvent={(e) => e?.fileList}
+                > 
+                  <Upload listType="picture-card" beforeUpload={() => false}>
+                    <div>
+                      <PlusOutlined />
+                    </div>
+                  </Upload>
+                </Form.Item>
+                {/* 尺寸提示已合并到标签中 */}
                 <Form.Item label="作者" name="author"> 
                   <Input placeholder="请输入" maxLength={10} showCount />
                 </Form.Item>
                 <Form.Item label="文章简介" name="summary"> 
                   <Input.TextArea placeholder="请输入" rows={3} maxLength={300} showCount />
                 </Form.Item>
-                {/* 封面上传区域已移除 */}
+                {/* 封面上传区域如上，保持与上传图样式一致 */}
 
-                <Divider orientation="left">文章内容</Divider>
+                <Divider orientation="center">文章内容</Divider>
                 <Form.Item label="文章内容" name="content" rules={[{ required: true, message: '请输入文章内容' }]}> 
                   <div>
                     <div style={{ border: '1px solid #e5e6eb', borderBottom: 'none', padding: 8, borderRadius: '6px 6px 0 0', background: '#fafafa' }}>

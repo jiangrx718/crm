@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, Upload, TreeSelect, Tooltip, Popconfirm } from 'antd';
-import type { UploadFile } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Card, Form, Input, Button, Table, Empty, Breadcrumb, Modal, InputNumber, Switch, TreeSelect, Tooltip, Popconfirm } from 'antd';
+import { PictureOutlined, HomeOutlined, SearchOutlined, SettingOutlined, UserOutlined, PhoneOutlined, QuestionCircleOutlined, InfoCircleOutlined, MinusOutlined, PlusOutlined, CheckOutlined, CloseOutlined, ZoomInOutlined, ZoomOutOutlined, CloudUploadOutlined, CloudDownloadOutlined, CameraOutlined, AppstoreOutlined, DashboardOutlined, BellOutlined, CloudOutlined, SaveOutlined, EditOutlined, FileTextOutlined, ShopOutlined, ShareAltOutlined, UpOutlined, DownOutlined, LeftOutlined, RightOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 type Permission = {
@@ -22,8 +21,9 @@ const PermissionSettings: React.FC = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [editForm] = Form.useForm();
   const [editing, setEditing] = useState<Permission | null>(null);
-  const [addIconList, setAddIconList] = useState<UploadFile[]>([]);
-  const [editIconList, setEditIconList] = useState<UploadFile[]>([]);
+  const [iconPickerOpen, setIconPickerOpen] = useState(false);
+  const [iconPickerTarget, setIconPickerTarget] = useState<'add' | 'edit'>('add');
+  const [iconQuery, setIconQuery] = useState<string>('');
 
   // Mock 数据：与上传图片页面的列表视觉一致（有层级，可展开）
   const [permissions, setPermissions] = useState<Permission[]>([
@@ -73,16 +73,46 @@ const PermissionSettings: React.FC = () => {
     });
   };
 
-  const toFileList = (url?: string): UploadFile[] => {
-    if (!url) return [];
-    return [
-      {
-        uid: `${Date.now()}`,
-        name: 'icon.png',
-        status: 'done',
-        url,
-      } as UploadFile,
-    ];
+  // 图标候选列表（示例，带 s- 前缀与常用图标）
+  const iconChoices = [
+    { key: 's-home', icon: <HomeOutlined /> },
+    { key: 's-search', icon: <SearchOutlined /> },
+    { key: 's-setting', icon: <SettingOutlined /> },
+    { key: 's-user', icon: <UserOutlined /> },
+    { key: 's-phone', icon: <PhoneOutlined /> },
+    { key: 's-help', icon: <QuestionCircleOutlined /> },
+    { key: 's-info', icon: <InfoCircleOutlined /> },
+    { key: 's-minus', icon: <MinusOutlined /> },
+    { key: 's-plus', icon: <PlusOutlined /> },
+    { key: 's-check', icon: <CheckOutlined /> },
+    { key: 's-close', icon: <CloseOutlined /> },
+    { key: 's-zoom-in', icon: <ZoomInOutlined /> },
+    { key: 's-zoom-out', icon: <ZoomOutOutlined /> },
+    { key: 's-cloud-up', icon: <CloudUploadOutlined /> },
+    { key: 's-cloud-down', icon: <CloudDownloadOutlined /> },
+    { key: 's-camera', icon: <CameraOutlined /> },
+    { key: 's-app', icon: <AppstoreOutlined /> },
+    { key: 's-dashboard', icon: <DashboardOutlined /> },
+    { key: 's-bell', icon: <BellOutlined /> },
+    { key: 's-cloud', icon: <CloudOutlined /> },
+    { key: 's-save', icon: <SaveOutlined /> },
+    { key: 's-edit', icon: <EditOutlined /> },
+    { key: 's-file', icon: <FileTextOutlined /> },
+    { key: 's-shop', icon: <ShopOutlined /> },
+    { key: 's-share', icon: <ShareAltOutlined /> },
+    { key: 's-up', icon: <UpOutlined /> },
+    { key: 's-down', icon: <DownOutlined /> },
+    { key: 's-left', icon: <LeftOutlined /> },
+    { key: 's-right', icon: <RightOutlined /> },
+    { key: 's-arrow-left', icon: <ArrowLeftOutlined /> },
+    { key: 's-arrow-right', icon: <ArrowRightOutlined /> },
+    { key: 's-image', icon: <PictureOutlined /> },
+  ];
+
+  const openIconPicker = (target: 'add' | 'edit') => {
+    setIconPickerTarget(target);
+    setIconPickerOpen(true);
+    setIconQuery('');
   };
 
   // 将权限列表转换为 TreeSelect 的数据结构
@@ -134,8 +164,8 @@ const PermissionSettings: React.FC = () => {
       sort: record.sort,
       visible: record.visible,
       parentId: record.parentId,
+      icon: record.icon,
     });
-    setEditIconList(toFileList(record.icon));
   };
 
   const columns = [
@@ -246,14 +276,14 @@ const PermissionSettings: React.FC = () => {
             type="primary"
             onClick={() => {
               form.validateFields().then((vals) => {
-                const iconUrl = addIconList[0]?.url || (addIconList[0] as any)?.thumbUrl;
+                const iconName = (vals.icon || '').trim();
                 const newItem: Permission = {
                   id: Date.now(),
                   name: vals.name,
                   type: vals.type,
                   sort: Number(vals.sort || 0),
                   visible: !!vals.visible,
-                  ...(iconUrl ? { icon: iconUrl } : {}),
+                  ...(iconName ? { icon: iconName } : {}),
                   ...(vals.parentId ? { parentId: vals.parentId } : {}),
                 };
                 setPermissions((prev) => {
@@ -264,7 +294,6 @@ const PermissionSettings: React.FC = () => {
                 });
                 setOpenAdd(false);
                 form.resetFields();
-                setAddIconList([]);
               });
             }}
           >
@@ -285,8 +314,8 @@ const PermissionSettings: React.FC = () => {
               style={{ width: '100%' }}
             />
           </Form.Item>
-          <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型路径' }]}> 
-            <Input placeholder="例如：/admin/index" />
+          <Form.Item label="权限路径" name="type" rules={[{ required: true, message: '请输入权限路径' }]}> 
+            <Input placeholder="例如：/home" />
           </Form.Item>
           <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请输入排序值' }]}> 
             <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入排序" />
@@ -294,20 +323,11 @@ const PermissionSettings: React.FC = () => {
           <Form.Item label="是否显示" name="visible" valuePropName="checked" initialValue={true}> 
             <Switch />
           </Form.Item>
-          <Form.Item label="图标">
-            <Upload
-              listType="picture-card"
-              fileList={addIconList}
-              beforeUpload={() => false}
-              onChange={({ fileList }) => setAddIconList(fileList)}
-            >
-              {addIconList.length >= 1 ? null : (
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>上传</div>
-                </div>
-              )}
-            </Upload>
+          <Form.Item label="图标" name="icon">
+            <Input
+              placeholder="请输入图标名称，如：s-home"
+              suffix={<Button type="text" icon={<PictureOutlined />} onClick={() => openIconPicker('add')} />}
+            />
           </Form.Item>
         </Form>
       </Modal>
@@ -331,7 +351,7 @@ const PermissionSettings: React.FC = () => {
             type="primary"
             onClick={() => {
               editForm.validateFields().then((vals) => {
-                const iconUrl = editIconList[0]?.url || (editIconList[0] as any)?.thumbUrl;
+                const iconName = (vals.icon || '').trim();
                 if (!editing) return;
                 const updated: Permission = {
                   ...editing,
@@ -339,7 +359,7 @@ const PermissionSettings: React.FC = () => {
                   type: vals.type,
                   sort: Number(vals.sort || 0),
                   visible: !!vals.visible,
-                  ...(iconUrl ? { icon: iconUrl } : {}),
+                  ...(iconName ? { icon: iconName } : {}),
                   parentId: vals.parentId,
                 };
                 setPermissions((prev) => {
@@ -380,22 +400,60 @@ const PermissionSettings: React.FC = () => {
           <Form.Item label="是否显示" name="visible" valuePropName="checked"> 
             <Switch />
           </Form.Item>
-          <Form.Item label="图标">
-            <Upload
-              listType="picture-card"
-              fileList={editIconList}
-              beforeUpload={() => false}
-              onChange={({ fileList }) => setEditIconList(fileList)}
-            >
-              {editIconList.length >= 1 ? null : (
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>上传</div>
-                </div>
-              )}
-            </Upload>
+          <Form.Item label="图标" name="icon">
+            <Input
+              placeholder="请输入图标名称，如：s-home"
+              suffix={<Button type="text" icon={<PictureOutlined />} onClick={() => openIconPicker('edit')} />}
+            />
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="图标选择"
+        open={iconPickerOpen}
+        width={720}
+        destroyOnClose
+        bodyStyle={{ padding: 12, maxHeight: '60vh', overflow: 'auto' }}
+        onCancel={() => setIconPickerOpen(false)}
+        footer={[<Button key="close" onClick={() => setIconPickerOpen(false)}>关闭</Button>]}
+      >
+        <Input
+          placeholder="输入关键词搜索，注意全是英文"
+          value={iconQuery}
+          onChange={(e) => setIconQuery(e.target.value)}
+          style={{ marginBottom: 12 }}
+        />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, 56px)', gap: 16 }}>
+          {iconChoices
+            .filter((it) => it.key.includes(iconQuery.trim().toLowerCase()))
+            .map((it) => (
+              <div
+                key={it.key}
+                onClick={() => {
+                  if (iconPickerTarget === 'add') {
+                    form.setFieldsValue({ icon: it.key });
+                  } else {
+                    editForm.setFieldsValue({ icon: it.key });
+                  }
+                  setIconPickerOpen(false);
+                }}
+                style={{
+                  width: 56,
+                  height: 56,
+                  border: '1px solid #e5e6eb',
+                  borderRadius: 6,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#4e5969',
+                }}
+                title={it.key}
+              >
+                {it.icon}
+              </div>
+            ))}
+        </div>
       </Modal>
     </div>
   );

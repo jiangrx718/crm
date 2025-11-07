@@ -43,7 +43,7 @@ const SideMenu: React.FC = () => {
   ];
 
   return (
-    <div className="menu-container">
+    <div className="menu-container" style={{ height: '100vh', overflowY: 'auto', overscrollBehavior: 'contain', paddingBottom: 12 }}>
       {/* 顶部菜单：首页 */}
       <div
         className={`menu-item ${currentPath === '/home' ? 'active' : ''}`}
@@ -57,7 +57,15 @@ const SideMenu: React.FC = () => {
       <div
         className={`menu-item ${currentPath === '/model-training' ? 'active' : ''}`}
         onClick={() => {
-          setOpenTrain(prev => !prev);
+          const next = !openTrain;
+          setOpenTrain(next);
+          // 手风琴：展开此分组时收起其他分组
+          if (next) {
+            setOpenAdmin(false);
+            setOpenGoods(false);
+            setOpenOrders(false);
+            setOpenSettings(false);
+          }
           // 点击同时跳转到模型训练页面
           navigate('/model-training');
         }}
@@ -87,7 +95,16 @@ const SideMenu: React.FC = () => {
       {/* 父级菜单：管理权限 */}
       <div
         className={`menu-item ${['/roles','/admins','/permissions'].includes(currentPath) ? 'active' : ''}`}
-        onClick={() => setOpenAdmin(prev => !prev)}
+        onClick={() => {
+          const next = !openAdmin;
+          setOpenAdmin(next);
+          if (next) {
+            setOpenTrain(false);
+            setOpenGoods(false);
+            setOpenOrders(false);
+            setOpenSettings(false);
+          }
+        }}
       >
         <span className="menu-icon"><SafetyOutlined /></span>
         <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>管理权限</span>
@@ -113,7 +130,16 @@ const SideMenu: React.FC = () => {
       {/* 父级菜单：商品管理 */}
       <div
         className={`menu-item ${['/product-category','/product-list'].includes(currentPath) ? 'active' : ''}`}
-        onClick={() => setOpenGoods(prev => !prev)}
+        onClick={() => {
+          const next = !openGoods;
+          setOpenGoods(next);
+          if (next) {
+            setOpenTrain(false);
+            setOpenAdmin(false);
+            setOpenOrders(false);
+            setOpenSettings(false);
+          }
+        }}
       >
         <span className="menu-icon"><ShoppingOutlined /></span>
         <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>商品管理</span>
@@ -139,7 +165,16 @@ const SideMenu: React.FC = () => {
       {/* 父级菜单：订单管理 */}
       <div
         className={`menu-item ${['/order-list','/order-statistics'].includes(currentPath) ? 'active' : ''}`}
-        onClick={() => setOpenOrders(prev => !prev)}
+        onClick={() => {
+          const next = !openOrders;
+          setOpenOrders(next);
+          if (next) {
+            setOpenTrain(false);
+            setOpenAdmin(false);
+            setOpenGoods(false);
+            setOpenSettings(false);
+          }
+        }}
       >
         <span className="menu-icon"><ShoppingCartOutlined /></span>
         <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>订单管理</span>
@@ -165,7 +200,16 @@ const SideMenu: React.FC = () => {
       {/* 父级菜单：系统设置 */}
       <div
         className={`menu-item ${['/base-settings','/agreement-settings'].includes(currentPath) ? 'active' : ''}`}
-        onClick={() => setOpenSettings(prev => !prev)}
+        onClick={() => {
+          const next = !openSettings;
+          setOpenSettings(next);
+          if (next) {
+            setOpenTrain(false);
+            setOpenAdmin(false);
+            setOpenGoods(false);
+            setOpenOrders(false);
+          }
+        }}
       >
         <span className="menu-icon"><SettingOutlined /></span>
         <span className="menu-text" style={{ whiteSpace: 'nowrap' }}>系统设置</span>

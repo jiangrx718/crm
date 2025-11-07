@@ -53,6 +53,11 @@ const ArticleList: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isHtmlMode, setIsHtmlMode] = useState(false);
   const [htmlSource, setHtmlSource] = useState('');
+  // 解决 toolbar handler 闭包状态不更新的问题
+  const isHtmlModeRef = useRef<boolean>(false);
+  const htmlSourceRef = useRef<string>('');
+  useEffect(() => { isHtmlModeRef.current = isHtmlMode; }, [isHtmlMode]);
+  useEffect(() => { htmlSourceRef.current = htmlSource; }, [htmlSource]);
 
   const filtered = useMemo(() => (
     data.filter(item => {
@@ -139,7 +144,7 @@ const ArticleList: React.FC = () => {
               setIsFullscreen(prev => !prev);
             },
             html: () => {
-              const next = !isHtmlMode;
+              const next = !isHtmlModeRef.current;
               if (next) {
                 const html = quillRef.current!.root.innerHTML;
                 setHtmlSource(html);
@@ -147,10 +152,11 @@ const ArticleList: React.FC = () => {
                 setContent(html);
                 addForm.setFieldValue('content', html);
               } else {
-                quillRef.current!.root.innerHTML = htmlSource;
+                const html = htmlSourceRef.current || '';
+                quillRef.current!.root.innerHTML = html;
                 setIsHtmlMode(false);
-                setContent(htmlSource);
-                addForm.setFieldValue('content', htmlSource);
+                setContent(html);
+                addForm.setFieldValue('content', html);
               }
             },
           }
@@ -190,6 +196,20 @@ const ArticleList: React.FC = () => {
       addForm.setFieldValue('content', htmlSource);
       setContent(htmlSource);
     }
+  }, [isHtmlMode, htmlSource]);
+
+  // 在源码模式下支持 ESC 快捷键返回富文本
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (isHtmlMode && e.key === 'Escape' && quillRef.current) {
+        quillRef.current.root.innerHTML = htmlSource || '';
+        setIsHtmlMode(false);
+        setContent(htmlSource || '');
+        addForm.setFieldValue('content', htmlSource || '');
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
   }, [isHtmlMode, htmlSource]);
 
   // 全屏时禁用页面滚动
@@ -347,7 +367,7 @@ const ArticleList: React.FC = () => {
                   <div ref={editorWrapperRef} style={isFullscreen ? { position: 'fixed', inset: 0, zIndex: 1000, background: '#fff', padding: 16 } : undefined}>
                     {/* 工具栏：与协议设置页一致，并补充 HTML/分隔线/全屏 */}
                     <div id="article-toolbar" ref={quillToolbarRef} className="ql-toolbar ql-snow" style={{ border: '1px solid #e5e6eb', borderRadius: 6, borderBottom: 'none' }}>
-                      <button className="ql-html" title="HTML" style={isHtmlMode ? { background: '#efefef', borderRadius: 4, padding: '0 6px' } : { padding: '0 6px' }}>HTML</button>
+                      <button className="ql-html" title={isHtmlMode ? '返回' : 'HTML'} style={isHtmlMode ? { background: '#efefef', borderRadius: 4, padding: '0 6px' } : { padding: '0 6px' }}>{isHtmlMode ? '返回' : 'HTML'}</button>
                       <span className="ql-formats">
                         <select className="ql-header" defaultValue="">
                           <option value="">正文</option>
@@ -408,14 +428,14 @@ const ArticleList: React.FC = () => {
                       </span>
                     </div>
                     <div style={{ border: '1px solid #e5e6eb', borderRadius: 6, overflow: 'hidden' }}>
-                      {isHtmlMode ? (
+                      {/* 始终保留 Quill 容器，避免切换模式时卸载导致编辑器失效 */}
+                      <div ref={quillContainerRef} style={{ height: 420, display: isHtmlMode ? 'none' : 'block' }} />
+                      {isHtmlMode && (
                         <textarea
                           value={htmlSource}
                           onChange={(e) => setHtmlSource(e.target.value)}
                           style={{ height: 420, width: '100%', fontFamily: 'monospace', fontSize: 12, lineHeight: '20px', border: 'none', outline: 'none', padding: 12 }}
                         />
-                      ) : (
-                        <div ref={quillContainerRef} style={{ height: 420 }} />
                       )}
                     </div>
                     {isFullscreen && (

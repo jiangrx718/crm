@@ -1,8 +1,8 @@
 package model
 
 import (
+	"crm/gopkg/gorms"
 	"time"
-	"web/gopkg/gorms"
 
 	"gorm.io/datatypes"
 )

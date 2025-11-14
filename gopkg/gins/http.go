@@ -1,10 +1,10 @@
 package gins
 
 import (
+	"crm/gopkg/services"
+	"crm/gopkg/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"web/gopkg/services"
-	"web/gopkg/utils"
 )
 
 func StatusOK(ctx *gin.Context, result services.Result) {

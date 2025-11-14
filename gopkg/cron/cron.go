@@ -1,7 +1,7 @@
 package cron
 
 import (
-	rxCron "web/gopkg/cron/base"
+	rxCron "crm/gopkg/cron/base"
 
 	"github.com/spf13/viper"
 )

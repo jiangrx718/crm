@@ -2,9 +2,9 @@ package minio
 
 import (
 	"context"
+	"crm/gopkg/viper"
 	"fmt"
 	"time"
-	"web/gopkg/viper"
 )
 
 func GeneratePresignedURL(objectName string, expiry time.Duration) (string, error) {

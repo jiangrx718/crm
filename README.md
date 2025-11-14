@@ -1,9 +1,9 @@
-web 项目，使用go语言编写，基于gin的web框架封装基础的相关信息，开箱即用
+crm 项目，使用go语言编写，基于gin的web框架封装基础的相关信息，开箱即用
 
 ## 1.正式项目目录运行时结构
 
 ```
-web/
+crm/
 ├── commands/
 │   └── agenerate # 生成SQL ORM目录
 │   └── migrate   # 数据库建表 目录

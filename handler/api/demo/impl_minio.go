@@ -1,14 +1,14 @@
 package demo
 
 import (
+	"crm/gopkg/gins"
+	"crm/gopkg/minio"
+	"crm/gopkg/services"
+	"crm/gopkg/utils/date"
+	"crm/gopkg/utils/files"
 	"fmt"
 	"os"
 	"path/filepath"
-	"web/gopkg/gins"
-	"web/gopkg/minio"
-	"web/gopkg/services"
-	"web/gopkg/utils/date"
-	"web/gopkg/utils/files"
 
 	"github.com/gin-gonic/gin"
 )

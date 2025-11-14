@@ -2,12 +2,12 @@ package demo
 
 import (
 	"context"
+	"crm/gopkg/gorms"
+	"crm/gopkg/log"
+	"crm/gopkg/paging"
+	"crm/gopkg/services"
+	"crm/internal/model"
 	"time"
-	"web/gopkg/gorms"
-	"web/gopkg/log"
-	"web/gopkg/paging"
-	"web/gopkg/services"
-	"web/internal/model"
 
 	"go.uber.org/zap"
 )
@@ -38,7 +38,7 @@ func NewDemo(demo *model.Demo) *Demo {
 	if demo == nil {
 		return nil
 	}
-	
+
 	return &Demo{
 		DemoId:      demo.DemoId,
 		Name:        demo.Name,

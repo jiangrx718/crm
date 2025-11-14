@@ -2,8 +2,8 @@ package demo
 
 import (
 	"context"
-	"web/gopkg/services"
-	"web/internal/model"
+	"crm/gopkg/services"
+	"crm/internal/model"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 )

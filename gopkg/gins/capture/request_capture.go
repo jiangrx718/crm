@@ -1,8 +1,8 @@
 package gins
 
 import (
+	"crm/gopkg/gins"
 	"github.com/gin-gonic/gin"
-	"web/gopkg/gins"
 )
 
 func RequestCapture(options Options, before func(ctx *gin.Context, request *Request), after func(ctx *gin.Context, capture *Capture)) gin.HandlerFunc {

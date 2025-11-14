@@ -1,10 +1,10 @@
 package server
 
 import (
+	"crm/gopkg/gins"
+	"crm/gopkg/graceful"
+	"crm/handler/api"
 	"net/http"
-	"web/gopkg/gins"
-	"web/gopkg/graceful"
-	"web/handler/api"
 
 	"github.com/urfave/cli/v2"
 )

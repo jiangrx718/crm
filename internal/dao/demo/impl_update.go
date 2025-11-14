@@ -2,9 +2,9 @@ package demo
 
 import (
 	"context"
+	"crm/internal/g"
+	"crm/internal/model"
 	"strings"
-	"web/internal/g"
-	"web/internal/model"
 
 	"github.com/pkg/errors"
 

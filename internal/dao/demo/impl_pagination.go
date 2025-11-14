@@ -2,10 +2,10 @@ package demo
 
 import (
 	"context"
-	"web/gopkg/gorms"
-	"web/internal/model"
+	"crm/gopkg/gorms"
+	"crm/internal/model"
 
-	"web/internal/g"
+	"crm/internal/g"
 )
 
 func (d *Dao) Pagination(ctx context.Context, page gorms.Page) (*gorms.Paging[*model.Demo], error) {

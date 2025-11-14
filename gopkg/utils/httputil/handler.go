@@ -3,8 +3,8 @@ package httputil
 import (
 	"net/http"
 
+	"crm/gopkg/utils"
 	"github.com/gin-gonic/gin"
-	"web/gopkg/utils"
 )
 
 type HttpError struct {

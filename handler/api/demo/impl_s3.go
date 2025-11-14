@@ -1,10 +1,10 @@
 package demo
 
 import (
+	"crm/gopkg/gins"
+	"crm/gopkg/storage"
+	"crm/handler/api/demo/request"
 	"fmt"
-	"web/gopkg/gins"
-	"web/gopkg/storage"
-	"web/handler/api/demo/request"
 
 	"github.com/gin-gonic/gin"
 )

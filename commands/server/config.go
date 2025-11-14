@@ -1,14 +1,14 @@
 package server
 
 import (
-	"web/gopkg/cache/es"
-	"web/gopkg/cron"
-	"web/gopkg/gorms"
-	"web/gopkg/log"
-	"web/gopkg/minio"
-	"web/gopkg/storage"
-	"web/gopkg/viper"
-	"web/internal/g"
+	"crm/gopkg/cache/es"
+	"crm/gopkg/cron"
+	"crm/gopkg/gorms"
+	"crm/gopkg/log"
+	"crm/gopkg/minio"
+	"crm/gopkg/storage"
+	"crm/gopkg/viper"
+	"crm/internal/g"
 
 	"github.com/urfave/cli/v2"
 )

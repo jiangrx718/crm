@@ -1,7 +1,7 @@
 package viper
 
 import (
-	"web/gopkg/log"
+	"crm/gopkg/log"
 
 	"github.com/spf13/viper"
 )

@@ -1,6 +1,6 @@
 package request
 
-import "web/internal/model"
+import "crm/internal/model"
 
 type CreateDemoParams struct {
 	Name        string             `json:"name" binding:"required"`         // 标题

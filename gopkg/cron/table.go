@@ -1,8 +1,8 @@
 package cron
 
 import (
-	rxCron "web/gopkg/cron/base"
-	"web/gopkg/log"
+	rxCron "crm/gopkg/cron/base"
+	"crm/gopkg/log"
 )
 
 type TableStatus struct {

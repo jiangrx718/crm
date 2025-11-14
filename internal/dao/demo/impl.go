@@ -1,7 +1,7 @@
 package demo
 
 import (
-	"web/gopkg/gorms"
+	"crm/gopkg/gorms"
 )
 
 type Dao struct {

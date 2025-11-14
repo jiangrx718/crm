@@ -1,8 +1,8 @@
 package demo
 
 import (
-	"web/gopkg/gins"
-	"web/handler/api/demo/request"
+	"crm/gopkg/gins"
+	"crm/handler/api/demo/request"
 
 	"github.com/gin-gonic/gin"
 )

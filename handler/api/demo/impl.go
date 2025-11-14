@@ -1,9 +1,9 @@
 package demo
 
 import (
-	"web/gopkg/gins"
-	"web/internal/service"
-	"web/internal/service/demo"
+	"crm/gopkg/gins"
+	"crm/internal/service"
+	"crm/internal/service/demo"
 
 	"github.com/gin-gonic/gin"
 )

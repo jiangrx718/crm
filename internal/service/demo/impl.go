@@ -1,8 +1,8 @@
 package demo
 
 import (
-	"web/internal/dao"
-	"web/internal/dao/demo"
+	"crm/internal/dao"
+	"crm/internal/dao/demo"
 )
 
 type Service struct {

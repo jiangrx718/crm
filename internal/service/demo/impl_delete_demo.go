@@ -2,9 +2,9 @@ package demo
 
 import (
 	"context"
+	"crm/gopkg/log"
+	"crm/gopkg/services"
 	"errors"
-	"web/gopkg/log"
-	"web/gopkg/services"
 
 	"go.uber.org/zap"
 )

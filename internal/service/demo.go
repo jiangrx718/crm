@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"web/gopkg/gorms"
-	"web/gopkg/services"
-	"web/internal/model"
+	"crm/gopkg/gorms"
+	"crm/gopkg/services"
+	"crm/internal/model"
 )
 
 type Demo interface {

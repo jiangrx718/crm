@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"web/internal/worker/base"
-	"web/internal/worker/order"
+	"crm/internal/worker/base"
+	"crm/internal/worker/order"
 
 	"github.com/urfave/cli/v2"
 )
@@ -54,11 +54,11 @@ func Command() *cli.Command {
 				for i := 1; i <= 3; i++ {
 					orderTask := order.ProcessOrderTask(fmt.Sprintf("all-%d", i))
 					refundTask := order.ProcessRefundTask(fmt.Sprintf("refund-%d", i))
-					
+
 					if err := taskManager.Submit(orderTask); err != nil {
 						fmt.Printf("提交订单任务失败: %v\n", err)
 					}
-					
+
 					if err := taskManager.Submit(refundTask); err != nil {
 						fmt.Printf("提交退款任务失败: %v\n", err)
 					}
@@ -69,12 +69,12 @@ func Command() *cli.Command {
 
 			// 等待一段时间以确保任务完成
 			time.Sleep(5 * time.Second)
-			
+
 			// 显示任务统计信息
 			fmt.Println("\n任务统计信息:")
 			stats := taskManager.GetAllStats()
 			for taskID, stat := range stats {
-				fmt.Printf("任务ID: %s, 总执行次数: %d, 成功: %d, 失败: %d, 最后执行: %v\n", 
+				fmt.Printf("任务ID: %s, 总执行次数: %d, 成功: %d, 失败: %d, 最后执行: %v\n",
 					taskID, stat.TotalExecutions, stat.SuccessCount, stat.ErrorCount, stat.LastExecution)
 			}
 

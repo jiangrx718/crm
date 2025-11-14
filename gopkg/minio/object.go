@@ -2,8 +2,8 @@ package minio
 
 import (
 	"context"
+	"crm/gopkg/viper"
 	"fmt"
-	"web/gopkg/viper"
 
 	"github.com/minio/minio-go/v7"
 )

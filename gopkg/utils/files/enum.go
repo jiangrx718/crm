@@ -1,10 +1,10 @@
 package files
 
 import (
+	"crm/gopkg/utils"
 	"fmt"
 	"path/filepath"
 	"strings"
-	"web/gopkg/utils"
 )
 
 type FileNames []FileName

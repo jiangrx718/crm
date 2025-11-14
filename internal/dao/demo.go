@@ -2,9 +2,9 @@ package dao
 
 import (
 	"context"
-	"web/gopkg/gorms"
-	"web/internal/g"
-	"web/internal/model"
+	"crm/gopkg/gorms"
+	"crm/internal/g"
+	"crm/internal/model"
 
 	"gorm.io/gen"
 )

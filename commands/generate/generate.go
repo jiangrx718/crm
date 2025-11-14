@@ -1,8 +1,8 @@
 package generate
 
 import (
-	"web/gopkg/gorms"
-	"web/internal/model"
+	"crm/gopkg/gorms"
+	"crm/internal/model"
 
 	"github.com/urfave/cli/v2"
 	"gorm.io/gen"

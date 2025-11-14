@@ -1,11 +1,11 @@
 package main
 
 import (
+	"crm/commands"
+	"crm/commands/server"
+	"crm/gopkg/log"
+	"crm/internal/worker"
 	"os"
-	"web/commands"
-	"web/commands/server"
-	"web/gopkg/log"
-	"web/internal/worker"
 
 	"github.com/urfave/cli/v2"
 )

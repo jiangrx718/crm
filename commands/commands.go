@@ -1,10 +1,10 @@
 package commands
 
 import (
-	"web/commands/generate"
-	"web/commands/gorm"
-	"web/commands/migrate"
-	"web/commands/worker"
+	"crm/commands/generate"
+	"crm/commands/gorm"
+	"crm/commands/migrate"
+	"crm/commands/worker"
 
 	"github.com/urfave/cli/v2"
 )

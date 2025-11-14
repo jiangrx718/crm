@@ -1,4 +1,4 @@
-module web
+module crm
 
 go 1.23.0
 

@@ -2,8 +2,8 @@ package demo
 
 import (
 	"context"
+	"crm/internal/g"
 	"strings"
-	"web/internal/g"
 )
 
 func (d *Dao) Delete(ctx context.Context, id string) error {

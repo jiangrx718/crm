@@ -3,11 +3,11 @@ package storage
 import (
 	"bytes"
 	"context"
+	"crm/gopkg/utils/files"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"io"
-	"web/gopkg/utils/files"
 )
 
 func UploadByFileReader(projectName ProjectName, moduleName ModuleName, fileName files.FileName, file io.Reader) (string, error) {

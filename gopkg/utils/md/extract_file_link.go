@@ -2,11 +2,11 @@ package md
 
 import (
 	"bufio"
+	"crm/gopkg/utils/slices"
 	"io"
 	"path"
 	"regexp"
 	"strings"
-	"web/gopkg/utils/slices"
 )
 
 // 预编译的组合正则：一次扫描同时匹配 Markdown 链接/图片与 HTML img/a

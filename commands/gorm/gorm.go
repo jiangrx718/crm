@@ -2,14 +2,14 @@ package gorm
 
 import (
 	"bufio"
+	"crm/gopkg/gorms"
+	"crm/gopkg/log"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
-	"web/gopkg/gorms"
-	"web/gopkg/log"
 
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"

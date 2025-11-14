@@ -17,7 +17,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"web/internal/model"
+	"crm/internal/model"
 )
 
 func newDemo(db *gorm.DB, opts ...gen.DOOption) demo {

@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	capture "web/gopkg/gins/capture"
-	"web/gopkg/utils"
+	capture "crm/gopkg/gins/capture"
+	"crm/gopkg/utils"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,6 +2,8 @@ package storage
 
 import (
 	"context"
+	"crm/gopkg/utils"
+	"crm/gopkg/utils/files"
 	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -9,8 +11,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"web/gopkg/utils"
-	"web/gopkg/utils/files"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/spf13/viper"

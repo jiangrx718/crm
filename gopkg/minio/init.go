@@ -1,7 +1,7 @@
 package minio
 
 import (
-	"web/gopkg/viper"
+	"crm/gopkg/viper"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"

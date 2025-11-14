@@ -2,11 +2,11 @@ package demo
 
 import (
 	"context"
-	"web/gopkg/log"
-	"web/internal/g"
-	"web/internal/model"
+	"crm/gopkg/log"
+	"crm/internal/g"
+	"crm/internal/model"
 
-	"web/gopkg/utils"
+	"crm/gopkg/utils"
 
 	"go.uber.org/zap"
 	"gorm.io/datatypes"

@@ -1,10 +1,10 @@
 package worker
 
 import (
-	"web/gopkg/gins"
-	"web/internal/service"
-	"web/internal/service/demo"
-	"web/internal/service/worker"
+	"crm/gopkg/gins"
+	"crm/internal/service"
+	"crm/internal/service/demo"
+	"crm/internal/service/worker"
 
 	"github.com/gin-gonic/gin"
 )

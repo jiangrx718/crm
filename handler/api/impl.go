@@ -2,7 +2,17 @@ package api
 
 import (
 	"crm/gopkg/gins"
+	"crm/handler/api/admin"
+	"crm/handler/api/admin_role"
+	"crm/handler/api/article"
+	"crm/handler/api/article_category"
 	"crm/handler/api/demo"
+	"crm/handler/api/order"
+	"crm/handler/api/permission"
+	"crm/handler/api/product"
+	"crm/handler/api/product_category"
+	"crm/handler/api/role"
+	"crm/handler/api/system"
 	"crm/handler/api/worker"
 	"crm/handler/middleware"
 
@@ -30,6 +40,16 @@ func (h *Handler) RegisterRoutes() {
 	handlers := []gins.Handler{
 		demo.NewHandler(g),
 		worker.NewHandler(g),
+		admin.NewHandler(g),
+		admin_role.NewHandler(g),
+		article.NewHandler(g),
+		article_category.NewHandler(g),
+		order.NewHandler(g),
+		permission.NewHandler(g),
+		product.NewHandler(g),
+		product_category.NewHandler(g),
+		role.NewHandler(g),
+		system.NewHandler(g),
 	}
 
 	for _, handler := range handlers {

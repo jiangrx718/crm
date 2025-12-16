@@ -1,4 +1,4 @@
-package demo
+package crm_admin
 
 import (
 	"crm/gopkg/gorms"

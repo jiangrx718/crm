@@ -6,14 +6,12 @@ import (
 	"crm/handler/api/admin_role"
 	"crm/handler/api/article"
 	"crm/handler/api/article_category"
-	"crm/handler/api/demo"
 	"crm/handler/api/order"
 	"crm/handler/api/permission"
 	"crm/handler/api/product"
 	"crm/handler/api/product_category"
 	"crm/handler/api/role"
 	"crm/handler/api/system"
-	"crm/handler/api/worker"
 	"crm/handler/middleware"
 
 	"github.com/gin-contrib/cors"
@@ -38,8 +36,6 @@ func (h *Handler) RegisterRoutes() {
 
 	g := h.engine.Group("/api", middleware.RequestCapture())
 	handlers := []gins.Handler{
-		demo.NewHandler(g),
-		worker.NewHandler(g),
 		admin.NewHandler(g),
 		admin_role.NewHandler(g),
 		article.NewHandler(g),

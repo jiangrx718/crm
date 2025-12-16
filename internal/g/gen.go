@@ -16,34 +16,34 @@ import (
 )
 
 var (
-	Q    = new(Query)
-	Demo *demo
+	Q        = new(Query)
+	CRMAdmin *cRMAdmin
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
-	Demo = &Q.Demo
+	CRMAdmin = &Q.CRMAdmin
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:   db,
-		Demo: newDemo(db, opts...),
+		db:       db,
+		CRMAdmin: newCRMAdmin(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Demo demo
+	CRMAdmin cRMAdmin
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:   db,
-		Demo: q.Demo.clone(db),
+		db:       db,
+		CRMAdmin: q.CRMAdmin.clone(db),
 	}
 }
 
@@ -57,18 +57,18 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:   db,
-		Demo: q.Demo.replaceDB(db),
+		db:       db,
+		CRMAdmin: q.CRMAdmin.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	Demo IDemoDo
+	CRMAdmin ICRMAdminDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Demo: q.Demo.WithContext(ctx),
+		CRMAdmin: q.CRMAdmin.WithContext(ctx),
 	}
 }
 

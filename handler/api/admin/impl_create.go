@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AdminCreate 管理权限-管理元列表-创建
+// AdminCreate 管理权限-管理员-创建
 func (h *Handler) AdminCreate(ctx *gin.Context) {
 	var req request.AdminCreateReq
 
@@ -16,7 +16,7 @@ func (h *Handler) AdminCreate(ctx *gin.Context) {
 		return
 	}
 
-	result, err := h.adminService.AdminCreate(ctx, req.UserName, req.UserPhone, req.Password, req.DepartmentId, req.Status)
+	result, err := h.adminService.AdminCreate(ctx, req.UserName, req.UserPhone, req.Password, req.Status, req.DepartmentId)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

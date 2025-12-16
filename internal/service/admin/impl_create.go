@@ -16,10 +16,10 @@ type RespAdminCreateInfo struct {
 	UserName     string `json:"user_name"`
 	UserPhone    string `json:"user_phone"`
 	DepartmentId int    `json:"department_id"`
-	Status       int    `json:"status"`
+	Status       string `json:"status"`
 }
 
-func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password string, departmentId, status int) (common.ServiceResult, error) {
+func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password, status string, departmentId int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()

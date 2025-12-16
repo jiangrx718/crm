@@ -4,9 +4,11 @@ import (
 	"context"
 	"crm/gopkg/log"
 	"crm/gopkg/utils"
+	"crm/gopkg/utils/str"
 	"crm/internal/common"
 	"crm/internal/g"
 	"crm/internal/model"
+	"fmt"
 )
 
 type RespAdminCreateInfo struct {
@@ -21,11 +23,12 @@ func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
 	)
+
 	crmAdmin := model.CRMAdmin{
 		AdminId:      utils.GenUUID(),
 		UserName:     userName,
 		UserPhone:    userPhone,
-		Password:     password,
+		Password:     str.MD5String(fmt.Sprintf("%s%s", password, model.SaltValue)),
 		DepartmentId: departmentId,
 	}
 

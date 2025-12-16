@@ -20,6 +20,9 @@ func (r *CRMAdmin) TableName() string {
 	return "crm_admin"
 }
 
+// SaltValue 加密盐值
+const SaltValue = "crm"
+
 const (
 	StatusOff = iota
 	StatusOn

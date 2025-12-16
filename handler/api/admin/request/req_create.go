@@ -5,4 +5,5 @@ type AdminCreateReq struct {
 	UserPhone    string `json:"user_phone" binding:"required"`
 	Password     string `json:"password" binding:"required"`
 	DepartmentId int    `json:"department_id" binding:"required"`
+	Status       int    `json:"status"`
 }

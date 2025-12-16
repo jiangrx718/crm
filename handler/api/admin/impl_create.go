@@ -16,7 +16,7 @@ func (h *Handler) AdminCreate(ctx *gin.Context) {
 		return
 	}
 
-	result, err := h.adminService.AdminCreate(ctx, req.UserName, req.UserPhone, req.Password, req.DepartmentId)
+	result, err := h.adminService.AdminCreate(ctx, req.UserName, req.UserPhone, req.Password, req.DepartmentId, req.Status)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

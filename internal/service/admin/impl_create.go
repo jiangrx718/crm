@@ -16,9 +16,10 @@ type RespAdminCreateInfo struct {
 	UserName     string `json:"user_name"`
 	UserPhone    string `json:"user_phone"`
 	DepartmentId int    `json:"department_id"`
+	Status       int    `json:"status"`
 }
 
-func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password string, departmentId int) (common.ServiceResult, error) {
+func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password string, departmentId, status int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -30,6 +31,7 @@ func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password
 		UserPhone:    userPhone,
 		Password:     str.MD5String(fmt.Sprintf("%s%s", password, model.SaltValue)),
 		DepartmentId: departmentId,
+		Status:       status,
 	}
 
 	if createErr := g.CRMAdmin.Create(&crmAdmin); createErr != nil {
@@ -42,6 +44,7 @@ func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password
 		UserName:     userName,
 		UserPhone:    userPhone,
 		DepartmentId: departmentId,
+		Status:       status,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

@@ -6,5 +6,5 @@ import (
 )
 
 type AdminIFace interface {
-	AdminCreate(ctx context.Context, userName, userPhone, password string, departmentId int) (common.ServiceResult, error)
+	AdminCreate(ctx context.Context, userName, userPhone, password string, departmentId, status int) (common.ServiceResult, error)
 }

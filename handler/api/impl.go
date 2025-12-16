@@ -45,7 +45,7 @@ func (h *Handler) RegisterRoutes() {
 	}
 
 	// 业务路由
-	g := h.engine.Group("/api", middleware.RequestCapture())
+	g := h.engine.Group("/api", middleware.RequestCapture(), middleware.JWTAuth())
 	handlers := []gins.Handler{
 		admin.NewHandler(g),
 		admin_role.NewHandler(g),

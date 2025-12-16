@@ -3,11 +3,13 @@ package gins
 import (
 	"crm/gopkg/services"
 	"crm/gopkg/utils"
-	"github.com/gin-gonic/gin"
+	"crm/internal/common"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-func StatusOK(ctx *gin.Context, result services.Result) {
+func StatusOK(ctx *gin.Context, result common.ServiceResult) {
 	ctx.AbortWithStatusJSON(http.StatusOK, result)
 }
 

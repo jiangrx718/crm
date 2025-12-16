@@ -24,6 +24,6 @@ func (r *CRMAdmin) TableName() string {
 const SaltValue = "crm"
 
 const (
-	StatusOff = iota
-	StatusOn
+	StatusOff = "off"
+	StatusOn  = "on"
 )

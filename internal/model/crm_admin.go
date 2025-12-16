@@ -6,6 +6,7 @@ import (
 
 type CRMAdmin struct {
 	Id           int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
+	AdminId      string    `gorm:"column:admin_id;type:char(36);unique;comment:业务主键;" json:"admin_id"`
 	UserName     string    `gorm:"column:user_name;type:varchar(256);default:'';comment:用户名" json:"user_name"`
 	UserPhone    string    `gorm:"column:user_phone;type:char(11);default:'';comment:手机号" json:"user_phone"`
 	Password     string    `gorm:"column:password;type:char(32);default:'';comment:密码" json:"password"`

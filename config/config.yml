@@ -1,11 +1,11 @@
-app: web
+app: crm
 debug: true
 db:
   dialect: mysql
-  dsn: root:123456@tcp(127.0.0.1:3306)/tools?charset=utf8mb4&parseTime=True&loc=Local
+  dsn: root:123456@tcp(127.0.0.1:3306)/crm?charset=utf8mb4&parseTime=True&loc=Local
 redis:
   client:
-    web:
+    crm:
       addr:
         - 127.0.0.1:6379
       db: 0

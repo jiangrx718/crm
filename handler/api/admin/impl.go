@@ -21,8 +21,8 @@ func NewHandler(g *gin.RouterGroup) gins.Handler {
 }
 
 func (h *Handler) RegisterRoutes() {
-	//g := h.g.Group("/admin")
-	//g.POST("/create", h.CreateData)
+	g := h.g.Group("/admin")
+	g.POST("/create", h.AdminCreate)
 	//g.POST("/update", h.UpdateData)
 	//g.POST("/delete", h.DeleteData)
 	//g.POST("/status", h.StatusData)

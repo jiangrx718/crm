@@ -2,7 +2,6 @@ package migrate
 
 import (
 	"crm/gopkg/gorms"
-	"crm/internal/model"
 
 	"github.com/urfave/cli/v2"
 )
@@ -19,9 +18,7 @@ func Command() *cli.Command {
 				Action: func(ctx *cli.Context) error {
 					tx := gorms.Client()
 					tx.DisableForeignKeyConstraintWhenMigrating = true
-					tables := []any{
-						&model.Demo{},
-					}
+					tables := []any{}
 					return tx.AutoMigrate(tables...)
 				},
 			},

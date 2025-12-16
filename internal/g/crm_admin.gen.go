@@ -29,6 +29,7 @@ func newCRMAdmin(db *gorm.DB, opts ...gen.DOOption) cRMAdmin {
 	tableName := _cRMAdmin.cRMAdminDo.TableName()
 	_cRMAdmin.ALL = field.NewAsterisk(tableName)
 	_cRMAdmin.Id = field.NewInt(tableName, "id")
+	_cRMAdmin.AdminId = field.NewString(tableName, "admin_id")
 	_cRMAdmin.UserName = field.NewString(tableName, "user_name")
 	_cRMAdmin.UserPhone = field.NewString(tableName, "user_phone")
 	_cRMAdmin.Password = field.NewString(tableName, "password")
@@ -47,6 +48,7 @@ type cRMAdmin struct {
 
 	ALL          field.Asterisk
 	Id           field.Int    // 主键
+	AdminId      field.String // 业务主键
 	UserName     field.String // 用户名
 	UserPhone    field.String // 手机号
 	Password     field.String // 密码
@@ -71,6 +73,7 @@ func (c cRMAdmin) As(alias string) *cRMAdmin {
 func (c *cRMAdmin) updateTableName(table string) *cRMAdmin {
 	c.ALL = field.NewAsterisk(table)
 	c.Id = field.NewInt(table, "id")
+	c.AdminId = field.NewString(table, "admin_id")
 	c.UserName = field.NewString(table, "user_name")
 	c.UserPhone = field.NewString(table, "user_phone")
 	c.Password = field.NewString(table, "password")
@@ -94,8 +97,9 @@ func (c *cRMAdmin) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cRMAdmin) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 8)
+	c.fieldMap = make(map[string]field.Expr, 9)
 	c.fieldMap["id"] = c.Id
+	c.fieldMap["admin_id"] = c.AdminId
 	c.fieldMap["user_name"] = c.UserName
 	c.fieldMap["user_phone"] = c.UserPhone
 	c.fieldMap["password"] = c.Password

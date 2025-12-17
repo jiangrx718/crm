@@ -4,7 +4,7 @@ package request
 type PermissionCreateReq struct {
 	PermissionName string `json:"permission_name" binding:"required"`
 	PermissionUrl  string `json:"permission_url" binding:"required"`
-	ParentId       string `json:"parent_id" binding:"required"`
+	ParentId       string `json:"parent_id"`
 	Status         string `json:"status" binding:"required"`
 }
 
@@ -18,7 +18,7 @@ type PermissionUpdateReq struct {
 	PermissionId   string `json:"permission_id" binding:"required"`
 	PermissionName string `json:"permission_name" binding:"required"`
 	PermissionUrl  string `json:"permission_url" binding:"required"`
-	ParentId       string `json:"parent_id" binding:"required"`
+	ParentId       string `json:"parent_id"`
 	Status         string `json:"status" binding:"required"`
 }
 

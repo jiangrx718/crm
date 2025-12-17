@@ -62,6 +62,6 @@ func ScanByPage() ([]*model.CRMPermission, int64, error) {
 	q := crmPermission.Debug()
 	where := []gen.Condition{}
 
-	count, err := q.Where(where...).Order(crmPermission.Id.Desc()).ScanByPage(&response, int(1), int(100))
+	count, err := q.Where(where...).Order(crmPermission.Id.Desc()).ScanByPage(&response, int(0), int(100))
 	return response, count, err
 }

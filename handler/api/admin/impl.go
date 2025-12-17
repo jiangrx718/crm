@@ -25,8 +25,5 @@ func (h *Handler) RegisterRoutes() {
 	g.POST("/create", h.AdminCreate)
 	g.GET("/list", h.AdminList)
 	g.POST("/delete", h.AdminDelete)
-	//g.POST("/update", h.UpdateData)
-	//g.POST("/delete", h.DeleteData)
-	//g.POST("/status", h.StatusData)
-	//g.GET("/list", h.ListData)
+	g.POST("/edit", h.AdminUpdate)
 }

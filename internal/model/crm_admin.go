@@ -12,8 +12,8 @@ type CRMAdmin struct {
 	Password     string    `gorm:"column:password;type:char(32);default:'';comment:密码" json:"password"`
 	Status       string    `gorm:"column:status;type:varchar(32);default:'on';comment:状态,off禁用,on启用" json:"status"`
 	DepartmentId int       `gorm:"column:department_id;type:int;default:0;comment:所属部门ID" json:"department_id"`
-	CreatedAt    time.Time `gorm:"column:created_at;type:time;autoCreateTime;index:idx_demo_created_at;comment:创建时间" json:"created_at"`
-	UpdatedAt    time.Time `gorm:"column:updated_at;type:time;autoUpdateTime;index:idx_demo_updated_at;comment:更新时间" json:"updated_at"`
+	CreatedAt    time.Time `gorm:"column:created_at;type:time;autoCreateTime;index:idx_created_at;comment:创建时间" json:"created_at"`
+	UpdatedAt    time.Time `gorm:"column:updated_at;type:time;autoUpdateTime;index:idx_updated_at;comment:更新时间" json:"updated_at"`
 }
 
 func (r *CRMAdmin) TableName() string {

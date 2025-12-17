@@ -19,6 +19,7 @@ func Command() *cli.Command {
 			g.UseDB(gorms.Client())
 			g.ApplyBasic(
 				model.CRMAdmin{},
+				model.CRMPermission{},
 			)
 			g.Execute()
 			return nil

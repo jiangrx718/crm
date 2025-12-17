@@ -11,12 +11,13 @@ import (
 )
 
 type RespPermissionService struct {
-	PermissionId   string `json:"permission_id"`
-	PermissionName string `json:"permission_name"`
-	PermissionUrl  string `json:"permission_url"`
-	ParentId       string `json:"parent_id"`
-	Status         string `json:"status"`
-	CreatedAt      string `json:"created_at"`
+	PermissionId   string                   `json:"permission_id"`
+	PermissionName string                   `json:"permission_name"`
+	PermissionUrl  string                   `json:"permission_url"`
+	ParentId       string                   `json:"parent_id"`
+	Status         string                   `json:"status"`
+	CreatedAt      string                   `json:"created_at"`
+	ChildList      []*RespPermissionService `json:"child_list"`
 }
 
 func (s *Service) PermissionList(ctx context.Context) (common.ServiceResult, error) {
@@ -33,22 +34,40 @@ func (s *Service) PermissionList(ctx context.Context) (common.ServiceResult, err
 		return result, nil
 	}
 
-	var listPermission []RespPermissionService
-	for idx, _ := range permissionDataList {
-		listPermission = append(listPermission, RespPermissionService{
-			PermissionId:   permissionDataList[idx].PermissionId,
-			PermissionName: permissionDataList[idx].PermissionName,
-			PermissionUrl:  permissionDataList[idx].PermissionURL,
-			ParentId:       permissionDataList[idx].ParentId,
-			Status:         permissionDataList[idx].Status,
-			CreatedAt:      permissionDataList[idx].CreatedAt.Format("2006-01-02 15:04:05"),
-		})
+	// 构建 id -> 节点 映射
+	idMap := make(map[string]*RespPermissionService, len(permissionDataList))
+	for _, p := range permissionDataList {
+		idMap[p.PermissionId] = &RespPermissionService{
+			PermissionId:   p.PermissionId,
+			PermissionName: p.PermissionName,
+			PermissionUrl:  p.PermissionURL,
+			ParentId:       p.ParentId,
+			Status:         p.Status,
+			CreatedAt:      p.CreatedAt.Format("2006-01-02 15:04:05"),
+			ChildList:      []*RespPermissionService{},
+		}
 	}
 
-	if len(listPermission) == 0 {
-		listPermission = []RespPermissionService{}
+	// 组装树结构：parent_id 与 permission_id 对应
+	var roots []*RespPermissionService
+	for _, p := range permissionDataList {
+		node := idMap[p.PermissionId]
+		if p.ParentId == "" {
+			roots = append(roots, node)
+			continue
+		}
+		if parent, ok := idMap[p.ParentId]; ok && parent != nil {
+			parent.ChildList = append(parent.ChildList, node)
+		} else {
+			// 如果找不到父节点，则作为根节点返回，避免数据丢失
+			roots = append(roots, node)
+		}
 	}
-	result.Data = map[string]any{"list": listPermission, "count": count}
+
+	if len(roots) == 0 {
+		roots = []*RespPermissionService{}
+	}
+	result.Data = map[string]any{"list": roots, "count": count}
 	result.SetMessage("操作成功")
 	return result, nil
 }

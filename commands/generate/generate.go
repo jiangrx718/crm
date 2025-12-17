@@ -20,6 +20,7 @@ func Command() *cli.Command {
 			g.ApplyBasic(
 				model.CRMAdmin{},
 				model.CRMPermission{},
+				model.CRMRole{},
 			)
 			g.Execute()
 			return nil

@@ -19,12 +19,14 @@ var (
 	Q             = new(Query)
 	CRMAdmin      *cRMAdmin
 	CRMPermission *cRMPermission
+	CRMRole       *cRMRole
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	CRMAdmin = &Q.CRMAdmin
 	CRMPermission = &Q.CRMPermission
+	CRMRole = &Q.CRMRole
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
@@ -32,6 +34,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		db:            db,
 		CRMAdmin:      newCRMAdmin(db, opts...),
 		CRMPermission: newCRMPermission(db, opts...),
+		CRMRole:       newCRMRole(db, opts...),
 	}
 }
 
@@ -40,6 +43,7 @@ type Query struct {
 
 	CRMAdmin      cRMAdmin
 	CRMPermission cRMPermission
+	CRMRole       cRMRole
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -49,6 +53,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		db:            db,
 		CRMAdmin:      q.CRMAdmin.clone(db),
 		CRMPermission: q.CRMPermission.clone(db),
+		CRMRole:       q.CRMRole.clone(db),
 	}
 }
 
@@ -65,18 +70,21 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		db:            db,
 		CRMAdmin:      q.CRMAdmin.replaceDB(db),
 		CRMPermission: q.CRMPermission.replaceDB(db),
+		CRMRole:       q.CRMRole.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
 	CRMAdmin      ICRMAdminDo
 	CRMPermission ICRMPermissionDo
+	CRMRole       ICRMRoleDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		CRMAdmin:      q.CRMAdmin.WithContext(ctx),
 		CRMPermission: q.CRMPermission.WithContext(ctx),
+		CRMRole:       q.CRMRole.WithContext(ctx),
 	}
 }
 

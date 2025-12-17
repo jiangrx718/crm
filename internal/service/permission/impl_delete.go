@@ -16,7 +16,7 @@ func (s *Service) PermissionDelete(ctx context.Context, permissionId string) (co
 		result = common.NewCRMServiceResult()
 	)
 
-	// 检查通知是否存在
+	// 检查数据是否存在
 	where := []gen.Condition{
 		g.CRMPermission.PermissionId.Eq(permissionId),
 	}

@@ -15,9 +15,10 @@ type RespPermissionCreateInfo struct {
 	PermissionURL  string `json:"permission_url"`
 	ParentId       string `json:"parent_id"`
 	Status         string `json:"status"`
+	Position       int    `json:"position"`
 }
 
-func (s *Service) PermissionCreate(ctx context.Context, permissionName, permissionUrl, parentId, status string) (common.ServiceResult, error) {
+func (s *Service) PermissionCreate(ctx context.Context, permissionName, permissionUrl, parentId, status string, position int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -30,6 +31,7 @@ func (s *Service) PermissionCreate(ctx context.Context, permissionName, permissi
 		PermissionURL:  permissionUrl,
 		ParentId:       parentId,
 		Status:         status,
+		Position:       position,
 	}
 	if createErr := g.CRMPermission.Create(&crmPermission); createErr != nil {
 		logObj.Errorw("CRMPermission Create crmPermission error", "crmPermission", crmPermission, "error", createErr)
@@ -42,6 +44,7 @@ func (s *Service) PermissionCreate(ctx context.Context, permissionName, permissi
 		PermissionURL:  permissionUrl,
 		ParentId:       parentId,
 		Status:         status,
+		Position:       position,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

@@ -16,9 +16,10 @@ type RespPermissionUpdateInfo struct {
 	PermissionURL  string `json:"permission_url"`
 	ParentId       string `json:"parent_id"`
 	Status         string `json:"status"`
+	Position       int    `json:"position"`
 }
 
-func (s *Service) PermissionUpdate(ctx context.Context, permissionId, permissionName, permissionUrl, parentId, status string) (common.ServiceResult, error) {
+func (s *Service) PermissionUpdate(ctx context.Context, permissionId, permissionName, permissionUrl, parentId, status string, position int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -40,6 +41,7 @@ func (s *Service) PermissionUpdate(ctx context.Context, permissionId, permission
 	permissionEntity.PermissionURL = permissionUrl
 	permissionEntity.ParentId = parentId
 	permissionEntity.Status = status
+	permissionEntity.Position = position
 
 	if _, err = g.CRMPermission.Where(
 		g.CRMPermission.PermissionId.Eq(permissionId),
@@ -54,6 +56,7 @@ func (s *Service) PermissionUpdate(ctx context.Context, permissionId, permission
 		PermissionURL:  permissionUrl,
 		ParentId:       parentId,
 		Status:         status,
+		Position:       position,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

@@ -32,9 +32,10 @@ func newCRMPermission(db *gorm.DB, opts ...gen.DOOption) cRMPermission {
 	_cRMPermission.PermissionId = field.NewString(tableName, "permission_id")
 	_cRMPermission.PermissionName = field.NewString(tableName, "permission_name")
 	_cRMPermission.PermissionURL = field.NewString(tableName, "permission_url")
-	_cRMPermission.PermissionType = field.NewInt(tableName, "permission_type")
 	_cRMPermission.ParentId = field.NewString(tableName, "parent_id")
 	_cRMPermission.Status = field.NewString(tableName, "status")
+	_cRMPermission.PermissionType = field.NewInt(tableName, "permission_type")
+	_cRMPermission.Position = field.NewInt(tableName, "position")
 	_cRMPermission.CreatedAt = field.NewTime(tableName, "created_at")
 	_cRMPermission.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -51,9 +52,10 @@ type cRMPermission struct {
 	PermissionId   field.String // 业务主键
 	PermissionName field.String // 权限名称
 	PermissionURL  field.String // 权限URL
-	PermissionType field.Int    // 权限类型,1菜单,2按钮,3接口
 	ParentId       field.String // 父级id
 	Status         field.String // 状态,off禁用,on启用
+	PermissionType field.Int    // 权限类型,1菜单,2按钮,3接口
+	Position       field.Int    // 排序
 	CreatedAt      field.Time   // 创建时间
 	UpdatedAt      field.Time   // 更新时间
 
@@ -76,9 +78,10 @@ func (c *cRMPermission) updateTableName(table string) *cRMPermission {
 	c.PermissionId = field.NewString(table, "permission_id")
 	c.PermissionName = field.NewString(table, "permission_name")
 	c.PermissionURL = field.NewString(table, "permission_url")
-	c.PermissionType = field.NewInt(table, "permission_type")
 	c.ParentId = field.NewString(table, "parent_id")
 	c.Status = field.NewString(table, "status")
+	c.PermissionType = field.NewInt(table, "permission_type")
+	c.Position = field.NewInt(table, "position")
 	c.CreatedAt = field.NewTime(table, "created_at")
 	c.UpdatedAt = field.NewTime(table, "updated_at")
 
@@ -97,14 +100,15 @@ func (c *cRMPermission) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (c *cRMPermission) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 9)
+	c.fieldMap = make(map[string]field.Expr, 10)
 	c.fieldMap["id"] = c.Id
 	c.fieldMap["permission_id"] = c.PermissionId
 	c.fieldMap["permission_name"] = c.PermissionName
 	c.fieldMap["permission_url"] = c.PermissionURL
-	c.fieldMap["permission_type"] = c.PermissionType
 	c.fieldMap["parent_id"] = c.ParentId
 	c.fieldMap["status"] = c.Status
+	c.fieldMap["permission_type"] = c.PermissionType
+	c.fieldMap["position"] = c.Position
 	c.fieldMap["created_at"] = c.CreatedAt
 	c.fieldMap["updated_at"] = c.UpdatedAt
 }

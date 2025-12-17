@@ -16,7 +16,7 @@ func (h *Handler) PermissionCreate(ctx *gin.Context) {
 		return
 	}
 
-	result, err := h.permissionService.PermissionCreate(ctx, req.PermissionName, req.PermissionUrl, req.ParentId, req.Status)
+	result, err := h.permissionService.PermissionCreate(ctx, req.PermissionName, req.PermissionUrl, req.ParentId, req.Status, req.Position)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

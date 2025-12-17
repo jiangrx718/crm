@@ -16,6 +16,7 @@ type RespPermissionService struct {
 	PermissionUrl  string                   `json:"permission_url"`
 	ParentId       string                   `json:"parent_id"`
 	Status         string                   `json:"status"`
+	Position       int                      `json:"position"`
 	CreatedAt      string                   `json:"created_at"`
 	ChildList      []*RespPermissionService `json:"child_list"`
 }
@@ -43,6 +44,7 @@ func (s *Service) PermissionList(ctx context.Context) (common.ServiceResult, err
 			PermissionUrl:  p.PermissionURL,
 			ParentId:       p.ParentId,
 			Status:         p.Status,
+			Position:       p.Position,
 			CreatedAt:      p.CreatedAt.Format("2006-01-02 15:04:05"),
 			ChildList:      []*RespPermissionService{},
 		}
@@ -81,6 +83,6 @@ func ScanByPage() ([]*model.CRMPermission, int64, error) {
 	q := crmPermission.Debug()
 	where := []gen.Condition{}
 
-	count, err := q.Where(where...).Order(crmPermission.Id.Desc()).ScanByPage(&response, int(0), int(100))
+	count, err := q.Where(where...).Order(crmPermission.Position.Desc(), crmPermission.Id.Desc()).ScanByPage(&response, int(0), int(100))
 	return response, count, err
 }

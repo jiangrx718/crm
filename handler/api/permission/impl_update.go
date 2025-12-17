@@ -16,7 +16,7 @@ func (h *Handler) PermissionUpdate(ctx *gin.Context) {
 		return
 	}
 
-	result, err := h.permissionService.PermissionUpdate(ctx, req.PermissionId, req.PermissionName, req.PermissionUrl, req.ParentId, req.Status)
+	result, err := h.permissionService.PermissionUpdate(ctx, req.PermissionId, req.PermissionName, req.PermissionUrl, req.ParentId, req.Status, req.Position)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

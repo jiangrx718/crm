@@ -25,8 +25,9 @@ func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password
 		result = common.NewCRMServiceResult()
 	)
 
+	adminId := utils.GenUUID()
 	crmAdmin := model.CRMAdmin{
-		AdminId:      utils.GenUUID(),
+		AdminId:      adminId,
 		UserName:     userName,
 		UserPhone:    userPhone,
 		Password:     str.MD5String(fmt.Sprintf("%s%s", password, model.SaltValue)),
@@ -40,7 +41,7 @@ func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password
 	}
 
 	result.Data = RespAdminCreateInfo{
-		AdminId:      utils.GenUUID(),
+		AdminId:      adminId,
 		UserName:     userName,
 		UserPhone:    userPhone,
 		DepartmentId: departmentId,

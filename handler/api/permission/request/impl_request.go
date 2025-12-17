@@ -21,3 +21,9 @@ type PermissionUpdateReq struct {
 	ParentId       string `json:"parent_id" binding:"required"`
 	Status         string `json:"status" binding:"required"`
 }
+
+// PermissionStatusReq 状态参数
+type PermissionStatusReq struct {
+	PermissionId string `json:"permission_id" binding:"required"`
+	Status       string `json:"status" binding:"required"`
+}

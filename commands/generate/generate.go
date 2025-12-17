@@ -21,6 +21,7 @@ func Command() *cli.Command {
 				model.CRMAdmin{},
 				model.CRMPermission{},
 				model.CRMRole{},
+				model.CRMRolePermission{},
 			)
 			g.Execute()
 			return nil

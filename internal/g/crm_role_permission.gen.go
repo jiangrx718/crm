@@ -29,7 +29,6 @@ func newCRMRolePermission(db *gorm.DB, opts ...gen.DOOption) cRMRolePermission {
 	tableName := _cRMRolePermission.cRMRolePermissionDo.TableName()
 	_cRMRolePermission.ALL = field.NewAsterisk(tableName)
 	_cRMRolePermission.Id = field.NewInt(tableName, "id")
-	_cRMRolePermission.RolePermissionId = field.NewString(tableName, "role_permission_id")
 	_cRMRolePermission.RoleId = field.NewString(tableName, "role_id")
 	_cRMRolePermission.PermissionId = field.NewString(tableName, "permission_id")
 	_cRMRolePermission.CreatedAt = field.NewTime(tableName, "created_at")
@@ -43,13 +42,12 @@ func newCRMRolePermission(db *gorm.DB, opts ...gen.DOOption) cRMRolePermission {
 type cRMRolePermission struct {
 	cRMRolePermissionDo
 
-	ALL              field.Asterisk
-	Id               field.Int    // 自增主键
-	RolePermissionId field.String // 业务主键
-	RoleId           field.String // 角色ID
-	PermissionId     field.String // 权限ID
-	CreatedAt        field.Time   // 创建时间
-	UpdatedAt        field.Time   // 更新时间
+	ALL          field.Asterisk
+	Id           field.Int    // 自增主键
+	RoleId       field.String // 角色ID
+	PermissionId field.String // 权限ID
+	CreatedAt    field.Time   // 创建时间
+	UpdatedAt    field.Time   // 更新时间
 
 	fieldMap map[string]field.Expr
 }
@@ -67,7 +65,6 @@ func (c cRMRolePermission) As(alias string) *cRMRolePermission {
 func (c *cRMRolePermission) updateTableName(table string) *cRMRolePermission {
 	c.ALL = field.NewAsterisk(table)
 	c.Id = field.NewInt(table, "id")
-	c.RolePermissionId = field.NewString(table, "role_permission_id")
 	c.RoleId = field.NewString(table, "role_id")
 	c.PermissionId = field.NewString(table, "permission_id")
 	c.CreatedAt = field.NewTime(table, "created_at")
@@ -88,9 +85,8 @@ func (c *cRMRolePermission) GetFieldByName(fieldName string) (field.OrderExpr, b
 }
 
 func (c *cRMRolePermission) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 6)
+	c.fieldMap = make(map[string]field.Expr, 5)
 	c.fieldMap["id"] = c.Id
-	c.fieldMap["role_permission_id"] = c.RolePermissionId
 	c.fieldMap["role_id"] = c.RoleId
 	c.fieldMap["permission_id"] = c.PermissionId
 	c.fieldMap["created_at"] = c.CreatedAt

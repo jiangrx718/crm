@@ -7,9 +7,8 @@ import (
 )
 
 type RoleIFace interface {
-	RoleCreate(ctx context.Context, roleName, status string) (common.ServiceResult, error)
-	RoleUpdate(ctx context.Context, roleId, roleName, status string) (common.ServiceResult, error)
-	RoleStatus(ctx context.Context, roleId, status string) (common.ServiceResult, error)
+	RoleCreate(ctx context.Context, roleName, status string, permission []string) (common.ServiceResult, error)
+	RoleUpdate(ctx context.Context, roleId, roleName, status string, permission []string) (common.ServiceResult, error)
 	RoleList(ctx context.Context, offset, limit int64) (common.ServiceResult, error)
 	RoleDelete(ctx context.Context, roleId string) (common.ServiceResult, error)
 }

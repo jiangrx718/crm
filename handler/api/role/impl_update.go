@@ -16,7 +16,7 @@ func (h *Handler) RoleUpdate(ctx *gin.Context) {
 		return
 	}
 
-	result, err := h.roleService.RoleUpdate(ctx, req.RoleId, req.RoleName, req.Status)
+	result, err := h.roleService.RoleUpdate(ctx, req.RoleId, req.RoleName, req.Status, req.Permission)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

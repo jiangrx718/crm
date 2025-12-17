@@ -15,7 +15,7 @@ type RespRoleCreateInfo struct {
 	Status   string `json:"status"`
 }
 
-func (s *Service) RoleCreate(ctx context.Context, roleName, status string) (common.ServiceResult, error) {
+func (s *Service) RoleCreate(ctx context.Context, roleName, status string, permission []string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -38,5 +38,5 @@ func (s *Service) RoleCreate(ctx context.Context, roleName, status string) (comm
 		Status:   status,
 	}
 	result.SetMessage("操作成功")
-	return nil, nil
+	return result, nil
 }

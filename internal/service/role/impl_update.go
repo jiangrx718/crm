@@ -16,7 +16,7 @@ type RespRoleUpdateInfo struct {
 	Status   string `json:"status"`
 }
 
-func (s *Service) RoleUpdate(ctx context.Context, roleId, roleName, status string) (common.ServiceResult, error) {
+func (s *Service) RoleUpdate(ctx context.Context, roleId, roleName, status string, permission []string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()

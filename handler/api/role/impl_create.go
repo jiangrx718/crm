@@ -16,7 +16,7 @@ func (h *Handler) RoleCreate(ctx *gin.Context) {
 		return
 	}
 
-	result, err := h.roleService.RoleCreate(ctx, req.RoleName, req.Status)
+	result, err := h.roleService.RoleCreate(ctx, req.RoleName, req.Status, req.Permission)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

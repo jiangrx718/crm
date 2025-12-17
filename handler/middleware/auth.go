@@ -12,7 +12,6 @@ import (
 func JWTAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := extractToken(ctx)
-		fmt.Println("debug: extracted token:", token)
 		if token == "" {
 			fmt.Println("debug: token is empty")
 			gins.Unauthorized(ctx)
@@ -22,13 +21,11 @@ func JWTAuth() gin.HandlerFunc {
 
 		claims, err := auth.ParseToken(token)
 		if err != nil {
-			fmt.Println("debug: parse token error:", err)
 			gins.Unauthorized(ctx)
 			ctx.Abort()
 			return
 		}
 		if claims == nil || claims.UserID == "" {
-			fmt.Println("debug: claims invalid")
 			gins.Unauthorized(ctx)
 			ctx.Abort()
 			return
@@ -42,7 +39,6 @@ func JWTAuth() gin.HandlerFunc {
 func extractToken(ctx *gin.Context) string {
 	// 优先解析 Authorization: Bearer <token>
 	authHeader := ctx.GetHeader("Authorization")
-	fmt.Println("debug: Authorization header:", authHeader)
 	if authHeader != "" {
 		parts := strings.SplitN(authHeader, " ", 2)
 		if len(parts) == 2 && strings.EqualFold(parts[0], "Bearer") {

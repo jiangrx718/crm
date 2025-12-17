@@ -32,6 +32,17 @@ func (s *Service) RoleCreate(ctx context.Context, roleName, status string, permi
 		return result, createErr
 	}
 
+	var rolePermission []model.CRMRolePermission
+	for _, permissionId := range permission {
+		rolePermission = append(rolePermission, model.CRMRolePermission{
+			RoleId:       roleId,
+			PermissionId: permissionId,
+		})
+	}
+	for _, vItem := range rolePermission {
+		_ = g.CRMRolePermission.Create(&vItem)
+	}
+
 	result.Data = RespRoleCreateInfo{
 		RoleId:   roleId,
 		RoleName: roleName,

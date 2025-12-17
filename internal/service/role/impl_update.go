@@ -5,6 +5,7 @@ import (
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
+	"crm/internal/model"
 	"fmt"
 
 	"gorm.io/gen"
@@ -42,6 +43,25 @@ func (s *Service) RoleUpdate(ctx context.Context, roleId, roleName, status strin
 	).Updates(&roleEntity); err != nil {
 		logObj.Errorw("RoleUpdate role error", "role", roleEntity, "error", err)
 		return result, err
+	}
+
+	// 先把原有的权限删除
+	if _, err := g.CRMRolePermission.Where([]gen.Condition{
+		g.CRMRolePermission.RoleId.Eq(roleId),
+	}...).Unscoped().Delete(); err != nil {
+		logObj.Errorf("CRMRolePermission Delete role Delete has error(%v)", err)
+	}
+
+	// 重新设置对应额权限
+	var rolePermission []model.CRMRolePermission
+	for _, permissionId := range permission {
+		rolePermission = append(rolePermission, model.CRMRolePermission{
+			RoleId:       roleId,
+			PermissionId: permissionId,
+		})
+	}
+	for _, vItem := range rolePermission {
+		_ = g.CRMRolePermission.Create(&vItem)
 	}
 
 	result.Data = RespRoleUpdateInfo{

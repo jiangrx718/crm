@@ -3,6 +3,7 @@ package middleware
 import (
 	"crm/gopkg/auth"
 	"crm/gopkg/gins"
+	"fmt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -11,14 +12,25 @@ import (
 func JWTAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := extractToken(ctx)
+		fmt.Println("debug: extracted token:", token)
 		if token == "" {
+			fmt.Println("debug: token is empty")
 			gins.Unauthorized(ctx)
+			ctx.Abort()
 			return
 		}
 
 		claims, err := auth.ParseToken(token)
-		if err != nil || claims == nil || claims.UserID == "" {
+		if err != nil {
+			fmt.Println("debug: parse token error:", err)
 			gins.Unauthorized(ctx)
+			ctx.Abort()
+			return
+		}
+		if claims == nil || claims.UserID == "" {
+			fmt.Println("debug: claims invalid")
+			gins.Unauthorized(ctx)
+			ctx.Abort()
 			return
 		}
 
@@ -30,10 +42,15 @@ func JWTAuth() gin.HandlerFunc {
 func extractToken(ctx *gin.Context) string {
 	// 优先解析 Authorization: Bearer <token>
 	authHeader := ctx.GetHeader("Authorization")
+	fmt.Println("debug: Authorization header:", authHeader)
 	if authHeader != "" {
 		parts := strings.SplitN(authHeader, " ", 2)
 		if len(parts) == 2 && strings.EqualFold(parts[0], "Bearer") {
 			return strings.TrimSpace(parts[1])
+		}
+		// Fallback: if no Bearer prefix, try using the whole header value if it looks like a token
+		if len(parts) == 1 {
+			return strings.TrimSpace(parts[0])
 		}
 	}
 

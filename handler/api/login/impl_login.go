@@ -2,6 +2,7 @@ package login
 
 import (
 	"crm/gopkg/gins"
+	service_login "crm/internal/service/login"
 
 	"github.com/spf13/viper"
 
@@ -29,13 +30,12 @@ func (h *Handler) DoLogin(ctx *gin.Context) {
 	}
 
 	// 写入登录态 Cookie/Header
-	if data, ok := result.GetData().(map[string]any); ok {
-		if tokenAny, ok := data["token"]; ok {
-			if token, ok := tokenAny.(string); ok && token != "" {
-				expireHour := viper.GetInt("auth.jwt.expire_hour")
-				ctx.SetCookie("token", token, expireHour*3600, "/", "", false, true)
-				ctx.Header("Authorization", "Bearer "+token)
-			}
+	if data, ok := result.GetData().(service_login.RespLogin); ok {
+		token := data.Token
+		if token != "" {
+			expireHour := viper.GetInt("auth.jwt.expire_hour")
+			ctx.SetCookie("token", token, expireHour*3600, "/", "", false, true)
+			ctx.Header("Authorization", "Bearer "+token)
 		}
 	}
 

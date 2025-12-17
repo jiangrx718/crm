@@ -6,7 +6,6 @@ import (
 	"crm/internal/common"
 	"crm/internal/g"
 	"crm/internal/model"
-	"fmt"
 
 	"gorm.io/gen"
 )
@@ -25,8 +24,6 @@ func (s *Service) AdminList(ctx context.Context, offset, limit int64, status, us
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
 	)
-
-	fmt.Printf("status is %s\n", status)
 
 	adminDataList, count, err := ScanByPage(userPhone, status, offset, limit)
 	if err != nil {

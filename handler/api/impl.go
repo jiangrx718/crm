@@ -31,8 +31,9 @@ func NewHandler(engine *gin.Engine) gins.Handler {
 
 func (h *Handler) RegisterRoutes() {
 	config := cors.DefaultConfig()
-	config.AllowHeaders = append([]string{}, config.AllowHeaders...)
 	config.AllowAllOrigins = true
+	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	h.engine.Use(cors.New(config))
 
 	// 登录路由
@@ -45,7 +46,7 @@ func (h *Handler) RegisterRoutes() {
 	}
 
 	// 业务路由
-	g := h.engine.Group("/api", middleware.RequestCapture(), middleware.JWTAuth())
+	g := h.engine.Group("/api", middleware.JWTAuth())
 	handlers := []gins.Handler{
 		admin.NewHandler(g),
 		admin_role.NewHandler(g),

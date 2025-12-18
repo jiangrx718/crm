@@ -29,3 +29,8 @@ type PermissionStatusReq struct {
 	PermissionId string `json:"permission_id" binding:"required"`
 	Status       string `json:"status" binding:"required"`
 }
+
+// ListQuery 列表参数
+type ListQuery struct {
+	Status string `json:"status" form:"status"`
+}

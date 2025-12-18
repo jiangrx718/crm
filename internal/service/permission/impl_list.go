@@ -21,13 +21,13 @@ type RespPermissionService struct {
 	ChildList      []*RespPermissionService `json:"child_list"`
 }
 
-func (s *Service) PermissionList(ctx context.Context) (common.ServiceResult, error) {
+func (s *Service) PermissionList(ctx context.Context, status string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
 	)
 
-	permissionDataList, count, err := ScanByPage()
+	permissionDataList, count, err := ScanByPage(status)
 	if err != nil {
 		logObj.Errorw("PermissionList Find", "error", err)
 		result.SetError(&common.ServiceError{Code: -1, Message: "failed"})
@@ -74,7 +74,7 @@ func (s *Service) PermissionList(ctx context.Context) (common.ServiceResult, err
 	return result, nil
 }
 
-func ScanByPage() ([]*model.CRMPermission, int64, error) {
+func ScanByPage(status string) ([]*model.CRMPermission, int64, error) {
 	var (
 		crmPermission = g.CRMPermission
 		response      = make([]*model.CRMPermission, 0)
@@ -82,6 +82,9 @@ func ScanByPage() ([]*model.CRMPermission, int64, error) {
 
 	q := crmPermission.Debug()
 	where := []gen.Condition{}
+	if status != "" {
+		where = append(where, crmPermission.Status.Eq(status))
+	}
 
 	count, err := q.Where(where...).Order(crmPermission.Position.Desc(), crmPermission.Id.Desc()).ScanByPage(&response, int(0), int(100))
 	return response, count, err

@@ -16,11 +16,11 @@ type RespAdminUpdateInfo struct {
 	AdminId      string `json:"admin_id"`
 	UserName     string `json:"user_name"`
 	UserPhone    string `json:"user_phone"`
-	DepartmentId int    `json:"department_id"`
+	DepartmentId string `json:"department_id"`
 	Status       string `json:"status"`
 }
 
-func (s *Service) AdminUpdate(ctx context.Context, adminId, password, status string, departmentId int) (common.ServiceResult, error) {
+func (s *Service) AdminUpdate(ctx context.Context, adminId, password, status, departmentId string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()

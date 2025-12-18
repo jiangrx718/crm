@@ -15,7 +15,7 @@ type RespAdminService struct {
 	UserName     string `json:"user_name"`
 	UserPhone    string `json:"user_phone"`
 	Status       string `json:"status"`
-	DepartmentId int    `json:"department_id"`
+	DepartmentId string `json:"department_id"`
 	CreatedAt    string `json:"created_at"`
 }
 

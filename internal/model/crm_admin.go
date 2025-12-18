@@ -11,7 +11,7 @@ type CRMAdmin struct {
 	UserPhone    string    `gorm:"column:user_phone;type:char(11);default:'';comment:手机号" json:"user_phone"`
 	Password     string    `gorm:"column:password;type:char(32);default:'';comment:密码" json:"password"`
 	Status       string    `gorm:"column:status;type:varchar(32);default:'on';comment:状态,off禁用,on启用" json:"status"`
-	DepartmentId int       `gorm:"column:department_id;type:int;default:0;comment:所属部门ID" json:"department_id"`
+	DepartmentId string    `gorm:"column:department_id;type:char(36);default:'';comment:所属部门ID" json:"department_id"`
 	CreatedAt    time.Time `gorm:"column:created_at;type:time;autoCreateTime;index:idx_created_at;comment:创建时间" json:"created_at"`
 	UpdatedAt    time.Time `gorm:"column:updated_at;type:time;autoUpdateTime;index:idx_updated_at;comment:更新时间" json:"updated_at"`
 }

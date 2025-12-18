@@ -34,7 +34,7 @@ func newCRMAdmin(db *gorm.DB, opts ...gen.DOOption) cRMAdmin {
 	_cRMAdmin.UserPhone = field.NewString(tableName, "user_phone")
 	_cRMAdmin.Password = field.NewString(tableName, "password")
 	_cRMAdmin.Status = field.NewString(tableName, "status")
-	_cRMAdmin.DepartmentId = field.NewInt(tableName, "department_id")
+	_cRMAdmin.DepartmentId = field.NewString(tableName, "department_id")
 	_cRMAdmin.CreatedAt = field.NewTime(tableName, "created_at")
 	_cRMAdmin.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -53,7 +53,7 @@ type cRMAdmin struct {
 	UserPhone    field.String // 手机号
 	Password     field.String // 密码
 	Status       field.String // 状态,off禁用,on启用
-	DepartmentId field.Int    // 所属部门ID
+	DepartmentId field.String // 所属部门ID
 	CreatedAt    field.Time   // 创建时间
 	UpdatedAt    field.Time   // 更新时间
 
@@ -78,7 +78,7 @@ func (c *cRMAdmin) updateTableName(table string) *cRMAdmin {
 	c.UserPhone = field.NewString(table, "user_phone")
 	c.Password = field.NewString(table, "password")
 	c.Status = field.NewString(table, "status")
-	c.DepartmentId = field.NewInt(table, "department_id")
+	c.DepartmentId = field.NewString(table, "department_id")
 	c.CreatedAt = field.NewTime(table, "created_at")
 	c.UpdatedAt = field.NewTime(table, "updated_at")
 

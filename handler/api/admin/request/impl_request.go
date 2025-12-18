@@ -7,7 +7,7 @@ type AdminCreateReq struct {
 	UserName     string `json:"user_name" binding:"required"`
 	UserPhone    string `json:"user_phone" binding:"required"`
 	Password     string `json:"password" binding:"required"`
-	DepartmentId int    `json:"department_id" binding:"required"`
+	DepartmentId string `json:"department_id" binding:"required"`
 	Status       string `json:"status" binding:"required"`
 }
 
@@ -20,7 +20,7 @@ type AdminDeleteReq struct {
 type AdminUpdateReq struct {
 	AdminId      string `json:"admin_id" binding:"required"`
 	Password     string `json:"password"`
-	DepartmentId int    `json:"department_id" binding:"required"`
+	DepartmentId string `json:"department_id" binding:"required"`
 	Status       string `json:"status" binding:"required"`
 }
 

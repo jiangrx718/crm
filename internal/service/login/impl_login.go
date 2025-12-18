@@ -36,7 +36,7 @@ func (s *Service) Login(ctx context.Context, userName, password string) (common.
 	}
 	admin, err := g.CRMAdmin.Where(where...).Take()
 	if err != nil {
-		return result, err
+		return result, fmt.Errorf("用户名或密码错误")
 	}
 	if admin == nil {
 		result.SetCode(401)

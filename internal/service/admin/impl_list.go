@@ -71,6 +71,6 @@ func ScanByPage(phone, status string, offset, limit int64) ([]*model.CRMAdmin, i
 		where = append(where, crmAdmin.Status.Eq(status))
 	}
 
-	count, err := q.Where(where...).Order(crmAdmin.Id.Desc()).ScanByPage(&response, int(offset), int(limit))
+	count, err := q.Where(where...).Order(crmAdmin.Id.Asc()).ScanByPage(&response, int(offset), int(limit))
 	return response, count, err
 }

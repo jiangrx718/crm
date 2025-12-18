@@ -62,7 +62,7 @@ func (s *Service) PermissionList(ctx context.Context, status string) (common.Ser
 			parent.ChildList = append(parent.ChildList, node)
 		} else {
 			// 如果找不到父节点，则作为根节点返回，避免数据丢失
-			roots = append(roots, node)
+			//roots = append(roots, node)
 		}
 	}
 

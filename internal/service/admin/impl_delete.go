@@ -16,7 +16,7 @@ func (s *Service) AdminDelete(ctx context.Context, adminId string) (common.Servi
 		result = common.NewCRMServiceResult()
 	)
 
-	// 检查通知是否存在
+	// 检查数据是否存在
 	where := []gen.Condition{
 		g.CRMAdmin.AdminId.Eq(adminId),
 	}

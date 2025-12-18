@@ -28,6 +28,18 @@ func (s *Service) RoleDelete(ctx context.Context, roleId string) (common.Service
 		return result, fmt.Errorf("role not found")
 	}
 
+	// 检查当前角色下是否存在用户
+	adminWhere := []gen.Condition{
+		g.CRMAdmin.DepartmentId.Eq(roleId),
+	}
+	adminEntity, err := g.CRMAdmin.Where(adminWhere...).Take()
+	if err != nil {
+		return result, err
+	}
+	if adminEntity != nil && adminEntity.Id > 0 {
+		return result, fmt.Errorf("当前角色下存在用户，请移除用户后删除")
+	}
+
 	if _, err := g.CRMRole.Where(where...).Unscoped().Delete(); err != nil {
 		logObj.Errorf("CRMRole Delete role Delete has error(%v)", err)
 		return result, err

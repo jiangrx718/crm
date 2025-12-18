@@ -32,11 +32,11 @@ func (s *Service) RoleDelete(ctx context.Context, roleId string) (common.Service
 	adminWhere := []gen.Condition{
 		g.CRMAdmin.DepartmentId.Eq(roleId),
 	}
-	adminEntity, err := g.CRMAdmin.Where(adminWhere...).Take()
+	adminList, err := g.CRMAdmin.Where(adminWhere...).Find()
 	if err != nil {
 		return result, err
 	}
-	if adminEntity != nil && adminEntity.Id > 0 {
+	if len(adminList) > 0 {
 		return result, fmt.Errorf("当前角色下存在用户，请移除用户后删除")
 	}
 

@@ -12,14 +12,14 @@ import (
 )
 
 type RespAdminCreateInfo struct {
-	AdminId      string `json:"admin_id"`
-	UserName     string `json:"user_name"`
-	UserPhone    string `json:"user_phone"`
-	DepartmentId string `json:"department_id"`
-	Status       string `json:"status"`
+	AdminId   string `json:"admin_id"`
+	UserName  string `json:"user_name"`
+	UserPhone string `json:"user_phone"`
+	RoleId    string `json:"role_id"`
+	Status    string `json:"status"`
 }
 
-func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password, status, departmentId string) (common.ServiceResult, error) {
+func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password, status, roleId string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -43,12 +43,12 @@ func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password
 
 	adminId := utils.GenUUID()
 	crmAdmin := model.CRMAdmin{
-		AdminId:      adminId,
-		UserName:     userName,
-		UserPhone:    userPhone,
-		Password:     str.MD5String(fmt.Sprintf("%s%s", password, model.SaltValue)),
-		DepartmentId: departmentId,
-		Status:       status,
+		AdminId:   adminId,
+		UserName:  userName,
+		UserPhone: userPhone,
+		Password:  str.MD5String(fmt.Sprintf("%s%s", password, model.SaltValue)),
+		RoleId:    roleId,
+		Status:    status,
 	}
 
 	if createErr := g.CRMAdmin.Create(&crmAdmin); createErr != nil {
@@ -57,11 +57,11 @@ func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password
 	}
 
 	result.Data = RespAdminCreateInfo{
-		AdminId:      adminId,
-		UserName:     userName,
-		UserPhone:    userPhone,
-		DepartmentId: departmentId,
-		Status:       status,
+		AdminId:   adminId,
+		UserName:  userName,
+		UserPhone: userPhone,
+		RoleId:    roleId,
+		Status:    status,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

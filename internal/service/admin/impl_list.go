@@ -11,12 +11,12 @@ import (
 )
 
 type RespAdminService struct {
-	AdminId      string `json:"admin_id"`
-	UserName     string `json:"user_name"`
-	UserPhone    string `json:"user_phone"`
-	Status       string `json:"status"`
-	DepartmentId string `json:"department_id"`
-	CreatedAt    string `json:"created_at"`
+	AdminId   string `json:"admin_id"`
+	UserName  string `json:"user_name"`
+	UserPhone string `json:"user_phone"`
+	Status    string `json:"status"`
+	RoleId    string `json:"role_id"`
+	CreatedAt string `json:"created_at"`
 }
 
 func (s *Service) AdminList(ctx context.Context, offset, limit int64, status, userPhone string) (common.ServiceResult, error) {
@@ -36,12 +36,12 @@ func (s *Service) AdminList(ctx context.Context, offset, limit int64, status, us
 	var listAdmin []RespAdminService
 	for idx, _ := range adminDataList {
 		listAdmin = append(listAdmin, RespAdminService{
-			AdminId:      adminDataList[idx].AdminId,
-			UserName:     adminDataList[idx].UserName,
-			UserPhone:    adminDataList[idx].UserPhone,
-			DepartmentId: adminDataList[idx].DepartmentId,
-			Status:       adminDataList[idx].Status,
-			CreatedAt:    adminDataList[idx].CreatedAt.Format("2006-01-02 15:04:05"),
+			AdminId:   adminDataList[idx].AdminId,
+			UserName:  adminDataList[idx].UserName,
+			UserPhone: adminDataList[idx].UserPhone,
+			RoleId:    adminDataList[idx].RoleId,
+			Status:    adminDataList[idx].Status,
+			CreatedAt: adminDataList[idx].CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}
 

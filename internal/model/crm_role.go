@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// CRMRole 角色表
 type CRMRole struct {
 	Id        int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
 	RoleId    string    `gorm:"column:role_id;type:char(36);unique;comment:业务主键;" json:"role_id"`

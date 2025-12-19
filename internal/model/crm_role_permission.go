@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// CRMRolePermission 角色权限表
 type CRMRolePermission struct {
 	Id           int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:自增主键;" json:"id"`
 	RoleId       string    `gorm:"column:role_id;type:char(36);not null;default:'';comment:角色ID;" json:"role_id"`

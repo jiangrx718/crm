@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// CRMPermission 权限菜单表
 type CRMPermission struct {
 	Id             int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
 	PermissionId   string    `gorm:"column:permission_id;type:char(36);not null;unique;comment:业务主键;" json:"permission_id"`

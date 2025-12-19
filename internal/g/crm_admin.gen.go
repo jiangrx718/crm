@@ -34,7 +34,7 @@ func newCRMAdmin(db *gorm.DB, opts ...gen.DOOption) cRMAdmin {
 	_cRMAdmin.UserPhone = field.NewString(tableName, "user_phone")
 	_cRMAdmin.Password = field.NewString(tableName, "password")
 	_cRMAdmin.Status = field.NewString(tableName, "status")
-	_cRMAdmin.DepartmentId = field.NewString(tableName, "department_id")
+	_cRMAdmin.RoleId = field.NewString(tableName, "role_id")
 	_cRMAdmin.CreatedAt = field.NewTime(tableName, "created_at")
 	_cRMAdmin.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -46,16 +46,16 @@ func newCRMAdmin(db *gorm.DB, opts ...gen.DOOption) cRMAdmin {
 type cRMAdmin struct {
 	cRMAdminDo
 
-	ALL          field.Asterisk
-	Id           field.Int    // 主键
-	AdminId      field.String // 业务主键
-	UserName     field.String // 用户名
-	UserPhone    field.String // 手机号
-	Password     field.String // 密码
-	Status       field.String // 状态,off禁用,on启用
-	DepartmentId field.String // 所属部门ID
-	CreatedAt    field.Time   // 创建时间
-	UpdatedAt    field.Time   // 更新时间
+	ALL       field.Asterisk
+	Id        field.Int    // 主键
+	AdminId   field.String // 业务主键
+	UserName  field.String // 用户名
+	UserPhone field.String // 手机号
+	Password  field.String // 密码
+	Status    field.String // 状态,off禁用,on启用
+	RoleId    field.String // 角色Id
+	CreatedAt field.Time   // 创建时间
+	UpdatedAt field.Time   // 更新时间
 
 	fieldMap map[string]field.Expr
 }
@@ -78,7 +78,7 @@ func (c *cRMAdmin) updateTableName(table string) *cRMAdmin {
 	c.UserPhone = field.NewString(table, "user_phone")
 	c.Password = field.NewString(table, "password")
 	c.Status = field.NewString(table, "status")
-	c.DepartmentId = field.NewString(table, "department_id")
+	c.RoleId = field.NewString(table, "role_id")
 	c.CreatedAt = field.NewTime(table, "created_at")
 	c.UpdatedAt = field.NewTime(table, "updated_at")
 
@@ -104,7 +104,7 @@ func (c *cRMAdmin) fillFieldMap() {
 	c.fieldMap["user_phone"] = c.UserPhone
 	c.fieldMap["password"] = c.Password
 	c.fieldMap["status"] = c.Status
-	c.fieldMap["department_id"] = c.DepartmentId
+	c.fieldMap["role_id"] = c.RoleId
 	c.fieldMap["created_at"] = c.CreatedAt
 	c.fieldMap["updated_at"] = c.UpdatedAt
 }

@@ -13,14 +13,14 @@ import (
 )
 
 type RespAdminUpdateInfo struct {
-	AdminId      string `json:"admin_id"`
-	UserName     string `json:"user_name"`
-	UserPhone    string `json:"user_phone"`
-	DepartmentId string `json:"department_id"`
-	Status       string `json:"status"`
+	AdminId   string `json:"admin_id"`
+	UserName  string `json:"user_name"`
+	UserPhone string `json:"user_phone"`
+	RoleId    string `json:"role_id"`
+	Status    string `json:"status"`
 }
 
-func (s *Service) AdminUpdate(ctx context.Context, adminId, password, status, departmentId string) (common.ServiceResult, error) {
+func (s *Service) AdminUpdate(ctx context.Context, adminId, password, status, roleId string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -38,7 +38,7 @@ func (s *Service) AdminUpdate(ctx context.Context, adminId, password, status, de
 		return result, fmt.Errorf("admin not found")
 	}
 
-	adminEntity.DepartmentId = departmentId
+	adminEntity.RoleId = roleId
 	adminEntity.Status = status
 	if password != "" {
 		adminEntity.Password = str.MD5String(fmt.Sprintf("%s%s", password, model.SaltValue))
@@ -52,11 +52,11 @@ func (s *Service) AdminUpdate(ctx context.Context, adminId, password, status, de
 	}
 
 	result.Data = RespAdminUpdateInfo{
-		AdminId:      adminId,
-		UserName:     adminEntity.UserName,
-		UserPhone:    adminEntity.UserPhone,
-		DepartmentId: departmentId,
-		Status:       status,
+		AdminId:   adminId,
+		UserName:  adminEntity.UserName,
+		UserPhone: adminEntity.UserPhone,
+		RoleId:    roleId,
+		Status:    status,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

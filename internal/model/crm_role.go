@@ -9,6 +9,7 @@ type CRMRole struct {
 	RoleName  string    `gorm:"column:role_name;type:varchar(128);not null;default:'';comment:角色名称" json:"role_name"`
 	Status    string    `gorm:"column:status;type:varchar(32);not null;default:'on';comment:状态,off禁用,on启用" json:"status"`
 	IsInit    string    `gorm:"column:is_init;type:varchar(32);not null;default:'off';comment:是否初始数据,off否,on是" json:"is_init"`
+	IsSuper   string    `gorm:"column:is_super;type:varchar(32);not null;default:'off';comment:是否超管数据,off否,on是" json:"is_super"`
 	CreatedAt time.Time `gorm:"column:created_at;type:timestamp;not null;default:CURRENT_TIMESTAMP;index:idx_created_at;comment:创建时间" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at;type:timestamp;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updated_at"`
 }

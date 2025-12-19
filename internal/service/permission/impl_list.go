@@ -16,6 +16,7 @@ type RespPermissionService struct {
 	PermissionUrl  string                   `json:"permission_url"`
 	ParentId       string                   `json:"parent_id"`
 	Status         string                   `json:"status"`
+	IsInit         string                   `json:"is_init"`
 	Position       int                      `json:"position"`
 	CreatedAt      string                   `json:"created_at"`
 	ChildList      []*RespPermissionService `json:"child_list"`
@@ -44,6 +45,7 @@ func (s *Service) PermissionList(ctx context.Context, status string) (common.Ser
 			PermissionUrl:  p.PermissionURL,
 			ParentId:       p.ParentId,
 			Status:         p.Status,
+			IsInit:         p.IsInit,
 			Position:       p.Position,
 			CreatedAt:      p.CreatedAt.Format("2006-01-02 15:04:05"),
 			ChildList:      []*RespPermissionService{},

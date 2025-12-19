@@ -4,11 +4,11 @@ import "crm/gopkg/utils/httputil"
 
 // AdminCreateReq 创建参数
 type AdminCreateReq struct {
-	UserName     string `json:"user_name" binding:"required"`
-	UserPhone    string `json:"user_phone" binding:"required"`
-	Password     string `json:"password" binding:"required"`
-	DepartmentId string `json:"department_id" binding:"required"`
-	Status       string `json:"status" binding:"required"`
+	UserName  string `json:"user_name" binding:"required"`
+	UserPhone string `json:"user_phone" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+	RoleId    string `json:"role_id" binding:"required"`
+	Status    string `json:"status" binding:"required"`
 }
 
 // AdminDeleteReq 删除参数
@@ -18,10 +18,10 @@ type AdminDeleteReq struct {
 
 // AdminUpdateReq 修改参数
 type AdminUpdateReq struct {
-	AdminId      string `json:"admin_id" binding:"required"`
-	Password     string `json:"password"`
-	DepartmentId string `json:"department_id" binding:"required"`
-	Status       string `json:"status" binding:"required"`
+	AdminId  string `json:"admin_id" binding:"required"`
+	Password string `json:"password"`
+	RoleId   string `json:"role_id" binding:"required"`
+	Status   string `json:"status" binding:"required"`
 }
 
 // ListQuery 列表参数

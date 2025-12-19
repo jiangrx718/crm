@@ -16,7 +16,7 @@ func (h *Handler) AdminUpdate(ctx *gin.Context) {
 		return
 	}
 
-	result, err := h.adminService.AdminUpdate(ctx, req.AdminId, req.Password, req.Status, req.DepartmentId)
+	result, err := h.adminService.AdminUpdate(ctx, req.AdminId, req.Password, req.Status, req.RoleId)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

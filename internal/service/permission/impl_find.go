@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+type RespPermissionFindInfo struct {
+	IsSuper       string   `json:"is_super"`
+	PermissionIds []string `json:"permission_ids"`
+}
+
 // PermissionFind 查询权限
 func (s *Service) PermissionFind(ctx context.Context, adminId string) (common.ServiceResult, error) {
 	var (
@@ -18,10 +23,11 @@ func (s *Service) PermissionFind(ctx context.Context, adminId string) (common.Se
 
 	// 尝试从缓存获取
 	cacheKey := fmt.Sprintf("login_auth:%s", adminId)
-	rdb, err := redis.ClientAndErr("web")
+	rdb, err := redis.ClientAndErr("crm")
 	if err == nil && rdb != nil {
-		if val, err := rdb.Get(ctx, cacheKey).Result(); err == nil && val == "1" {
+		if val, err := rdb.Get(ctx, cacheKey).Result(); err == nil {
 			// 缓存命中，直接返回成功
+			result.Data = val
 			result.SetMessage("操作成功")
 			return result, nil
 		}
@@ -61,11 +67,21 @@ func (s *Service) PermissionFind(ctx context.Context, adminId string) (common.Se
 		return result, fmt.Errorf("用户角色对应的权限不存在")
 	}
 
-	// 写入缓存，有效期 30 分钟
-	if rdb != nil {
-		rdb.Set(ctx, cacheKey, "1", 30*time.Minute)
+	var permissionIds []string
+	for _, permission := range rolePermission {
+		permissionIds = append(permissionIds, permission.PermissionId)
 	}
 
+	var respPermissionFind RespPermissionFindInfo
+	respPermissionFind.IsSuper = roleInfo.IsSuper
+	respPermissionFind.PermissionIds = permissionIds
+
+	// 写入缓存，有效期 30 分钟
+	if rdb != nil {
+		rdb.Set(ctx, cacheKey, respPermissionFind, 30*time.Minute)
+	}
+
+	result.Data = respPermissionFind
 	result.SetMessage("操作成功")
 	return result, nil
 }

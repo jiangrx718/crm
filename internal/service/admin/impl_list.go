@@ -16,6 +16,7 @@ type RespAdminService struct {
 	UserPhone string `json:"user_phone"`
 	Status    string `json:"status"`
 	RoleId    string `json:"role_id"`
+	IsInit    string `json:"is_init"`
 	CreatedAt string `json:"created_at"`
 }
 
@@ -41,6 +42,7 @@ func (s *Service) AdminList(ctx context.Context, offset, limit int64, status, us
 			UserPhone: adminDataList[idx].UserPhone,
 			RoleId:    adminDataList[idx].RoleId,
 			Status:    adminDataList[idx].Status,
+			IsInit:    adminDataList[idx].IsInit,
 			CreatedAt: adminDataList[idx].CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}

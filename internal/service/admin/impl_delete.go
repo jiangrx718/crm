@@ -5,6 +5,7 @@ import (
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
+	"crm/internal/model"
 	"fmt"
 
 	"gorm.io/gen"
@@ -26,6 +27,11 @@ func (s *Service) AdminDelete(ctx context.Context, adminId string) (common.Servi
 	}
 	if adminEntity == nil {
 		return result, fmt.Errorf("admin not found")
+	}
+
+	// 判断是否为初始数据
+	if adminEntity.IsInit == model.IsInitOn {
+		return result, fmt.Errorf("初始数据禁止删除")
 	}
 
 	if _, err := g.CRMAdmin.Where(where...).Unscoped().Delete(); err != nil {

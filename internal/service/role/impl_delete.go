@@ -51,6 +51,15 @@ func (s *Service) RoleDelete(ctx context.Context, roleId string) (common.Service
 		return result, err
 	}
 
+	// 删除角色对应的权限数据
+	rolePermissionWhere := []gen.Condition{
+		g.CRMRolePermission.RoleId.Eq(roleId),
+	}
+	if _, err := g.CRMRolePermission.Where(rolePermissionWhere...).Unscoped().Delete(); err != nil {
+		logObj.Errorf("CRMRolePermission Delete role Delete has error(%v)", err)
+		return result, err
+	}
+
 	result.Data = map[string]string{
 		"role_id": roleId,
 	}

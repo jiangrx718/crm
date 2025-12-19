@@ -14,8 +14,8 @@ type CRMPermission struct {
 	Status         string    `gorm:"column:status;type:varchar(32);not null;default:'on';comment:状态,off禁用,on启用" json:"status"`
 	PermissionType int       `gorm:"column:permission_type;type:int;not null;default:0;comment:权限类型,1菜单,2按钮,3接口" json:"permission_type"`
 	Position       int       `gorm:"column:position;type:int;not null;default:0;comment:排序" json:"position"`
-	CreatedAt      time.Time `gorm:"column:created_at;type:time;autoCreateTime;index:idx_created_at;comment:创建时间" json:"created_at"`
-	UpdatedAt      time.Time `gorm:"column:updated_at;type:time;autoUpdateTime;index:idx_updated_at;comment:更新时间" json:"updated_at"`
+	CreatedAt      time.Time `gorm:"column:created_at;type:timestamp;not null;default:CURRENT_TIMESTAMP;index:idx_created_at;comment:创建时间" json:"created_at"`
+	UpdatedAt      time.Time `gorm:"column:updated_at;type:timestamp;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updated_at"`
 }
 
 func (r *CRMPermission) TableName() string {

@@ -32,6 +32,7 @@ func newCRMRole(db *gorm.DB, opts ...gen.DOOption) cRMRole {
 	_cRMRole.RoleId = field.NewString(tableName, "role_id")
 	_cRMRole.RoleName = field.NewString(tableName, "role_name")
 	_cRMRole.Status = field.NewString(tableName, "status")
+	_cRMRole.IsInit = field.NewString(tableName, "is_init")
 	_cRMRole.CreatedAt = field.NewTime(tableName, "created_at")
 	_cRMRole.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -48,6 +49,7 @@ type cRMRole struct {
 	RoleId    field.String // 业务主键
 	RoleName  field.String // 角色名称
 	Status    field.String // 状态,off禁用,on启用
+	IsInit    field.String // 是否初始数据,off否,on是
 	CreatedAt field.Time   // 创建时间
 	UpdatedAt field.Time   // 更新时间
 
@@ -70,6 +72,7 @@ func (c *cRMRole) updateTableName(table string) *cRMRole {
 	c.RoleId = field.NewString(table, "role_id")
 	c.RoleName = field.NewString(table, "role_name")
 	c.Status = field.NewString(table, "status")
+	c.IsInit = field.NewString(table, "is_init")
 	c.CreatedAt = field.NewTime(table, "created_at")
 	c.UpdatedAt = field.NewTime(table, "updated_at")
 
@@ -88,11 +91,12 @@ func (c *cRMRole) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cRMRole) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 6)
+	c.fieldMap = make(map[string]field.Expr, 7)
 	c.fieldMap["id"] = c.Id
 	c.fieldMap["role_id"] = c.RoleId
 	c.fieldMap["role_name"] = c.RoleName
 	c.fieldMap["status"] = c.Status
+	c.fieldMap["is_init"] = c.IsInit
 	c.fieldMap["created_at"] = c.CreatedAt
 	c.fieldMap["updated_at"] = c.UpdatedAt
 }

@@ -5,6 +5,7 @@ import (
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
+	"crm/internal/model"
 	"fmt"
 
 	"gorm.io/gen"
@@ -26,6 +27,11 @@ func (s *Service) RoleDelete(ctx context.Context, roleId string) (common.Service
 	}
 	if roleEntity == nil {
 		return result, fmt.Errorf("role not found")
+	}
+
+	// 判断是否为初始数据
+	if roleEntity.IsInit == model.IsInitOn {
+		return result, fmt.Errorf("初始数据禁止删除")
 	}
 
 	// 检查当前角色下是否存在用户

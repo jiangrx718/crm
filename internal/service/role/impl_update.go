@@ -35,6 +35,11 @@ func (s *Service) RoleUpdate(ctx context.Context, roleId, roleName, status strin
 		return result, fmt.Errorf("role not found")
 	}
 
+	// 判断是否为初始数据
+	if roleEntity.IsInit == model.IsInitOn {
+		return result, fmt.Errorf("初始数据禁止修改")
+	}
+
 	roleEntity.RoleName = roleName
 	roleEntity.Status = status
 

@@ -27,4 +27,6 @@ const SaltValue = "crm"
 const (
 	StatusOff = "off"
 	StatusOn  = "on"
+	IsInitOn  = "on"
+	IsInitOff = "off"
 )

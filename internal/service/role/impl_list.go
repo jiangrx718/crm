@@ -14,6 +14,7 @@ type RespRoleService struct {
 	RoleId     string   `json:"role_id"`
 	RoleName   string   `json:"role_name"`
 	Status     string   `json:"status"`
+	IsInit     string   `json:"is_init"`
 	CreatedAt  string   `json:"created_at"`
 	Permission []string `json:"permission"`
 }
@@ -69,6 +70,7 @@ func (s *Service) RoleList(ctx context.Context, offset, limit int64) (common.Ser
 			RoleId:     roleId,
 			RoleName:   roleDataList[idx].RoleName,
 			Status:     roleDataList[idx].Status,
+			IsInit:     roleDataList[idx].IsInit,
 			CreatedAt:  roleDataList[idx].CreatedAt.Format("2006-01-02 15:04:05"),
 			Permission: perms,
 		})

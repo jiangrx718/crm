@@ -30,7 +30,7 @@ func (s *Service) RoleDelete(ctx context.Context, roleId string) (common.Service
 
 	// 检查当前角色下是否存在用户
 	adminWhere := []gen.Condition{
-		g.CRMAdmin.DepartmentId.Eq(roleId),
+		g.CRMAdmin.RoleId.Eq(roleId),
 	}
 	adminList, err := g.CRMAdmin.Where(adminWhere...).Find()
 	if err != nil {

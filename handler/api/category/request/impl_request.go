@@ -31,6 +31,7 @@ type CategoryDeleteReq struct {
 // ListQuery 列表参数
 type ListQuery struct {
 	httputil.Pagination
+	CategoryType int `json:"category_type" form:"category_type"`
 }
 
 const (

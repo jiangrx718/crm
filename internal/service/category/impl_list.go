@@ -22,13 +22,13 @@ type RespCategoryService struct {
 	ChildList     []*RespCategoryService `json:"child_list"`
 }
 
-func (s *Service) CategoryList(ctx context.Context, offset, limit int64) (common.ServiceResult, error) {
+func (s *Service) CategoryList(ctx context.Context, offset, limit int64, categoryType int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
 	)
 
-	categoryDataList, count, err := ScanByPage(offset, limit)
+	categoryDataList, count, err := ScanByPage(offset, limit, categoryType)
 	if err != nil {
 		logObj.Errorw("CategoryList Find", "error", err)
 		result.SetError(&common.ServiceError{Code: -1, Message: "failed"})
@@ -77,14 +77,16 @@ func (s *Service) CategoryList(ctx context.Context, offset, limit int64) (common
 	return result, nil
 }
 
-func ScanByPage(offset, limit int64) ([]*model.CRMCategory, int64, error) {
+func ScanByPage(offset, limit int64, categoryType int) ([]*model.CRMCategory, int64, error) {
 	var (
 		crmCategory = g.CRMCategory
 		response    = make([]*model.CRMCategory, 0)
 	)
 
 	q := crmCategory.Debug()
-	where := []gen.Condition{}
+	where := []gen.Condition{
+		g.CRMCategory.CategoryType.Eq(categoryType),
+	}
 
 	count, err := q.Where(where...).Order(crmCategory.Id.Asc()).ScanByPage(&response, int(offset), int(limit))
 	return response, count, err

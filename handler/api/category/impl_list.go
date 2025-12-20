@@ -22,7 +22,7 @@ func (h *Handler) CategoryList(ctx *gin.Context) {
 		query.Limit = request.MaxLimit
 	}
 
-	result, err := h.categoryService.CategoryList(ctx, query.Offset, query.Limit)
+	result, err := h.categoryService.CategoryList(ctx, query.Offset, query.Limit, query.CategoryType)
 	if err != nil {
 		httputil.ServerError(ctx, err)
 		return

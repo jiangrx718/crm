@@ -28,6 +28,12 @@ type CategoryDeleteReq struct {
 	CategoryId string `json:"category_id" binding:"required"`
 }
 
+// CategoryStatusReq 状态参数
+type CategoryStatusReq struct {
+	CategoryId string `json:"category_id" binding:"required"`
+	Status     string `json:"status" binding:"required"`
+}
+
 // ListQuery 列表参数
 type ListQuery struct {
 	httputil.Pagination

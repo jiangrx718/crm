@@ -11,6 +11,7 @@ import (
 )
 
 type RespCategoryService struct {
+	Id            int                    `json:"id"`
 	CategoryId    string                 `json:"category_id"`
 	CategoryName  string                 `json:"category_name"`
 	CategoryImage string                 `json:"category_image"`
@@ -39,6 +40,7 @@ func (s *Service) CategoryList(ctx context.Context, offset, limit int64) (common
 	idMap := make(map[string]*RespCategoryService, len(categoryDataList))
 	for _, p := range categoryDataList {
 		idMap[p.CategoryId] = &RespCategoryService{
+			Id:            p.Id,
 			CategoryId:    p.CategoryId,
 			CategoryName:  p.CategoryName,
 			CategoryImage: p.CategoryImage,

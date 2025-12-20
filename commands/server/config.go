@@ -2,6 +2,7 @@ package server
 
 import (
 	"crm/gopkg/cache/es"
+	rxRedis "crm/gopkg/cache/redis"
 	"crm/gopkg/cron"
 	"crm/gopkg/gorms"
 	"crm/gopkg/log"
@@ -39,9 +40,9 @@ func InitConfigFromConfigPath(configPath, envPath string) error {
 		return err
 	}
 	// 初始化Redis
-	//if err := rxRedis.InitFromViper(); err != nil {
-	//	return err
-	//}
+	if err := rxRedis.InitFromViperDefault(); err != nil {
+		return err
+	}
 	//初始化cron定时任务
 	if err := cron.DoCron(); err != nil {
 		return err

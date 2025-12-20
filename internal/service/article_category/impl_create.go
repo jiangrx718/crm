@@ -1,1 +1,65 @@
 package article_category
+
+import (
+	"context"
+	"crm/gopkg/log"
+	"crm/gopkg/utils"
+	"crm/internal/common"
+	"crm/internal/g"
+	"crm/internal/model"
+)
+
+type RespArticleCategoryInfo struct {
+	CategoryId    string `json:"category_id"`
+	CategoryName  string `json:"category_name"`
+	CategoryImage string `json:"category_image"`
+	ParentId      string `json:"parent_id"`
+	Status        string `json:"status"`
+	Position      int    `json:"position"`
+}
+
+func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, categoryImage, status string, position int) (common.ServiceResult, error) {
+	var (
+		logObj = log.SugarContext(ctx)
+		result = common.NewCRMServiceResult()
+	)
+
+	// 检查数据是否存在
+	categoryEntity, err := g.CRMArticleCategory.Where(
+		g.CRMArticleCategory.CategoryName.Eq(categoryName)).Take()
+
+	if err != nil && err.Error() != "record not found" {
+		logObj.Errorw("CategoryCreate Check Exist Error", "error", err)
+		return result, err
+	}
+	if categoryEntity != nil {
+		result.SetCode(10001) // 业务错误码
+		result.SetMessage("栏目已存在")
+		return result, nil // 返回 nil error，让 controller 处理 result
+	}
+	categoryId := utils.GenUUID()
+	crmCategory := model.CRMArticleCategory{
+		CategoryId:    categoryId,
+		CategoryName:  categoryName,
+		CategoryImage: categoryImage,
+		ParentId:      parentId,
+		Position:      position,
+		Status:        status,
+	}
+
+	if createErr := g.CRMArticleCategory.Create(&crmCategory); createErr != nil {
+		logObj.Errorw("CRMArticleCategory Create crmCategory error", "crmCategory", crmCategory, "error", createErr)
+		return result, createErr
+	}
+
+	result.Data = RespArticleCategoryInfo{
+		CategoryId:    categoryId,
+		CategoryName:  categoryName,
+		CategoryImage: categoryImage,
+		ParentId:      parentId,
+		Position:      position,
+		Status:        status,
+	}
+	result.SetMessage("操作成功")
+	return result, nil
+}

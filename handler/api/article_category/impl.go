@@ -21,10 +21,9 @@ func NewHandler(g *gin.RouterGroup) gins.Handler {
 }
 
 func (h *Handler) RegisterRoutes() {
-	//g := h.g.Group("/admin")
-	//g.POST("/create", h.CreateData)
-	//g.POST("/update", h.UpdateData)
-	//g.POST("/delete", h.DeleteData)
-	//g.POST("/status", h.StatusData)
-	//g.GET("/list", h.ListData)
+	g := h.g.Group("/article/category")
+	g.POST("/create", h.CategoryCreate)
+	g.POST("/update", h.CategoryUpdate)
+	g.POST("/delete", h.CategoryDelete)
+	g.GET("/list", h.CategoryList)
 }

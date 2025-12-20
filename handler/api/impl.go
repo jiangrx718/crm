@@ -3,7 +3,6 @@ package api
 import (
 	"crm/gopkg/gins"
 	"crm/handler/api/admin"
-	"crm/handler/api/admin_role"
 	"crm/handler/api/article"
 	"crm/handler/api/article_category"
 	"crm/handler/api/login"
@@ -49,7 +48,6 @@ func (h *Handler) RegisterRoutes() {
 	g := h.engine.Group("/api", middleware.JWTAuth())
 	handlers := []gins.Handler{
 		admin.NewHandler(g),
-		admin_role.NewHandler(g),
 		article.NewHandler(g),
 		article_category.NewHandler(g),
 		order.NewHandler(g),

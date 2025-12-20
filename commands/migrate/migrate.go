@@ -24,6 +24,9 @@ func Command() *cli.Command {
 						model.CRMPermission{},
 						model.CRMRole{},
 						model.CRMRolePermission{},
+						model.CRMArticle{},
+						model.CRMArticleCategory{},
+						model.CRMArticleContent{},
 					}
 					return tx.AutoMigrate(tables...)
 				},

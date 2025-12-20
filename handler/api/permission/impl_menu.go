@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// PermissionMenu 管理权限-权限设置-列表
+// PermissionMenu 管理权限-左侧菜单-列表
 func (h *Handler) PermissionMenu(ctx *gin.Context) {
 
 	var query request.ListQuery

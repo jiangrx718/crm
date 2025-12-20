@@ -17,17 +17,13 @@ func (s *Service) PermissionMenu(ctx context.Context, adminId string) (common.Se
 		result = common.NewCRMServiceResult()
 	)
 
-	fmt.Printf("permission menu adminId:%s\n", adminId)
 	// 1. 获取用户权限信息 (复用 PermissionFind 逻辑或直接查缓存)
 	// var permInfo RespPermissionFindInfo
 	cacheKey := fmt.Sprintf("login_auth:%s", adminId)
 	rdb, err := redis.ClientAndErr("crm")
 	if err == nil && rdb != nil {
 		if val, err := rdb.Get(ctx, cacheKey).Result(); err == nil && val != "" {
-			// 尝试解析缓存中的结构体 (注意：PermissionFind 之前存的是 string "1"，现在为了菜单需要存结构体)
-			// 如果之前只存了 "1"，这里会解析失败或者拿到默认值，需要重新查库
-			// 为了稳妥，建议直接查库，或者优化 PermissionFind 存完整信息
-			// 鉴于 PermissionFind 刚改为存 "1"，这里我们先直接查库，确保数据准确
+			
 		}
 	}
 
@@ -113,14 +109,6 @@ func (s *Service) PermissionMenu(ctx context.Context, adminId string) (common.Se
 		if parent, ok := idMap[p.ParentId]; ok && parent != nil {
 			parent.ChildList = append(parent.ChildList, node)
 		} else {
-			// 特殊情况：如果是普通用户，可能只分配了子菜单而没有分配父菜单
-			// 这种情况下，是否需要显示？通常如果不显示父菜单，子菜单也无法在树中找到位置
-			// 策略：如果找不到父节点，且该用户不是超管（即部分权限），
-			// 可能需要前端处理，或者后端将其作为顶层？
-			// 根据需求 "对应层级展示"，通常意味着父节点必须存在。
-			// 如果数据库中存在父节点但未分配给用户，则用户看不到该树枝。
-			// 如果是数据不一致（父节点ID错误），则也无法挂载。
-			// 这里保持与 PermissionList 一致逻辑：不挂载则不显示（或者作为游离节点，但 PermissionList 注释掉了 roots append）
 		}
 	}
 
@@ -128,12 +116,7 @@ func (s *Service) PermissionMenu(ctx context.Context, adminId string) (common.Se
 		roots = []*RespPermissionService{}
 	}
 
-	// 序列化结果以便存入 result.Data (result.Data is interface{})
-	// 直接赋值即可
 	result.Data = map[string]any{"list": roots}
 	result.SetMessage("操作成功")
 	return result, nil
 }
-
-// 辅助结构体定义 (如果 impl_find.go 里定义了 RespPermissionFindInfo，这里可以复用，或者重新定义)
-// 注意：同一个包下可以直接使用 impl_find.go 中的 RespPermissionFindInfo

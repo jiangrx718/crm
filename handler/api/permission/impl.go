@@ -24,6 +24,7 @@ func (h *Handler) RegisterRoutes() {
 	g := h.g.Group("/permission")
 	g.POST("/create", h.PermissionCreate)
 	g.GET("/list", h.PermissionList)
+	g.GET("/menu", h.PermissionMenu)
 	g.POST("/delete", h.PermissionDelete)
 	g.POST("/edit", h.PermissionUpdate)
 	g.POST("/status", h.PermissionStatus)

@@ -13,4 +13,5 @@ type PermissionIFace interface {
 	PermissionList(ctx context.Context, status string) (common.ServiceResult, error)
 	PermissionDelete(ctx context.Context, permissionId string) (common.ServiceResult, error)
 	PermissionFind(ctx context.Context, adminId string) (common.ServiceResult, error)
+	PermissionMenu(ctx context.Context, adminId string) (common.ServiceResult, error)
 }

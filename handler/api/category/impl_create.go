@@ -16,7 +16,7 @@ func (h *Handler) CategoryCreate(ctx *gin.Context) {
 		return
 	}
 
-	result, err := h.categoryService.CategoryCreate(ctx, req.ParentId, req.CategoryName, req.CategoryImage, req.Status, req.Position)
+	result, err := h.categoryService.CategoryCreate(ctx, req.ParentId, req.CategoryName, req.CategoryImage, req.Status, req.CategoryType, req.Position)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

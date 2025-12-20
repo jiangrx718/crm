@@ -6,6 +6,7 @@ import "crm/gopkg/utils/httputil"
 type CategoryCreateReq struct {
 	ParentId      string `json:"parent_id"`
 	CategoryImage string `json:"category_image"`
+	CategoryType  int    `json:"category_type" binding:"required"`
 	Position      int    `json:"position"`
 	CategoryName  string `json:"category_name" binding:"required"`
 	Status        string `json:"status" binding:"required"`
@@ -16,6 +17,7 @@ type CategoryUpdateReq struct {
 	CategoryId    string `json:"category_id" binding:"required"`
 	ParentId      string `json:"parent_id"`
 	CategoryImage string `json:"category_image"`
+	CategoryType  int    `json:"category_type" binding:"required"`
 	Position      int    `json:"position"`
 	CategoryName  string `json:"category_name" binding:"required"`
 	Status        string `json:"status" binding:"required"`

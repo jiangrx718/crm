@@ -15,10 +15,11 @@ type RespCategoryInfo struct {
 	CategoryImage string `json:"category_image"`
 	ParentId      string `json:"parent_id"`
 	Status        string `json:"status"`
+	CategoryType  int    `json:"category_type"`
 	Position      int    `json:"position"`
 }
 
-func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, categoryImage, status string, position int) (common.ServiceResult, error) {
+func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, categoryImage, status string, categoryType, position int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -26,7 +27,8 @@ func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, ca
 
 	// 检查数据是否存在
 	categoryEntity, err := g.CRMCategory.Where(
-		g.CRMCategory.CategoryName.Eq(categoryName)).Take()
+		g.CRMCategory.CategoryName.Eq(categoryName),
+		g.CRMCategory.CategoryType.Eq(categoryType)).Take()
 
 	if err != nil && err.Error() != "record not found" {
 		logObj.Errorw("CategoryCreate Check Exist Error", "error", err)
@@ -39,6 +41,7 @@ func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, ca
 	}
 	categoryId := utils.GenUUID()
 	crmCategory := model.CRMCategory{
+		CategoryType:  categoryType,
 		CategoryId:    categoryId,
 		CategoryName:  categoryName,
 		CategoryImage: categoryImage,
@@ -59,6 +62,7 @@ func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, ca
 		ParentId:      parentId,
 		Position:      position,
 		Status:        status,
+		CategoryType:  categoryType,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gen"
 )
 
-func (s *Service) CategoryUpdate(ctx context.Context, categoryId, parentId, categoryName, categoryImage, status string, position int) (common.ServiceResult, error) {
+func (s *Service) CategoryUpdate(ctx context.Context, categoryId, parentId, categoryName, categoryImage, status string, categoryType, position int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -32,6 +32,7 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, parentId, cate
 	categoryEntity.CategoryImage = categoryImage
 	categoryEntity.Status = status
 	categoryEntity.Position = position
+	categoryEntity.CategoryType = categoryType
 
 	if _, err = g.CRMCategory.Where(
 		g.CRMCategory.CategoryId.Eq(categoryId),
@@ -47,6 +48,7 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, parentId, cate
 		ParentId:      parentId,
 		Position:      position,
 		Status:        status,
+		CategoryType:  categoryType,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

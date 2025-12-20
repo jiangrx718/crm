@@ -1,4 +1,4 @@
-package article_category
+package category
 
 import (
 	"context"
@@ -18,9 +18,9 @@ func (s *Service) CategoryDelete(ctx context.Context, categoryId string) (common
 
 	// 检查数据是否存在
 	where := []gen.Condition{
-		g.CRMArticleCategory.CategoryId.Eq(categoryId),
+		g.CRMCategory.CategoryId.Eq(categoryId),
 	}
-	categoryEntity, err := g.CRMArticleCategory.Where(where...).Take()
+	categoryEntity, err := g.CRMCategory.Where(where...).Take()
 	if err != nil {
 		return result, err
 	}
@@ -28,7 +28,7 @@ func (s *Service) CategoryDelete(ctx context.Context, categoryId string) (common
 		return result, fmt.Errorf("category not found")
 	}
 
-	if _, err := g.CRMArticleCategory.Where(where...).Unscoped().Delete(); err != nil {
+	if _, err := g.CRMCategory.Where(where...).Unscoped().Delete(); err != nil {
 		logObj.Errorf("Category Delete Category Delete has error(%v)", err)
 		return result, err
 	}

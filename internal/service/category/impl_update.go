@@ -1,4 +1,4 @@
-package article_category
+package category
 
 import (
 	"context"
@@ -18,9 +18,9 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, parentId, cate
 
 	// 检查数据是否存在
 	where := []gen.Condition{
-		g.CRMArticleCategory.CategoryId.Eq(categoryId),
+		g.CRMCategory.CategoryId.Eq(categoryId),
 	}
-	categoryEntity, err := g.CRMArticleCategory.Where(where...).Take()
+	categoryEntity, err := g.CRMCategory.Where(where...).Take()
 	if err != nil {
 		return result, err
 	}
@@ -33,14 +33,14 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, parentId, cate
 	categoryEntity.Status = status
 	categoryEntity.Position = position
 
-	if _, err = g.CRMArticleCategory.Where(
-		g.CRMArticleCategory.CategoryId.Eq(categoryId),
+	if _, err = g.CRMCategory.Where(
+		g.CRMCategory.CategoryId.Eq(categoryId),
 	).Updates(&categoryEntity); err != nil {
 		logObj.Errorw("CategoryUpdate error", "categoryEntity", categoryEntity, "error", err)
 		return result, err
 	}
 
-	result.Data = RespArticleCategoryInfo{
+	result.Data = RespCategoryInfo{
 		CategoryId:    categoryId,
 		CategoryName:  categoryName,
 		CategoryImage: categoryImage,

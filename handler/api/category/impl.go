@@ -1,27 +1,27 @@
-package article_category
+package category
 
 import (
 	"crm/gopkg/gins"
 	"crm/internal/service"
-	"crm/internal/service/article_category"
+	"crm/internal/service/category"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	g                      *gin.RouterGroup
-	articleCategoryService service.ArticleCategoryIFace
+	g               *gin.RouterGroup
+	categoryService service.CategoryIFace
 }
 
 func NewHandler(g *gin.RouterGroup) gins.Handler {
 	return &Handler{
-		g:                      g,
-		articleCategoryService: article_category.NewService(),
+		g:               g,
+		categoryService: category.NewService(),
 	}
 }
 
 func (h *Handler) RegisterRoutes() {
-	g := h.g.Group("/article/category")
+	g := h.g.Group("/category")
 	g.POST("/create", h.CategoryCreate)
 	g.POST("/update", h.CategoryUpdate)
 	g.POST("/delete", h.CategoryDelete)

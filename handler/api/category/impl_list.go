@@ -1,12 +1,12 @@
-package article_category
+package category
 
 import (
 	"crm/gopkg/utils/httputil"
-	"crm/handler/api/article_category/request"
+	"crm/handler/api/category/request"
 	"github.com/gin-gonic/gin"
 )
 
-// CategoryList 内容管理-文章分类-列表
+// CategoryList 内容管理-文章/商品分类-列表
 func (h *Handler) CategoryList(ctx *gin.Context) {
 
 	var query request.ListQuery
@@ -22,7 +22,7 @@ func (h *Handler) CategoryList(ctx *gin.Context) {
 		query.Limit = request.MaxLimit
 	}
 
-	result, err := h.articleCategoryService.CategoryList(ctx, query.Offset, query.Limit)
+	result, err := h.categoryService.CategoryList(ctx, query.Offset, query.Limit)
 	if err != nil {
 		httputil.ServerError(ctx, err)
 		return

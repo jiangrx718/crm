@@ -4,12 +4,11 @@ import (
 	"crm/gopkg/gins"
 	"crm/handler/api/admin"
 	"crm/handler/api/article"
-	"crm/handler/api/article_category"
+	"crm/handler/api/category"
 	"crm/handler/api/login"
 	"crm/handler/api/order"
 	"crm/handler/api/permission"
 	"crm/handler/api/product"
-	"crm/handler/api/product_category"
 	"crm/handler/api/role"
 	"crm/handler/api/system"
 	"crm/handler/middleware"
@@ -49,11 +48,10 @@ func (h *Handler) RegisterRoutes() {
 	handlers := []gins.Handler{
 		admin.NewHandler(g),
 		article.NewHandler(g),
-		article_category.NewHandler(g),
+		category.NewHandler(g),
 		order.NewHandler(g),
 		permission.NewHandler(g),
 		product.NewHandler(g),
-		product_category.NewHandler(g),
 		role.NewHandler(g),
 		system.NewHandler(g),
 	}

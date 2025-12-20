@@ -1,22 +1,22 @@
-package article_category
+package category
 
 import (
 	"crm/gopkg/gins"
-	"crm/handler/api/article_category/request"
+	"crm/handler/api/category/request"
 
 	"github.com/gin-gonic/gin"
 )
 
-// CategoryDelete 内容管理-文章分类-删除
+// CategoryDelete 内容管理-文章/商品分类-删除
 func (h *Handler) CategoryDelete(ctx *gin.Context) {
-	var req request.ArticleCategoryDeleteReq
+	var req request.CategoryDeleteReq
 
 	if err := ctx.Bind(&req); err != nil {
 		gins.BadRequest(ctx, err)
 		return
 	}
 
-	result, err := h.articleCategoryService.CategoryDelete(ctx, req.CategoryId)
+	result, err := h.categoryService.CategoryDelete(ctx, req.CategoryId)
 	if err != nil {
 		gins.ServerError(ctx, err)
 		return

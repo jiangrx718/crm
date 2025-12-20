@@ -16,22 +16,22 @@ import (
 )
 
 var (
-	Q                  = new(Query)
-	CRMAdmin           *cRMAdmin
-	CRMArticle         *cRMArticle
-	CRMArticleCategory *cRMArticleCategory
-	CRMArticleContent  *cRMArticleContent
-	CRMPermission      *cRMPermission
-	CRMRole            *cRMRole
-	CRMRolePermission  *cRMRolePermission
+	Q                 = new(Query)
+	CRMAdmin          *cRMAdmin
+	CRMArticle        *cRMArticle
+	CRMArticleContent *cRMArticleContent
+	CRMCategory       *cRMCategory
+	CRMPermission     *cRMPermission
+	CRMRole           *cRMRole
+	CRMRolePermission *cRMRolePermission
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	CRMAdmin = &Q.CRMAdmin
 	CRMArticle = &Q.CRMArticle
-	CRMArticleCategory = &Q.CRMArticleCategory
 	CRMArticleContent = &Q.CRMArticleContent
+	CRMCategory = &Q.CRMCategory
 	CRMPermission = &Q.CRMPermission
 	CRMRole = &Q.CRMRole
 	CRMRolePermission = &Q.CRMRolePermission
@@ -39,41 +39,41 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:                 db,
-		CRMAdmin:           newCRMAdmin(db, opts...),
-		CRMArticle:         newCRMArticle(db, opts...),
-		CRMArticleCategory: newCRMArticleCategory(db, opts...),
-		CRMArticleContent:  newCRMArticleContent(db, opts...),
-		CRMPermission:      newCRMPermission(db, opts...),
-		CRMRole:            newCRMRole(db, opts...),
-		CRMRolePermission:  newCRMRolePermission(db, opts...),
+		db:                db,
+		CRMAdmin:          newCRMAdmin(db, opts...),
+		CRMArticle:        newCRMArticle(db, opts...),
+		CRMArticleContent: newCRMArticleContent(db, opts...),
+		CRMCategory:       newCRMCategory(db, opts...),
+		CRMPermission:     newCRMPermission(db, opts...),
+		CRMRole:           newCRMRole(db, opts...),
+		CRMRolePermission: newCRMRolePermission(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	CRMAdmin           cRMAdmin
-	CRMArticle         cRMArticle
-	CRMArticleCategory cRMArticleCategory
-	CRMArticleContent  cRMArticleContent
-	CRMPermission      cRMPermission
-	CRMRole            cRMRole
-	CRMRolePermission  cRMRolePermission
+	CRMAdmin          cRMAdmin
+	CRMArticle        cRMArticle
+	CRMArticleContent cRMArticleContent
+	CRMCategory       cRMCategory
+	CRMPermission     cRMPermission
+	CRMRole           cRMRole
+	CRMRolePermission cRMRolePermission
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:                 db,
-		CRMAdmin:           q.CRMAdmin.clone(db),
-		CRMArticle:         q.CRMArticle.clone(db),
-		CRMArticleCategory: q.CRMArticleCategory.clone(db),
-		CRMArticleContent:  q.CRMArticleContent.clone(db),
-		CRMPermission:      q.CRMPermission.clone(db),
-		CRMRole:            q.CRMRole.clone(db),
-		CRMRolePermission:  q.CRMRolePermission.clone(db),
+		db:                db,
+		CRMAdmin:          q.CRMAdmin.clone(db),
+		CRMArticle:        q.CRMArticle.clone(db),
+		CRMArticleContent: q.CRMArticleContent.clone(db),
+		CRMCategory:       q.CRMCategory.clone(db),
+		CRMPermission:     q.CRMPermission.clone(db),
+		CRMRole:           q.CRMRole.clone(db),
+		CRMRolePermission: q.CRMRolePermission.clone(db),
 	}
 }
 
@@ -87,36 +87,36 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:                 db,
-		CRMAdmin:           q.CRMAdmin.replaceDB(db),
-		CRMArticle:         q.CRMArticle.replaceDB(db),
-		CRMArticleCategory: q.CRMArticleCategory.replaceDB(db),
-		CRMArticleContent:  q.CRMArticleContent.replaceDB(db),
-		CRMPermission:      q.CRMPermission.replaceDB(db),
-		CRMRole:            q.CRMRole.replaceDB(db),
-		CRMRolePermission:  q.CRMRolePermission.replaceDB(db),
+		db:                db,
+		CRMAdmin:          q.CRMAdmin.replaceDB(db),
+		CRMArticle:        q.CRMArticle.replaceDB(db),
+		CRMArticleContent: q.CRMArticleContent.replaceDB(db),
+		CRMCategory:       q.CRMCategory.replaceDB(db),
+		CRMPermission:     q.CRMPermission.replaceDB(db),
+		CRMRole:           q.CRMRole.replaceDB(db),
+		CRMRolePermission: q.CRMRolePermission.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	CRMAdmin           ICRMAdminDo
-	CRMArticle         ICRMArticleDo
-	CRMArticleCategory ICRMArticleCategoryDo
-	CRMArticleContent  ICRMArticleContentDo
-	CRMPermission      ICRMPermissionDo
-	CRMRole            ICRMRoleDo
-	CRMRolePermission  ICRMRolePermissionDo
+	CRMAdmin          ICRMAdminDo
+	CRMArticle        ICRMArticleDo
+	CRMArticleContent ICRMArticleContentDo
+	CRMCategory       ICRMCategoryDo
+	CRMPermission     ICRMPermissionDo
+	CRMRole           ICRMRoleDo
+	CRMRolePermission ICRMRolePermissionDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		CRMAdmin:           q.CRMAdmin.WithContext(ctx),
-		CRMArticle:         q.CRMArticle.WithContext(ctx),
-		CRMArticleCategory: q.CRMArticleCategory.WithContext(ctx),
-		CRMArticleContent:  q.CRMArticleContent.WithContext(ctx),
-		CRMPermission:      q.CRMPermission.WithContext(ctx),
-		CRMRole:            q.CRMRole.WithContext(ctx),
-		CRMRolePermission:  q.CRMRolePermission.WithContext(ctx),
+		CRMAdmin:          q.CRMAdmin.WithContext(ctx),
+		CRMArticle:        q.CRMArticle.WithContext(ctx),
+		CRMArticleContent: q.CRMArticleContent.WithContext(ctx),
+		CRMCategory:       q.CRMCategory.WithContext(ctx),
+		CRMPermission:     q.CRMPermission.WithContext(ctx),
+		CRMRole:           q.CRMRole.WithContext(ctx),
+		CRMRolePermission: q.CRMRolePermission.WithContext(ctx),
 	}
 }
 

@@ -1,4 +1,4 @@
-package article_category
+package category
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"crm/internal/model"
 )
 
-type RespArticleCategoryInfo struct {
+type RespCategoryInfo struct {
 	CategoryId    string `json:"category_id"`
 	CategoryName  string `json:"category_name"`
 	CategoryImage string `json:"category_image"`
@@ -25,8 +25,8 @@ func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, ca
 	)
 
 	// 检查数据是否存在
-	categoryEntity, err := g.CRMArticleCategory.Where(
-		g.CRMArticleCategory.CategoryName.Eq(categoryName)).Take()
+	categoryEntity, err := g.CRMCategory.Where(
+		g.CRMCategory.CategoryName.Eq(categoryName)).Take()
 
 	if err != nil && err.Error() != "record not found" {
 		logObj.Errorw("CategoryCreate Check Exist Error", "error", err)
@@ -38,7 +38,7 @@ func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, ca
 		return result, nil // 返回 nil error，让 controller 处理 result
 	}
 	categoryId := utils.GenUUID()
-	crmCategory := model.CRMArticleCategory{
+	crmCategory := model.CRMCategory{
 		CategoryId:    categoryId,
 		CategoryName:  categoryName,
 		CategoryImage: categoryImage,
@@ -47,12 +47,12 @@ func (s *Service) CategoryCreate(ctx context.Context, parentId, categoryName, ca
 		Status:        status,
 	}
 
-	if createErr := g.CRMArticleCategory.Create(&crmCategory); createErr != nil {
-		logObj.Errorw("CRMArticleCategory Create crmCategory error", "crmCategory", crmCategory, "error", createErr)
+	if createErr := g.CRMCategory.Create(&crmCategory); createErr != nil {
+		logObj.Errorw("CRMCategory Create crmCategory error", "crmCategory", crmCategory, "error", createErr)
 		return result, createErr
 	}
 
-	result.Data = RespArticleCategoryInfo{
+	result.Data = RespCategoryInfo{
 		CategoryId:    categoryId,
 		CategoryName:  categoryName,
 		CategoryImage: categoryImage,

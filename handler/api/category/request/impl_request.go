@@ -2,8 +2,8 @@ package request
 
 import "crm/gopkg/utils/httputil"
 
-// ArticleCategoryCreateReq 创建参数
-type ArticleCategoryCreateReq struct {
+// CategoryCreateReq 创建参数
+type CategoryCreateReq struct {
 	ParentId      string `json:"parent_id"`
 	CategoryImage string `json:"category_image"`
 	Position      int    `json:"position"`
@@ -11,8 +11,8 @@ type ArticleCategoryCreateReq struct {
 	Status        string `json:"status" binding:"required"`
 }
 
-// ArticleCategoryUpdateReq 修改参数
-type ArticleCategoryUpdateReq struct {
+// CategoryUpdateReq 修改参数
+type CategoryUpdateReq struct {
 	CategoryId    string `json:"category_id" binding:"required"`
 	ParentId      string `json:"parent_id"`
 	CategoryImage string `json:"category_image"`
@@ -21,8 +21,8 @@ type ArticleCategoryUpdateReq struct {
 	Status        string `json:"status" binding:"required"`
 }
 
-// ArticleCategoryDeleteReq 删除参数
-type ArticleCategoryDeleteReq struct {
+// CategoryDeleteReq 删除参数
+type CategoryDeleteReq struct {
 	CategoryId string `json:"category_id" binding:"required"`
 }
 

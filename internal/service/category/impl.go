@@ -1,4 +1,4 @@
-package product_category
+package category
 
 type Service struct {
 }

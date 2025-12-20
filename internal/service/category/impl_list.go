@@ -1,4 +1,4 @@
-package article_category
+package category
 
 import (
 	"context"
@@ -77,15 +77,15 @@ func (s *Service) CategoryList(ctx context.Context, offset, limit int64) (common
 	return result, nil
 }
 
-func ScanByPage(offset, limit int64) ([]*model.CRMArticleCategory, int64, error) {
+func ScanByPage(offset, limit int64) ([]*model.CRMCategory, int64, error) {
 	var (
-		crmArticleCategory = g.CRMArticleCategory
-		response           = make([]*model.CRMArticleCategory, 0)
+		crmCategory = g.CRMCategory
+		response    = make([]*model.CRMCategory, 0)
 	)
 
-	q := crmArticleCategory.Debug()
+	q := crmCategory.Debug()
 	where := []gen.Condition{}
 
-	count, err := q.Where(where...).Order(crmArticleCategory.Id.Asc()).ScanByPage(&response, int(offset), int(limit))
+	count, err := q.Where(where...).Order(crmCategory.Id.Asc()).ScanByPage(&response, int(offset), int(limit))
 	return response, count, err
 }

@@ -11,6 +11,7 @@ import (
 )
 
 type RespArticleService struct {
+	Id           int    `json:"id"`
 	ArticleId    string `json:"article_id"`
 	CategoryId   string `json:"category_id"`
 	ArticleName  string `json:"article_name"`
@@ -37,6 +38,7 @@ func (s *Service) ArticleList(ctx context.Context, offset, limit int64, status, 
 	var listArticle []RespArticleService
 	for idx, _ := range articleDataList {
 		listArticle = append(listArticle, RespArticleService{
+			Id:           int(articleDataList[idx].Id),
 			ArticleId:    articleDataList[idx].ArticleId,
 			CategoryId:   articleDataList[idx].CategoryId,
 			ArticleName:  articleDataList[idx].ArticleName,
@@ -73,6 +75,6 @@ func ScanByPage(articleName, status string, offset, limit int64) ([]*model.CRMAr
 		where = append(where, crmArticle.Status.Eq(status))
 	}
 
-	count, err := q.Where(where...).Order(crmArticle.Id.Asc()).ScanByPage(&response, int(offset), int(limit))
+	count, err := q.Where(where...).Order(crmArticle.Id.Desc()).ScanByPage(&response, int(offset), int(limit))
 	return response, count, err
 }

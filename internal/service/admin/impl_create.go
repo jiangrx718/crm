@@ -26,18 +26,31 @@ func (s *Service) AdminCreate(ctx context.Context, userName, userPhone, password
 	)
 
 	// 检查数据是否存在
-	adminEntity, err := g.CRMAdmin.Where(
-		g.CRMAdmin.Where(g.CRMAdmin.UserName.Eq(userName)).
-			Or(g.CRMAdmin.UserPhone.Eq(userPhone)),
+	adminIphoneEntity, err := g.CRMAdmin.Where(
+		g.CRMAdmin.Where(g.CRMAdmin.UserPhone.Eq(userPhone)),
 	).Take()
 
 	if err != nil && err.Error() != "record not found" {
 		logObj.Errorw("AdminCreate Check Exist Error", "error", err)
 		return result, err
 	}
-	if adminEntity != nil {
+	if adminIphoneEntity != nil {
 		result.SetCode(10001) // 业务错误码
-		result.SetMessage("用户名或手机号已存在")
+		result.SetMessage("手机号已存在")
+		return result, nil // 返回 nil error，让 controller 处理 result
+	}
+
+	adminUserNameEntity, err := g.CRMAdmin.Where(
+		g.CRMAdmin.Where(g.CRMAdmin.UserName.Eq(userName)),
+	).Take()
+
+	if err != nil && err.Error() != "record not found" {
+		logObj.Errorw("AdminCreate Check Exist Error", "error", err)
+		return result, err
+	}
+	if adminUserNameEntity != nil {
+		result.SetCode(10001) // 业务错误码
+		result.SetMessage("用户已存在")
 		return result, nil // 返回 nil error，让 controller 处理 result
 	}
 

@@ -11,3 +11,8 @@ const (
 	IsSuperOn  = "on"
 	IsSuperOff = "off"
 )
+
+const (
+	CategoryTypeArticle int = 1 // 文章
+	CategoryTypeProduct int = 2 // 商品
+)

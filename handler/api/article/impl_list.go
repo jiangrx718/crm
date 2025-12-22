@@ -23,7 +23,7 @@ func (h *Handler) ArticleList(ctx *gin.Context) {
 		query.Limit = request.MaxLimit
 	}
 
-	result, err := h.articleService.ArticleList(ctx, query.Offset, query.Limit, query.Status, query.ArticleName)
+	result, err := h.articleService.ArticleList(ctx, query.Offset, query.Limit, query.CategoryId, query.ArticleName)
 	if err != nil {
 		httputil.ServerError(ctx, err)
 		return

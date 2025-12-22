@@ -22,13 +22,13 @@ type RespArticleService struct {
 	CreatedAt    string `json:"created_at"`
 }
 
-func (s *Service) ArticleList(ctx context.Context, offset, limit int64, status, articleName string) (common.ServiceResult, error) {
+func (s *Service) ArticleList(ctx context.Context, offset, limit int64, categoryId, articleName string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
 	)
 
-	articleDataList, count, err := ScanByPage(articleName, status, offset, limit)
+	articleDataList, count, err := ScanByPage(articleName, categoryId, offset, limit)
 	if err != nil {
 		logObj.Errorw("ArticleList Find", "error", err)
 		result.SetError(&common.ServiceError{Code: -1, Message: "failed"})
@@ -85,7 +85,7 @@ func (s *Service) ArticleList(ctx context.Context, offset, limit int64, status, 
 	return result, nil
 }
 
-func ScanByPage(articleName, status string, offset, limit int64) ([]*model.CRMArticle, int64, error) {
+func ScanByPage(articleName, categoryId string, offset, limit int64) ([]*model.CRMArticle, int64, error) {
 	var (
 		crmArticle = g.CRMArticle
 		response   = make([]*model.CRMArticle, 0)
@@ -96,11 +96,12 @@ func ScanByPage(articleName, status string, offset, limit int64) ([]*model.CRMAr
 
 	// 手机号
 	if articleName != "" {
-		where = append(where, crmArticle.ArticleName.Eq(articleName))
+		pattern := "%" + articleName + "%"
+		where = append(where, crmArticle.ArticleName.Like(pattern))
 	}
 	// 启用状态
-	if status != "" {
-		where = append(where, crmArticle.Status.Eq(status))
+	if categoryId != "" {
+		where = append(where, crmArticle.CategoryId.Eq(categoryId))
 	}
 
 	count, err := q.Where(where...).Order(crmArticle.Id.Desc()).ScanByPage(&response, int(offset), int(limit))

@@ -37,7 +37,7 @@ type ArticleStatusReq struct {
 // ListQuery 列表参数
 type ListQuery struct {
 	httputil.Pagination
-	Status      string `json:"status" form:"status"`
+	CategoryId  string `json:"category_id" form:"category_id"`
 	ArticleName string `json:"article_name" form:"article_name"`
 }
 

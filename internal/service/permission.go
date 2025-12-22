@@ -7,7 +7,7 @@ import (
 )
 
 type PermissionIFace interface {
-	PermissionCreate(ctx context.Context, permissionName, permissionUrl, parentId, status string, position int) (common.ServiceResult, error)
+	PermissionCreate(ctx context.Context, permissionName, permissionUrl, parentId, status string, position, permissionType int) (common.ServiceResult, error)
 	PermissionUpdate(ctx context.Context, permissionId, permissionName, permissionUrl, parentId, status string, position int) (common.ServiceResult, error)
 	PermissionStatus(ctx context.Context, permissionId, status string) (common.ServiceResult, error)
 	PermissionList(ctx context.Context, status string) (common.ServiceResult, error)

@@ -6,6 +6,7 @@ type PermissionCreateReq struct {
 	PermissionUrl  string `json:"permission_url" binding:"required"`
 	ParentId       string `json:"parent_id"`
 	Position       int    `json:"position"`
+	PermissionType int    `json:"permission_type" binding:"required"`
 	Status         string `json:"status" binding:"required"`
 }
 

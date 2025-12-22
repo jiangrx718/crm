@@ -3,7 +3,7 @@ package request
 // PermissionCreateReq 创建参数
 type PermissionCreateReq struct {
 	PermissionName string `json:"permission_name" binding:"required"`
-	PermissionUrl  string `json:"permission_url" binding:"required"`
+	PermissionUrl  string `json:"permission_url"`
 	ParentId       string `json:"parent_id"`
 	Position       int    `json:"position"`
 	PermissionType int    `json:"permission_type" binding:"required"`
@@ -19,7 +19,7 @@ type PermissionDeleteReq struct {
 type PermissionUpdateReq struct {
 	PermissionId   string `json:"permission_id" binding:"required"`
 	PermissionName string `json:"permission_name" binding:"required"`
-	PermissionUrl  string `json:"permission_url" binding:"required"`
+	PermissionUrl  string `json:"permission_url"`
 	ParentId       string `json:"parent_id"`
 	Position       int    `json:"position"`
 	Status         string `json:"status" binding:"required"`

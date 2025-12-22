@@ -40,7 +40,7 @@ aws_s3:
   aws_secret_key: 6
 minio:
   endpoint: localhost:9000
-  bucket:  my-bucket
+  bucket:  studio
   secret_id: admin
-  secret_key: 123456!@#$%
+  secret_key: 12345678
   use_ssl: false

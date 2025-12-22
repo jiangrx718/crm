@@ -5,6 +5,7 @@ import (
 	"crm/handler/api/admin"
 	"crm/handler/api/article"
 	"crm/handler/api/category"
+	"crm/handler/api/file"
 	"crm/handler/api/login"
 	"crm/handler/api/order"
 	"crm/handler/api/permission"
@@ -49,6 +50,7 @@ func (h *Handler) RegisterRoutes() {
 		admin.NewHandler(g),
 		article.NewHandler(g),
 		category.NewHandler(g),
+		file.NewHandler(g),
 		order.NewHandler(g),
 		permission.NewHandler(g),
 		product.NewHandler(g),

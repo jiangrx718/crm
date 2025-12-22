@@ -44,3 +44,8 @@ type ListQuery struct {
 const (
 	MaxLimit = 100
 )
+
+// ArticleDetailReq 详情参数
+type ArticleDetailReq struct {
+	ArticleId string `json:"article_id" form:"article_id"`
+}

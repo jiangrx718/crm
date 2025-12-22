@@ -11,4 +11,5 @@ type ArticleIFace interface {
 	ArticleList(ctx context.Context, offset, limit int64, status, articleName string) (common.ServiceResult, error)
 	ArticleDelete(ctx context.Context, articleId string) (common.ServiceResult, error)
 	ArticleStatus(ctx context.Context, articleId, status string) (common.ServiceResult, error)
+	ArticleDetail(ctx context.Context, articleId string) (common.ServiceResult, error)
 }

@@ -27,4 +27,5 @@ func (h *Handler) RegisterRoutes() {
 	g.POST("/delete", h.ArticleDelete)
 	g.POST("/status", h.ArticleStatus)
 	g.GET("/list", h.ArticleList)
+	g.GET("/detail", h.ArticleDetail)
 }

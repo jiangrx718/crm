@@ -14,6 +14,7 @@ type RespArticleService struct {
 	Id           int    `json:"id"`
 	ArticleId    string `json:"article_id"`
 	CategoryId   string `json:"category_id"`
+	CategoryName string `json:"category_name"`
 	ArticleName  string `json:"article_name"`
 	ArticleImage string `json:"article_image"`
 	Status       string `json:"status"`
@@ -35,12 +36,39 @@ func (s *Service) ArticleList(ctx context.Context, offset, limit int64, status, 
 		return result, nil
 	}
 
+	// 批量查询分类名称
+	categoryIds := make([]string, 0)
+	for _, v := range articleDataList {
+		if v.CategoryId != "" {
+			categoryIds = append(categoryIds, v.CategoryId)
+		}
+	}
+
+	categoryMap := make(map[string]string)
+	if len(categoryIds) > 0 {
+		crmCategory := g.CRMCategory
+		categories, err := crmCategory.Where(crmCategory.CategoryId.In(categoryIds...)).Find()
+		if err == nil {
+			for _, v := range categories {
+				categoryMap[v.CategoryId] = v.CategoryName
+			}
+		} else {
+			logObj.Errorw("ArticleList Category Find", "error", err)
+		}
+	}
+
 	var listArticle []RespArticleService
 	for idx, _ := range articleDataList {
+		cName := ""
+		if val, ok := categoryMap[articleDataList[idx].CategoryId]; ok {
+			cName = val
+		}
+
 		listArticle = append(listArticle, RespArticleService{
 			Id:           int(articleDataList[idx].Id),
 			ArticleId:    articleDataList[idx].ArticleId,
 			CategoryId:   articleDataList[idx].CategoryId,
+			CategoryName: cName,
 			ArticleName:  articleDataList[idx].ArticleName,
 			ArticleImage: articleDataList[idx].ArticleImage,
 			Status:       articleDataList[idx].Status,

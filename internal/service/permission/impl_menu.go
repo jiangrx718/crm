@@ -7,7 +7,9 @@ import (
 	"crm/internal/common"
 	"crm/internal/g"
 	"crm/internal/model"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // PermissionMenu 获取菜单
@@ -19,11 +21,19 @@ func (s *Service) PermissionMenu(ctx context.Context, adminId string) (common.Se
 
 	// 1. 获取用户权限信息 (复用 PermissionFind 逻辑或直接查缓存)
 	// var permInfo RespPermissionFindInfo
-	cacheKey := fmt.Sprintf("login_auth:%s", adminId)
+	cacheKeyMenu := fmt.Sprintf("login_menu:%s", adminId)
 	rdb, err := redis.ClientAndErr("crm")
 	if err == nil && rdb != nil {
-		if val, err := rdb.Get(ctx, cacheKey).Result(); err == nil && val != "" {
-			
+		if val, err := rdb.Get(ctx, cacheKeyMenu).Result(); err == nil && val != "" {
+			var menuData []*RespPermissionService
+			err := json.Unmarshal([]byte(val), &menuData)
+			if err != nil {
+
+			}
+			if len(menuData) > 0 {
+				result.Data = map[string]any{"list": menuData}
+				return result, nil
+			}
 		}
 	}
 
@@ -116,6 +126,12 @@ func (s *Service) PermissionMenu(ctx context.Context, adminId string) (common.Se
 		roots = []*RespPermissionService{}
 	}
 
+	if len(roots) > 0 && rdb != nil {
+		bytes, _ := json.Marshal(roots)
+		if err := rdb.Set(ctx, cacheKeyMenu, string(bytes), 30*time.Minute).Err(); err != nil {
+			logObj.Errorw("PermissionMenu Cache Set", "error", err)
+		}
+	}
 	result.Data = map[string]any{"list": roots}
 	result.SetMessage("操作成功")
 	return result, nil

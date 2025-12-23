@@ -40,7 +40,7 @@ func InitConfigFromConfigPath(configPath, envPath string) error {
 		return err
 	}
 	// 初始化Redis
-	if err := rxRedis.InitFromViperDefault(); err != nil {
+	if err := rxRedis.InitFromViper(); err != nil {
 		return err
 	}
 	//初始化cron定时任务

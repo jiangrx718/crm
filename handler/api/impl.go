@@ -7,6 +7,7 @@ import (
 	"crm/handler/api/category"
 	"crm/handler/api/file"
 	"crm/handler/api/login"
+	"crm/handler/api/logout"
 	"crm/handler/api/order"
 	"crm/handler/api/permission"
 	"crm/handler/api/product"
@@ -41,6 +42,15 @@ func (h *Handler) RegisterRoutes() {
 		login.NewHandler(l),
 	}
 	for _, handler := range loginHandlers {
+		handler.RegisterRoutes()
+	}
+
+	// 退出路由
+	lg := h.engine.Group("/", middleware.JWTAuth())
+	logoutHandlers := []gins.Handler{
+		logout.NewHandler(lg),
+	}
+	for _, handler := range logoutHandlers {
 		handler.RegisterRoutes()
 	}
 

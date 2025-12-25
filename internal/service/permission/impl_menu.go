@@ -64,6 +64,14 @@ func (s *Service) PermissionMenu(ctx context.Context, adminId string) (common.Se
 			logObj.Errorw("PermissionMenu Super ScanByPage error", "error", err)
 			return result, err
 		}
+		// 仅保留菜单类型（permission_type = 1），过滤掉接口类型(3)与按钮(2)
+		tmp := make([]*model.CRMPermission, 0, len(permissionDataList))
+		for _, p := range permissionDataList {
+			if p.PermissionType == 1 {
+				tmp = append(tmp, p)
+			}
+		}
+		permissionDataList = tmp
 	} else {
 		// 普通用户：查询角色关联的权限 ID
 		rolePermissions, err := g.CRMRolePermission.WithContext(ctx).Where(
@@ -83,6 +91,7 @@ func (s *Service) PermissionMenu(ctx context.Context, adminId string) (common.Se
 			permissionDataList, err = g.CRMPermission.WithContext(ctx).Where(
 				g.CRMPermission.PermissionId.In(permissionIds...),
 				g.CRMPermission.Status.Eq(model.StatusOn),
+				g.CRMPermission.PermissionType.Eq(1),
 			).Order(g.CRMPermission.Position.Desc(), g.CRMPermission.Id.Desc()).Find()
 			if err != nil {
 				return result, err

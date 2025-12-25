@@ -46,7 +46,7 @@ func (h *Handler) RegisterRoutes() {
 	}
 
 	// 退出路由
-	lg := h.engine.Group("/", middleware.JWTAuth())
+	lg := h.engine.Group("/api", middleware.JWTAuth())
 	logoutHandlers := []gins.Handler{
 		logout.NewHandler(lg),
 	}

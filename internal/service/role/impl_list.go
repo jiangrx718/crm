@@ -90,6 +90,6 @@ func ScanByPage(offset, limit int64) ([]*model.CRMRole, int64, error) {
 	q := crmRole.Debug()
 	where := []gen.Condition{}
 
-	count, err := q.Where(where...).Order(crmRole.Id.Desc()).ScanByPage(&response, int(offset), int(limit))
+	count, err := q.Where(where...).Order(crmRole.Id.Asc()).ScanByPage(&response, int(offset), int(limit))
 	return response, count, err
 }

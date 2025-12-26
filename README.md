@@ -1,5 +1,14 @@
 crm 项目，使用go语言编写，基于gin的web框架封装基础的相关信息，开箱即用
 
+## 说明
+```
+# 后端项目地址
+$ git clone https://github.com/jiangrx718/crm.git
+
+# 前端项目地址
+$ git clone https://github.com/jiangrx718/crm-page.git
+```
+
 ## 1.正式项目目录运行时结构
 
 ```
@@ -39,6 +48,7 @@ go run main.go swag init
 
 ## 4.后端启动命令
 ```shell
+# 进入到crm目录执行以下命令
 
 fresh
 或者
@@ -48,6 +58,7 @@ go run main.go
 
 ## 5、前端启动
 ```shell
+# 进入到crm-page/crm-shop 目录执行以下命令
 
 npm run dev
 

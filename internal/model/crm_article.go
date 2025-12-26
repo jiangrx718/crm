@@ -4,7 +4,7 @@ import "time"
 
 // CRMArticle 文章表
 type CRMArticle struct {
-	Id           int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
+	Id           int       `gorm:"column:id;type:bigint;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
 	ArticleId    string    `gorm:"column:article_id;type:char(36);not null;default:'';comment:业务主键;" json:"article_id"`
 	CategoryId   string    `gorm:"column:category_id;type:char(36);not null;default:'';index:idx_category_id;comment:栏目Id;" json:"category_id"`
 	ArticleName  string    `gorm:"column:article_name;type:varchar(1024);not null;default:'';comment:文章名称" json:"article_name"`
@@ -21,7 +21,7 @@ func (r *CRMArticle) TableName() string {
 
 // CRMArticleContent 文章内容表
 type CRMArticleContent struct {
-	Id             int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
+	Id             int       `gorm:"column:id;type:bigint;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
 	ContentId      string    `gorm:"column:content_id;type:char(36);not null;default:'';comment:业务主键;" json:"content_id"`
 	ArticleId      string    `gorm:"column:article_id;type:char(36);not null;default:'';index:idx_article_id;comment:文章Id;" json:"article_id"`
 	ArticleContent string    `gorm:"column:article_content;type:text;comment:文章内容" json:"article_content"`

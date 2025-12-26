@@ -4,7 +4,7 @@ import "time"
 
 // CRMCategory 栏目表
 type CRMCategory struct {
-	Id            int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
+	Id            int       `gorm:"column:id;type:bigint;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
 	CategoryId    string    `gorm:"column:category_id;type:char(36);not null;default:'';comment:业务主键;" json:"category_id"`
 	CategoryName  string    `gorm:"column:category_name;type:varchar(128);not null;default:'';comment:栏目名称" json:"category_name"`
 	CategoryImage string    `gorm:"column:category_image;type:varchar(1024);not null;default:'';comment:栏目图片" json:"category_image"`

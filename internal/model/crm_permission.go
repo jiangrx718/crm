@@ -6,7 +6,7 @@ import (
 
 // CRMPermission 权限菜单表
 type CRMPermission struct {
-	Id             int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
+	Id             int       `gorm:"column:id;type:bigint;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
 	PermissionId   string    `gorm:"column:permission_id;type:char(36);not null;default:'';index:idx_permission_id;;comment:业务主键;" json:"permission_id"`
 	PermissionName string    `gorm:"column:permission_name;type:varchar(128);not null;default:'';comment:权限名称" json:"permission_name"`
 	PermissionURL  string    `gorm:"column:permission_url;type:varchar(128);not null;default:'';comment:权限URL" json:"permission_url"`

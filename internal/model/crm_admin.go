@@ -6,7 +6,7 @@ import (
 
 // CRMAdmin 管理员表
 type CRMAdmin struct {
-	Id        int       `gorm:"column:id;type:int;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
+	Id        int       `gorm:"column:id;type:bigint;not null;primaryKey;autoIncrement;comment:主键;" json:"id"`
 	AdminId   string    `gorm:"column:admin_id;type:char(36);not null;default:'';index:idx_admin_id;comment:业务主键;" json:"admin_id"`
 	UserName  string    `gorm:"column:user_name;type:varchar(256);not null;default:'';comment:用户名" json:"user_name"`
 	UserPhone string    `gorm:"column:user_phone;type:char(11);not null;default:'';index:idx_phone;comment:手机号" json:"user_phone"`

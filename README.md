@@ -25,14 +25,33 @@ go list -m
 # 修改模块名称
 go mod edit -module web1
 ```
-## Commands
+## 3.Commands
 ```shell
 生成SQL ORM
 go run main.go generate
 
-数据库建表
+数据库建表，并初始化数据
 go run main.go migrate up
 
 生成API文档
 go run main.go swag init
 ```
+
+## 4.后端启动命令
+```shell
+
+fresh
+或者
+go run main.go 
+
+```
+
+## 5、前端启动
+```shell
+
+npm run dev
+
+```
+## 6、账号
+默认账号：admin 或者对应的手机号
+默认密码：123456  登录后可自行修改

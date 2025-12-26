@@ -31,7 +31,7 @@ func doSeed(db *gorm.DB) error {
 		admin := model.CRMAdmin{
 			AdminId:   "6828a60c-c9e6-48b4-82af-d6c0909a2230",
 			UserName:  "admin",
-			UserPhone: "18810950520",
+			UserPhone: "18210605516",
 			Password:  "a9a43ccea31e4bbce49c86cad83b8604",
 			Status:    model.StatusOn,
 			RoleId:    role.RoleId,

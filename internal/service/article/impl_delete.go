@@ -33,6 +33,11 @@ func (s *Service) ArticleDelete(ctx context.Context, articleId string) (common.S
 		return result, err
 	}
 
+	contentWhere := []gen.Condition{
+		g.CRMArticleContent.ArticleId.Eq(articleId),
+	}
+	_, _ = g.CRMArticleContent.Where(contentWhere...).Unscoped().Delete()
+
 	result.Data = map[string]string{
 		"article_id": articleId,
 	}

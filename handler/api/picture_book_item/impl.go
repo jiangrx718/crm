@@ -21,10 +21,10 @@ func NewHandler(g *gin.RouterGroup) gins.Handler {
 }
 
 func (h *Handler) RegisterRoutes() {
-	g := h.g.Group("/picture_book_item")
+	g := h.g.Group("/picture/book/item")
 	g.POST("/create", h.ItemCreate)
 	g.POST("/update", h.ItemUpdate)
 	g.POST("/delete", h.ItemDelete)
 	g.POST("/status", h.ItemStatus)
-	g.GET("/list", h.ItemList)
+	g.GET("/:book_id/list", h.ItemList)
 }

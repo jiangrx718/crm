@@ -31,8 +31,11 @@ type ItemStatusRequest struct {
 	Status string `json:"status" binding:"required"`
 }
 
+type ItemListUri struct {
+	BookId string `uri:"book_id" binding:"required"`
+}
+
 type ItemListRequest struct {
-	Offset int64  `form:"offset"`
-	Limit  int64  `form:"limit"`
-	BookId string `form:"book_id" binding:"required"`
+	Offset int64 `form:"offset"`
+	Limit  int64 `form:"limit"`
 }

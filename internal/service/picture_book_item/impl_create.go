@@ -10,7 +10,14 @@ import (
 )
 
 type RespItemCreateInfo struct {
-	Id int `json:"id"`
+	BookId   string `json:"book_id"`
+	Title    string `json:"title"`
+	Pic      string `json:"pic"`
+	BPic     string `json:"b_pic"`
+	Audio    string `json:"audio"`
+	Content  string `json:"content"`
+	Status   string `json:"status"`
+	Position int    `json:"position"`
 }
 
 func (s *Service) ItemCreate(ctx context.Context, bookId, title, pic, bPic, audio, content, status string, position int) (common.ServiceResult, error) {
@@ -37,7 +44,14 @@ func (s *Service) ItemCreate(ctx context.Context, bookId, title, pic, bPic, audi
 	}
 
 	result.Data = RespItemCreateInfo{
-		Id: entity.Id,
+		BookId:   bookId,
+		Title:    title,
+		Pic:      pic,
+		BPic:     bPic,
+		Audio:    audio,
+		Content:  content,
+		Status:   status,
+		Position: position,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

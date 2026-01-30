@@ -9,6 +9,14 @@ import (
 	"fmt"
 )
 
+type RespCategoryUpdateInfo struct {
+	CategoryId   string `json:"category_id"`
+	CategoryName string `json:"category_name"`
+	Status       string `json:"status"`
+	Position     int    `json:"position"`
+	CategoryType int    `json:"category_type"`
+}
+
 func (s *Service) CategoryUpdate(ctx context.Context, categoryId, categoryName, status string, position, categoryType int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
@@ -34,6 +42,13 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, categoryName, 
 		return result, err
 	}
 
+	result.Data = RespCategoryUpdateInfo{
+		CategoryId:   categoryId,
+		CategoryName: categoryName,
+		Status:       status,
+		Position:     position,
+		CategoryType: categoryType,
+	}
 	result.SetMessage("操作成功")
 	return result, nil
 }

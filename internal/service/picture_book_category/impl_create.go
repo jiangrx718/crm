@@ -11,7 +11,11 @@ import (
 )
 
 type RespCategoryCreateInfo struct {
-	CategoryId string `json:"category_id"`
+	CategoryId   string `json:"category_id"`
+	CategoryName string `json:"category_name"`
+	Status       string `json:"status"`
+	Position     int    `json:"position"`
+	CategoryType int    `json:"category_type"`
 }
 
 func (s *Service) CategoryCreate(ctx context.Context, categoryName, status string, position, categoryType int) (common.ServiceResult, error) {
@@ -36,7 +40,11 @@ func (s *Service) CategoryCreate(ctx context.Context, categoryName, status strin
 	}
 
 	result.Data = RespCategoryCreateInfo{
-		CategoryId: categoryId,
+		CategoryId:   categoryId,
+		CategoryName: categoryName,
+		Status:       status,
+		Position:     position,
+		CategoryType: categoryType,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

@@ -9,6 +9,11 @@ import (
 	"fmt"
 )
 
+type RespCategoryStatusInfo struct {
+	CategoryId string `json:"category_id"`
+	Status     string `json:"status"`
+}
+
 func (s *Service) CategoryStatus(ctx context.Context, categoryId, status string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
@@ -25,6 +30,10 @@ func (s *Service) CategoryStatus(ctx context.Context, categoryId, status string)
 		return result, fmt.Errorf("record not found")
 	}
 
+	result.Data = RespCategoryStatusInfo{
+		CategoryId: categoryId,
+		Status:     status,
+	}
 	result.SetMessage("操作成功")
 	return result, nil
 }

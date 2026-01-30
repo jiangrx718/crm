@@ -2,6 +2,7 @@ package picture_book_category
 
 import (
 	"context"
+	"crm/gopkg/gorms"
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
@@ -14,7 +15,8 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, categoryName, 
 		result = common.NewCRMServiceResult()
 	)
 
-	entity, err := g.SPictureBookCategory.Where(g.SPictureBookCategory.CategoryId.Eq(categoryId)).Take()
+	q := g.Use(gorms.GetClient("account"))
+	entity, err := q.SPictureBookCategory.Where(q.SPictureBookCategory.CategoryId.Eq(categoryId)).Take()
 	if err != nil {
 		return result, err
 	}
@@ -27,7 +29,7 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, categoryName, 
 	entity.Position = position
 	entity.CategoryType = categoryType
 
-	if _, err := g.SPictureBookCategory.Where(g.SPictureBookCategory.CategoryId.Eq(categoryId)).Updates(entity); err != nil {
+	if _, err := q.SPictureBookCategory.Where(q.SPictureBookCategory.CategoryId.Eq(categoryId)).Updates(entity); err != nil {
 		logObj.Errorw("SPictureBookCategory Update error", "entity", entity, "error", err)
 		return result, err
 	}

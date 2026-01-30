@@ -2,6 +2,7 @@ package picture_book_category
 
 import (
 	"context"
+	"crm/gopkg/gorms"
 	"crm/gopkg/log"
 	"crm/gopkg/utils"
 	"crm/internal/common"
@@ -28,7 +29,8 @@ func (s *Service) CategoryCreate(ctx context.Context, categoryName, status strin
 		CategoryType: categoryType,
 	}
 
-	if err := g.SPictureBookCategory.Create(&entity); err != nil {
+	q := g.Use(gorms.GetClient("account"))
+	if err := q.SPictureBookCategory.Create(&entity); err != nil {
 		logObj.Errorw("SPictureBookCategory Create error", "entity", entity, "error", err)
 		return result, err
 	}

@@ -2,6 +2,7 @@ package picture_book
 
 import (
 	"context"
+	"crm/gopkg/gorms"
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
@@ -26,7 +27,8 @@ func (s *Service) BookDetail(ctx context.Context, bookId string) (common.Service
 		result = common.NewCRMServiceResult()
 	)
 
-	entity, err := g.SPictureBook.Where(g.SPictureBook.BookId.Eq(bookId)).Take()
+	q := g.Use(gorms.GetClient("account"))
+	entity, err := q.SPictureBook.Where(q.SPictureBook.BookId.Eq(bookId)).Take()
 	if err != nil {
 		logObj.Errorw("BookDetail Find error", "bookId", bookId, "error", err)
 		return result, err

@@ -2,6 +2,7 @@ package picture_book_item
 
 import (
 	"context"
+	"crm/gopkg/gorms"
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
@@ -28,13 +29,15 @@ func (s *Service) ItemList(ctx context.Context, offset, limit int64, bookId stri
 		result = common.NewCRMServiceResult()
 	)
 
-	q := g.SPictureBookItem.Debug()
+	q := g.Use(gorms.GetClient("account"))
+	spbi := q.SPictureBookItem
+	query := spbi.Debug()
 	var conditions []gen.Condition
 	if bookId != "" {
-		conditions = append(conditions, g.SPictureBookItem.BookId.Eq(bookId))
+		conditions = append(conditions, spbi.BookId.Eq(bookId))
 	}
 
-	list, count, err := q.Where(conditions...).Order(g.SPictureBookItem.Position.Desc(), g.SPictureBookItem.Id.Desc()).FindByPage(int(offset), int(limit))
+	list, count, err := query.Where(conditions...).Order(spbi.Position.Desc(), spbi.Id.Desc()).FindByPage(int(offset), int(limit))
 	if err != nil {
 		logObj.Errorw("ItemList Find error", "error", err)
 		return result, err

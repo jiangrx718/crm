@@ -2,6 +2,7 @@ package picture_book
 
 import (
 	"context"
+	"crm/gopkg/gorms"
 	"crm/gopkg/log"
 	"crm/gopkg/utils"
 	"crm/internal/common"
@@ -30,7 +31,8 @@ func (s *Service) BookCreate(ctx context.Context, categoryId, title, icon, statu
 		CategoryType: categoryType,
 	}
 
-	if err := g.SPictureBook.Create(&entity); err != nil {
+	q := g.Use(gorms.GetClient("account"))
+	if err := q.SPictureBook.Create(&entity); err != nil {
 		logObj.Errorw("SPictureBook Create error", "entity", entity, "error", err)
 		return result, err
 	}

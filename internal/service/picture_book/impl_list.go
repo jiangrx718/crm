@@ -2,6 +2,7 @@ package picture_book
 
 import (
 	"context"
+	"crm/gopkg/gorms"
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
@@ -27,19 +28,21 @@ func (s *Service) BookList(ctx context.Context, offset, limit int64, title strin
 		result = common.NewCRMServiceResult()
 	)
 
-	q := g.SPictureBook.Debug()
+	q := g.Use(gorms.GetClient("account"))
+	spb := q.SPictureBook
+	query := spb.Debug()
 	var conditions []gen.Condition
 	if title != "" {
-		conditions = append(conditions, g.SPictureBook.Title.Like("%"+title+"%"))
+		conditions = append(conditions, spb.Title.Like("%"+title+"%"))
 	}
 	if categoryType != 0 {
-		conditions = append(conditions, g.SPictureBook.CategoryType.Eq(categoryType))
+		conditions = append(conditions, spb.CategoryType.Eq(categoryType))
 	}
 	if categoryId != "" {
-		conditions = append(conditions, g.SPictureBook.CategoryId.Eq(categoryId))
+		conditions = append(conditions, spb.CategoryId.Eq(categoryId))
 	}
 
-	list, count, err := q.Where(conditions...).Order(g.SPictureBook.Position.Desc(), g.SPictureBook.Id.Desc()).FindByPage(int(offset), int(limit))
+	list, count, err := query.Where(conditions...).Order(spb.Position.Desc(), spb.Id.Desc()).FindByPage(int(offset), int(limit))
 	if err != nil {
 		logObj.Errorw("BookList Find error", "error", err)
 		return result, err

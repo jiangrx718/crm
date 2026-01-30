@@ -2,6 +2,7 @@ package picture_book_category
 
 import (
 	"context"
+	"crm/gopkg/gorms"
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
@@ -13,7 +14,8 @@ func (s *Service) CategoryDelete(ctx context.Context, categoryId string) (common
 		result = common.NewCRMServiceResult()
 	)
 
-	if _, err := g.SPictureBookCategory.Where(g.SPictureBookCategory.CategoryId.Eq(categoryId)).Delete(); err != nil {
+	q := g.Use(gorms.GetClient("account"))
+	if _, err := q.SPictureBookCategory.Where(q.SPictureBookCategory.CategoryId.Eq(categoryId)).Delete(); err != nil {
 		logObj.Errorw("SPictureBookCategory Delete error", "categoryId", categoryId, "error", err)
 		return result, err
 	}

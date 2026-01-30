@@ -2,6 +2,7 @@ package picture_book_category
 
 import (
 	"context"
+	"crm/gopkg/gorms"
 	"crm/gopkg/log"
 	"crm/internal/common"
 	"crm/internal/g"
@@ -13,9 +14,9 @@ type RespCategoryService struct {
 	Id           int    `json:"id"`
 	CategoryId   string `json:"category_id"`
 	CategoryName string `json:"category_name"`
-	CategoryType int    `json:"category_type"`
 	Status       string `json:"status"`
 	Position     int    `json:"position"`
+	CategoryType int    `json:"category_type"`
 	CreatedAt    string `json:"created_at"`
 }
 
@@ -25,16 +26,18 @@ func (s *Service) CategoryList(ctx context.Context, offset, limit int64, categor
 		result = common.NewCRMServiceResult()
 	)
 
-	q := g.SPictureBookCategory.Debug()
+	q := g.Use(gorms.GetClient("account"))
+	spbc := q.SPictureBookCategory
+	query := spbc.Debug()
 	var conditions []gen.Condition
 	if categoryName != "" {
-		conditions = append(conditions, g.SPictureBookCategory.CategoryName.Like("%"+categoryName+"%"))
+		conditions = append(conditions, spbc.CategoryName.Like("%"+categoryName+"%"))
 	}
 	if categoryType != 0 {
-		conditions = append(conditions, g.SPictureBookCategory.CategoryType.Eq(categoryType))
+		conditions = append(conditions, spbc.CategoryType.Eq(categoryType))
 	}
 
-	list, count, err := q.Where(conditions...).Order(g.SPictureBookCategory.Position.Desc(), g.SPictureBookCategory.Id.Desc()).FindByPage(int(offset), int(limit))
+	list, count, err := query.Where(conditions...).Order(spbc.Position.Desc(), spbc.Id.Desc()).FindByPage(int(offset), int(limit))
 	if err != nil {
 		logObj.Errorw("CategoryList Find error", "error", err)
 		return result, err
@@ -46,9 +49,9 @@ func (s *Service) CategoryList(ctx context.Context, offset, limit int64, categor
 			Id:           v.Id,
 			CategoryId:   v.CategoryId,
 			CategoryName: v.CategoryName,
-			CategoryType: v.CategoryType,
 			Status:       v.Status,
 			Position:     v.Position,
+			CategoryType: v.CategoryType,
 			CreatedAt:    v.CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}

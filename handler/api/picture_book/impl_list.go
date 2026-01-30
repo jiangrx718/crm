@@ -13,7 +13,7 @@ func (h *Handler) BookList(c *gin.Context) {
 		gins.BadRequest(c, err)
 		return
 	}
-	res, err := h.service.BookList(c, req.Offset, req.Limit, req.Title, req.CategoryType, req.CategoryId)
+	res, err := h.service.BookList(c, req.Offset, req.Limit, req.Title, req.CType, req.CategoryId)
 	if err != nil {
 		gins.ServerError(c, err)
 		return

@@ -11,7 +11,6 @@ import (
 )
 
 type RespBookService struct {
-	Id         int    `json:"id"`
 	BookId     string `json:"book_id"`
 	Title      string `json:"title"`
 	Icon       string `json:"icon"`
@@ -51,7 +50,6 @@ func (s *Service) BookList(ctx context.Context, offset, limit int64, title strin
 	var respList []RespBookService
 	for _, v := range list {
 		respList = append(respList, RespBookService{
-			Id:         v.Id,
 			BookId:     v.BookId,
 			Title:      v.Title,
 			Icon:       v.Icon,

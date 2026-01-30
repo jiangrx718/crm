@@ -13,7 +13,7 @@ func (h *Handler) BookUpdate(c *gin.Context) {
 		gins.BadRequest(c, err)
 		return
 	}
-	res, err := h.service.BookUpdate(c, req.BookId, req.CategoryId, req.Title, req.Icon, req.Status, req.Position, req.CategoryType)
+	res, err := h.service.BookUpdate(c, req.BookId, req.CategoryId, req.Title, req.Icon, req.Status, req.Position, req.CType)
 	if err != nil {
 		gins.ServerError(c, err)
 		return

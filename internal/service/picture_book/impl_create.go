@@ -11,7 +11,13 @@ import (
 )
 
 type RespBookCreateInfo struct {
-	BookId string `json:"book_id"`
+	BookId     string `json:"book_id"`
+	CategoryId string `json:"category_id"`
+	Title      string `json:"title"`
+	Icon       string `json:"icon"`
+	Status     string `json:"status"`
+	Position   int    `json:"position"`
+	Type       int    `json:"type"`
 }
 
 func (s *Service) BookCreate(ctx context.Context, categoryId, title, icon, status string, position, cType int) (common.ServiceResult, error) {
@@ -38,7 +44,13 @@ func (s *Service) BookCreate(ctx context.Context, categoryId, title, icon, statu
 	}
 
 	result.Data = RespBookCreateInfo{
-		BookId: bookId,
+		BookId:     bookId,
+		CategoryId: categoryId,
+		Title:      title,
+		Icon:       icon,
+		Status:     status,
+		Position:   position,
+		Type:       cType,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

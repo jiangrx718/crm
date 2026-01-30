@@ -10,7 +10,6 @@ import (
 )
 
 type RespBookDetail struct {
-	Id         int    `json:"id"`
 	BookId     string `json:"book_id"`
 	Title      string `json:"title"`
 	Icon       string `json:"icon"`
@@ -38,7 +37,6 @@ func (s *Service) BookDetail(ctx context.Context, bookId string) (common.Service
 	}
 
 	result.Data = RespBookDetail{
-		Id:         entity.Id,
 		BookId:     entity.BookId,
 		Title:      entity.Title,
 		Icon:       entity.Icon,

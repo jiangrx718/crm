@@ -9,6 +9,16 @@ import (
 	"fmt"
 )
 
+type RespBookUpdateInfo struct {
+	BookId     string `json:"book_id"`
+	CategoryId string `json:"category_id"`
+	Title      string `json:"title"`
+	Icon       string `json:"icon"`
+	Status     string `json:"status"`
+	Position   int    `json:"position"`
+	Type       int    `json:"type"`
+}
+
 func (s *Service) BookUpdate(ctx context.Context, bookId, categoryId, title, icon, status string, position, cType int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
@@ -35,7 +45,15 @@ func (s *Service) BookUpdate(ctx context.Context, bookId, categoryId, title, ico
 		logObj.Errorw("SPictureBook Update error", "entity", entity, "error", err)
 		return result, err
 	}
-
+	result.Data = RespBookUpdateInfo{
+		BookId:     entity.BookId,
+		CategoryId: entity.CategoryId,
+		Title:      entity.Title,
+		Icon:       entity.Icon,
+		Status:     entity.Status,
+		Position:   entity.Position,
+		Type:       entity.Type,
+	}
 	result.SetMessage("操作成功")
 	return result, nil
 }

@@ -25,6 +25,9 @@ func Command() *cli.Command {
 				model.CRMArticle{},
 				model.CRMCategory{},
 				model.CRMArticleContent{},
+				model.SPictureBook{},
+				model.SPictureBookItem{},
+				model.SPictureBookCategory{},
 			)
 			g.Execute()
 			return nil

@@ -34,7 +34,7 @@ func (s *Service) CategoryList(ctx context.Context, offset, limit int64, categor
 		conditions = append(conditions, spbc.CategoryName.Like("%"+categoryName+"%"))
 	}
 	if cType != 0 {
-		conditions = append(conditions, spbc.CategoryType.Eq(cType))
+		conditions = append(conditions, spbc.Type.Eq(cType))
 	}
 
 	list, count, err := query.Where(conditions...).Order(spbc.Position.Desc(), spbc.Id.Desc()).FindByPage(int(offset), int(limit))

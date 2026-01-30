@@ -22,7 +22,7 @@ type RespBookService struct {
 	CreatedAt  string `json:"created_at"`
 }
 
-func (s *Service) BookList(ctx context.Context, offset, limit int64, title string, categoryType int, categoryId string) (common.ServiceResult, error) {
+func (s *Service) BookList(ctx context.Context, offset, limit int64, title string, cType int, categoryId string) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -35,8 +35,8 @@ func (s *Service) BookList(ctx context.Context, offset, limit int64, title strin
 	if title != "" {
 		conditions = append(conditions, spb.Title.Like("%"+title+"%"))
 	}
-	if categoryType != 0 {
-		conditions = append(conditions, spb.CategoryType.Eq(categoryType))
+	if cType != 0 {
+		conditions = append(conditions, spb.Type.Eq(cType))
 	}
 	if categoryId != "" {
 		conditions = append(conditions, spb.CategoryId.Eq(categoryId))

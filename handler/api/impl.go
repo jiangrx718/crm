@@ -10,6 +10,9 @@ import (
 	"crm/handler/api/logout"
 	"crm/handler/api/order"
 	"crm/handler/api/permission"
+	"crm/handler/api/picture_book"
+	"crm/handler/api/picture_book_category"
+	"crm/handler/api/picture_book_item"
 	"crm/handler/api/product"
 	"crm/handler/api/role"
 	"crm/handler/api/system"
@@ -63,6 +66,9 @@ func (h *Handler) RegisterRoutes() {
 		file.NewHandler(g),
 		order.NewHandler(g),
 		permission.NewHandler(g),
+		picture_book.NewHandler(g),
+		picture_book_category.NewHandler(g),
+		picture_book_item.NewHandler(g),
 		product.NewHandler(g),
 		role.NewHandler(g),
 		system.NewHandler(g),

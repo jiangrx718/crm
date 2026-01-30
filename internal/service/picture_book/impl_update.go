@@ -1,0 +1,39 @@
+package picture_book
+
+import (
+	"context"
+	"crm/gopkg/log"
+	"crm/internal/common"
+	"crm/internal/g"
+	"fmt"
+)
+
+func (s *Service) BookUpdate(ctx context.Context, bookId, categoryId, title, icon, status string, position, categoryType int) (common.ServiceResult, error) {
+	var (
+		logObj = log.SugarContext(ctx)
+		result = common.NewCRMServiceResult()
+	)
+
+	entity, err := g.SPictureBook.Where(g.SPictureBook.BookId.Eq(bookId)).Take()
+	if err != nil {
+		return result, err
+	}
+	if entity == nil {
+		return result, fmt.Errorf("record not found")
+	}
+
+	entity.CategoryId = categoryId
+	entity.Title = title
+	entity.Icon = icon
+	entity.Status = status
+	entity.Position = position
+	entity.CategoryType = categoryType
+
+	if _, err := g.SPictureBook.Where(g.SPictureBook.BookId.Eq(bookId)).Updates(entity); err != nil {
+		logObj.Errorw("SPictureBook Update error", "entity", entity, "error", err)
+		return result, err
+	}
+
+	result.SetMessage("操作成功")
+	return result, nil
+}

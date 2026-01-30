@@ -14,7 +14,7 @@ type RespBookCreateInfo struct {
 	BookId string `json:"book_id"`
 }
 
-func (s *Service) BookCreate(ctx context.Context, categoryId, title, icon, status string, position, categoryType int) (common.ServiceResult, error) {
+func (s *Service) BookCreate(ctx context.Context, categoryId, title, icon, status string, position, cType int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -22,13 +22,13 @@ func (s *Service) BookCreate(ctx context.Context, categoryId, title, icon, statu
 
 	bookId := utils.GenUUID()
 	entity := model.SPictureBook{
-		BookId:       bookId,
-		CategoryId:   categoryId,
-		Title:        title,
-		Icon:         icon,
-		Status:       status,
-		Position:     position,
-		CategoryType: categoryType,
+		BookId:     bookId,
+		CategoryId: categoryId,
+		Title:      title,
+		Icon:       icon,
+		Status:     status,
+		Position:   position,
+		Type:       cType,
 	}
 
 	q := g.Use(gorms.GetClient("account"))

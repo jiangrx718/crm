@@ -11,15 +11,15 @@ import (
 )
 
 type RespBookService struct {
-	Id           int    `json:"id"`
-	BookId       string `json:"book_id"`
-	Title        string `json:"title"`
-	Icon         string `json:"icon"`
-	CategoryId   string `json:"category_id"`
-	Status       string `json:"status"`
-	Position     int    `json:"position"`
-	CategoryType int    `json:"category_type"`
-	CreatedAt    string `json:"created_at"`
+	Id         int    `json:"id"`
+	BookId     string `json:"book_id"`
+	Title      string `json:"title"`
+	Icon       string `json:"icon"`
+	CategoryId string `json:"category_id"`
+	Status     string `json:"status"`
+	Position   int    `json:"position"`
+	Type       int    `json:"type"`
+	CreatedAt  string `json:"created_at"`
 }
 
 func (s *Service) BookList(ctx context.Context, offset, limit int64, title string, categoryType int, categoryId string) (common.ServiceResult, error) {
@@ -51,15 +51,15 @@ func (s *Service) BookList(ctx context.Context, offset, limit int64, title strin
 	var respList []RespBookService
 	for _, v := range list {
 		respList = append(respList, RespBookService{
-			Id:           v.Id,
-			BookId:       v.BookId,
-			Title:        v.Title,
-			Icon:         v.Icon,
-			CategoryId:   v.CategoryId,
-			Status:       v.Status,
-			Position:     v.Position,
-			CategoryType: v.CategoryType,
-			CreatedAt:    v.CreatedAt.Format("2006-01-02 15:04:05"),
+			Id:         v.Id,
+			BookId:     v.BookId,
+			Title:      v.Title,
+			Icon:       v.Icon,
+			CategoryId: v.CategoryId,
+			Status:     v.Status,
+			Position:   v.Position,
+			Type:       v.Type,
+			CreatedAt:  v.CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}
 

@@ -15,10 +15,10 @@ type RespCategoryCreateInfo struct {
 	CategoryName string `json:"category_name"`
 	Status       string `json:"status"`
 	Position     int    `json:"position"`
-	CategoryType int    `json:"category_type"`
+	Type         int    `json:"type"`
 }
 
-func (s *Service) CategoryCreate(ctx context.Context, categoryName, status string, position, categoryType int) (common.ServiceResult, error) {
+func (s *Service) CategoryCreate(ctx context.Context, categoryName, status string, position, cType int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -30,7 +30,7 @@ func (s *Service) CategoryCreate(ctx context.Context, categoryName, status strin
 		CategoryName: categoryName,
 		Status:       status,
 		Position:     position,
-		CategoryType: categoryType,
+		Type:         cType,
 	}
 
 	q := g.Use(gorms.GetClient("account"))
@@ -44,7 +44,7 @@ func (s *Service) CategoryCreate(ctx context.Context, categoryName, status strin
 		CategoryName: categoryName,
 		Status:       status,
 		Position:     position,
-		CategoryType: categoryType,
+		Type:         cType,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

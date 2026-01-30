@@ -32,7 +32,7 @@ func newSPictureBookCategory(db *gorm.DB, opts ...gen.DOOption) sPictureBookCate
 	_sPictureBookCategory.CategoryId = field.NewString(tableName, "category_id")
 	_sPictureBookCategory.CategoryName = field.NewString(tableName, "category_name")
 	_sPictureBookCategory.Position = field.NewInt(tableName, "position")
-	_sPictureBookCategory.CategoryType = field.NewInt(tableName, "category_type")
+	_sPictureBookCategory.Type = field.NewInt(tableName, "type")
 	_sPictureBookCategory.Status = field.NewString(tableName, "status")
 	_sPictureBookCategory.CreatedAt = field.NewTime(tableName, "created_at")
 	_sPictureBookCategory.UpdatedAt = field.NewTime(tableName, "updated_at")
@@ -50,7 +50,7 @@ type sPictureBookCategory struct {
 	CategoryId   field.String // 栏目ID
 	CategoryName field.String // 栏目名称
 	Position     field.Int    // 排序,倒序
-	CategoryType field.Int    // 1中文绘本,2英文绘本,3古诗绘本,4英语词汇
+	Type         field.Int    // 1中文绘本,2英文绘本,3古诗绘本,4英语词汇
 	Status       field.String // 状态,on启用,off禁用
 	CreatedAt    field.Time   // 创建时间
 	UpdatedAt    field.Time   // 更新时间
@@ -74,7 +74,7 @@ func (s *sPictureBookCategory) updateTableName(table string) *sPictureBookCatego
 	s.CategoryId = field.NewString(table, "category_id")
 	s.CategoryName = field.NewString(table, "category_name")
 	s.Position = field.NewInt(table, "position")
-	s.CategoryType = field.NewInt(table, "category_type")
+	s.Type = field.NewInt(table, "type")
 	s.Status = field.NewString(table, "status")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
@@ -99,7 +99,7 @@ func (s *sPictureBookCategory) fillFieldMap() {
 	s.fieldMap["category_id"] = s.CategoryId
 	s.fieldMap["category_name"] = s.CategoryName
 	s.fieldMap["position"] = s.Position
-	s.fieldMap["category_type"] = s.CategoryType
+	s.fieldMap["type"] = s.Type
 	s.fieldMap["status"] = s.Status
 	s.fieldMap["created_at"] = s.CreatedAt
 	s.fieldMap["updated_at"] = s.UpdatedAt

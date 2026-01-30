@@ -35,7 +35,7 @@ func newSPictureBook(db *gorm.DB, opts ...gen.DOOption) sPictureBook {
 	_sPictureBook.CategoryId = field.NewString(tableName, "category_id")
 	_sPictureBook.Status = field.NewString(tableName, "status")
 	_sPictureBook.Position = field.NewInt(tableName, "position")
-	_sPictureBook.CategoryType = field.NewInt(tableName, "category_type")
+	_sPictureBook.Type = field.NewInt(tableName, "type")
 	_sPictureBook.CreatedAt = field.NewTime(tableName, "created_at")
 	_sPictureBook.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -47,17 +47,17 @@ func newSPictureBook(db *gorm.DB, opts ...gen.DOOption) sPictureBook {
 type sPictureBook struct {
 	sPictureBookDo
 
-	ALL          field.Asterisk
-	Id           field.Int    // 主键
-	BookId       field.String // 绘本id
-	Title        field.String // 绘本标题
-	Icon         field.String // 绘本封面
-	CategoryId   field.String // 栏目ID
-	Status       field.String // 状态,on启用,off禁用
-	Position     field.Int    // 排序,倒序
-	CategoryType field.Int    // 1中文绘本,2英文绘本,3古诗绘本,4英语词汇
-	CreatedAt    field.Time   // 创建时间
-	UpdatedAt    field.Time   // 更新时间
+	ALL        field.Asterisk
+	Id         field.Int    // 主键
+	BookId     field.String // 绘本id
+	Title      field.String // 绘本标题
+	Icon       field.String // 绘本封面
+	CategoryId field.String // 栏目ID
+	Status     field.String // 状态,on启用,off禁用
+	Position   field.Int    // 排序,倒序
+	Type       field.Int    // 1中文绘本,2英文绘本,3古诗绘本,4英语词汇
+	CreatedAt  field.Time   // 创建时间
+	UpdatedAt  field.Time   // 更新时间
 
 	fieldMap map[string]field.Expr
 }
@@ -81,7 +81,7 @@ func (s *sPictureBook) updateTableName(table string) *sPictureBook {
 	s.CategoryId = field.NewString(table, "category_id")
 	s.Status = field.NewString(table, "status")
 	s.Position = field.NewInt(table, "position")
-	s.CategoryType = field.NewInt(table, "category_type")
+	s.Type = field.NewInt(table, "type")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 
@@ -108,7 +108,7 @@ func (s *sPictureBook) fillFieldMap() {
 	s.fieldMap["category_id"] = s.CategoryId
 	s.fieldMap["status"] = s.Status
 	s.fieldMap["position"] = s.Position
-	s.fieldMap["category_type"] = s.CategoryType
+	s.fieldMap["type"] = s.Type
 	s.fieldMap["created_at"] = s.CreatedAt
 	s.fieldMap["updated_at"] = s.UpdatedAt
 }

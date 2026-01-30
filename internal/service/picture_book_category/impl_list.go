@@ -16,11 +16,11 @@ type RespCategoryService struct {
 	CategoryName string `json:"category_name"`
 	Status       string `json:"status"`
 	Position     int    `json:"position"`
-	CategoryType int    `json:"category_type"`
+	Type         int    `json:"type"`
 	CreatedAt    string `json:"created_at"`
 }
 
-func (s *Service) CategoryList(ctx context.Context, offset, limit int64, categoryName string, categoryType int) (common.ServiceResult, error) {
+func (s *Service) CategoryList(ctx context.Context, offset, limit int64, categoryName string, cType int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -33,8 +33,8 @@ func (s *Service) CategoryList(ctx context.Context, offset, limit int64, categor
 	if categoryName != "" {
 		conditions = append(conditions, spbc.CategoryName.Like("%"+categoryName+"%"))
 	}
-	if categoryType != 0 {
-		conditions = append(conditions, spbc.CategoryType.Eq(categoryType))
+	if cType != 0 {
+		conditions = append(conditions, spbc.CategoryType.Eq(cType))
 	}
 
 	list, count, err := query.Where(conditions...).Order(spbc.Position.Desc(), spbc.Id.Desc()).FindByPage(int(offset), int(limit))
@@ -51,7 +51,7 @@ func (s *Service) CategoryList(ctx context.Context, offset, limit int64, categor
 			CategoryName: v.CategoryName,
 			Status:       v.Status,
 			Position:     v.Position,
-			CategoryType: v.CategoryType,
+			Type:         v.Type,
 			CreatedAt:    v.CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}

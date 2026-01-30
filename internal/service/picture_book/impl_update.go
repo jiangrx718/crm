@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-func (s *Service) BookUpdate(ctx context.Context, bookId, categoryId, title, icon, status string, position, categoryType int) (common.ServiceResult, error) {
+func (s *Service) BookUpdate(ctx context.Context, bookId, categoryId, title, icon, status string, position, cType int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -29,7 +29,7 @@ func (s *Service) BookUpdate(ctx context.Context, bookId, categoryId, title, ico
 	entity.Icon = icon
 	entity.Status = status
 	entity.Position = position
-	entity.CategoryType = categoryType
+	entity.Type = cType
 
 	if _, err := q.SPictureBook.Where(q.SPictureBook.BookId.Eq(bookId)).Updates(entity); err != nil {
 		logObj.Errorw("SPictureBook Update error", "entity", entity, "error", err)

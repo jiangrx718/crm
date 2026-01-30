@@ -17,7 +17,7 @@ type RespCategoryUpdateInfo struct {
 	CategoryType int    `json:"category_type"`
 }
 
-func (s *Service) CategoryUpdate(ctx context.Context, categoryId, categoryName, status string, position, categoryType int) (common.ServiceResult, error) {
+func (s *Service) CategoryUpdate(ctx context.Context, categoryId, categoryName, status string, position, cType int) (common.ServiceResult, error) {
 	var (
 		logObj = log.SugarContext(ctx)
 		result = common.NewCRMServiceResult()
@@ -35,7 +35,7 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, categoryName, 
 	entity.CategoryName = categoryName
 	entity.Status = status
 	entity.Position = position
-	entity.CategoryType = categoryType
+	entity.Type = cType
 
 	if _, err := q.SPictureBookCategory.Where(q.SPictureBookCategory.CategoryId.Eq(categoryId)).Updates(entity); err != nil {
 		logObj.Errorw("SPictureBookCategory Update error", "entity", entity, "error", err)
@@ -47,7 +47,7 @@ func (s *Service) CategoryUpdate(ctx context.Context, categoryId, categoryName, 
 		CategoryName: categoryName,
 		Status:       status,
 		Position:     position,
-		CategoryType: categoryType,
+		CategoryType: cType,
 	}
 	result.SetMessage("操作成功")
 	return result, nil

@@ -2,25 +2,17 @@ package gorms
 
 import (
 	"strings"
-	"sync"
 
 	"github.com/pkg/errors"
 
 	gaussdb "github.com/okyer/gorm4gaussdb"
-	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-var (
-	databaseOnce   sync.Once
-	databaseClient *gorm.DB
-)
-
-func NewDatabase(dsn string, config *gorm.Config) (*gorm.DB, error) {
-	var err error
+func NewDatabase(dialect string, dsn string, config *gorm.Config) (*gorm.DB, error) {
 	var dialector gorm.Dialector
 
 	if config == nil {
@@ -32,8 +24,7 @@ func NewDatabase(dsn string, config *gorm.Config) (*gorm.DB, error) {
 		}
 	}
 
-	dbDialect := viper.GetString("db.dialect")
-	switch strings.ToLower(dbDialect) {
+	switch strings.ToLower(dialect) {
 	case "gaussdb":
 		dsn = strings.Trim(dsn, "'")
 		dialector = gaussdb.Open(dsn)
@@ -42,12 +33,8 @@ func NewDatabase(dsn string, config *gorm.Config) (*gorm.DB, error) {
 	case "postgres":
 		dialector = postgres.Open(dsn)
 	default:
-		return nil, errors.Errorf("db.dialect not found: %s", dbDialect)
+		return nil, errors.Errorf("db.dialect not found: %s", dialect)
 	}
 
-	databaseOnce.Do(func() {
-		databaseClient, err = gorm.Open(dialector, config)
-	})
-
-	return databaseClient, err
+	return gorm.Open(dialector, config)
 }

@@ -14,9 +14,9 @@ type BookUpdateRequest struct {
 	CategoryId string `json:"category_id" binding:"required"`
 	Title      string `json:"title" binding:"required"`
 	Icon       string `json:"icon" binding:"required"`
-	Status     string `json:"status" binding:"required"`
+	Status     string `json:"status"`
 	Position   int    `json:"position"`
-	CType      int    `json:"type" binding:"required"`
+	CType      int    `json:"type"`
 }
 
 type BookDeleteRequest struct {
